@@ -1,0 +1,47 @@
+PROJECT mt "Model transformation"
+
+SCREENING
+Reviews 2
+Conflict on Criteria resolved_by Unanimity
+Criteria =   ["Criteria 1","Criteria 2" ]
+Sources = ["Scopus",'IEEE']
+Strategies =["Snowballing","database search"]
+Validation 30%  Normal
+Phases "Phase 1" "Screen per title" Fields(Title) ,
+	    "Phase 2" "Screen per title and abstract 2" Fields(Title,Abstract,Link) 
+QA
+
+Questions =["Question 1","Question 2","Question 3","Question 4"]
+ Response=["Yes":3,"Partially":1.5,"No":0]
+ Min_score 3
+CLASSIFICATION
+no_overide
+Simple transformation_name "Transformation name" * [1] :string(100)
+DynamicList domain "Domain"  [1] "Domain" =["Artificial Intelligence","Collaborative system","Compilation","E-commerce","HOT"]
+DynamicList trans_language "Transformation Language"  [10] "Transformation Language " =["ATL","Henshin","MoTiF","QVT"]
+DynamicList source_language "Source language"  [1] "Language" =["DSL","Java","SySML","UML"]
+DynamicList target_language "Target language"  [1] "Language"
+DynamicList scope "Scope"  [10] "Scope" =["Exogenous","Inplace","Outplace"]
+
+DynamicList intent  "Intent" * [10]  "Intents" = ["Translation", "Simulation", "Migration", "Composition"]{
+	Simple name_used "Name used by the author" *  :string(100)
+	Simple line_code "Lines of code generated"  [1] :int
+	DynamicList op_result "Operation result"  [1] "Operation result" =["Success","Failed","Not set"]
+	Simple note "Note" :text(500)  
+}  
+  
+DynamicList intent_relation "Intent relation" * [1] "Relation" = ["Relation 1", "Relation2","Relation 3"]{
+	DynamicList intent_1 "Intent 1" * depends_on intent
+	DynamicList intent_2 "Intent 2" * depends_on intent
+	Simple note "Note" :text(500)   
+}   
+Simple industrial "Industrial" [1] :bool 
+Simple bidirectional "Bidirectional" [1] :bool 
+Simple number_citation "Number of citations"  [1] :int
+Simple year "Targeted year"  [1] :int(4)
+Simple note "Note"   :text(500) 
+
+
+REPORT
+Simple domain "Domain" on domain charts( pie,bar)
+Compare year_domain "Domain per year" on domain with year charts( line,bar)
