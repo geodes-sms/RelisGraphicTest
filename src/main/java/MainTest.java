@@ -3,30 +3,54 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class MainTest {
 
 
-  private static final String RELIS_URL = "http://relis.iro.umontreal.ca/auth.html";
-  private static final String LOCAL_URL = "http://localhost:8083/auth.html";
+
+    public static  String mt_project  = "src/main/resources/project/mt.php";
+    public static String mt = "Model transformation";
+  static RelisUser getMockUser(){
+
+      RelisUser user = new RelisUser();
+      user.setUser_email("mahamatyoussoufi@yahoo.com");
+      user.setUsername("john2020");
+      user.setPassword("mondaymyday");
+      user.setFull_name("John Teller");
+      return user;
+  }
+
+  static RelisUser getMockConnectUser(){
+
+    RelisUser user = new RelisUser();
+    user.setUsername("admin");
+    user.setPassword("123");
+    return user;
+  }
 
   public static void main(String[] args) {
 
 
-    WebDriverManager.firefoxdriver().setup();
-
-    WebDriver webDriver = new FirefoxDriver();
-
-    webDriver.get(RELIS_URL);
 
 
-    ITest test = new LogInTest();
+//    Initialiazer init = new Initialiazer();
+//    init.init();
+//    WebDriver webDriver = init.getWebDriver();
+//   Connexion connexion = new Connexion();
+//   connexion.registerUser(webDriver,getMockUser());
+//   // connexion.connect(webDriver,getMockConnectUser());
+//    ProjectManager projectManager = new ProjectManager();
+//
+//    projectManager.openProject(webDriver, mt);
+//   // projectManager.uploadFromBibTeXPaper(webDriver,"src/main/resources/bibtex/one.bib")
+//      // projectManager.createProject(webDriver, mt_project);
+//      // projectManager.importBibTexPapers(webDriver,"");
+//    projectManager.addReviewer(webDriver, new RelisUser());
 
-    test.process(webDriver);
-
-    sleep(4);
-    new  FileUploadedProject().process(webDriver);
-    sleep(3);
-    webDriver.quit();
+    Utility.generateRelisUserSQL();
   }
 
 
@@ -40,5 +64,8 @@ public class MainTest {
     }
   }
 
-  // getInfo() => { e -> print(e); }
+
+
+
+
 }
