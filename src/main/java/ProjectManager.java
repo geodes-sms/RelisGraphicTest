@@ -77,6 +77,12 @@ public class ProjectManager {
     }
 
 
+    /**
+     * importing papers from bibtex file
+     * @param driver
+     * @param fileName
+     */
+
     public void importBibTexPapers(WebDriver driver, String fileName){
 
 
@@ -87,8 +93,6 @@ public class ProjectManager {
        // driver.findElement(By.xpath(".//ul/li[2]/ul/li[2]/a")).click();
         new WebDriverWait(driver, 5).until(ExpectedConditions.elementToBeClickable(
                 By.linkText(PaperUtils.LK_BIBTEX_IMPORT_MODE))).click();
-
-
 
         // we gotta choose the file and import all the papers from it
         driver.findElement(By.name(PaperUtils.NAME_BIBTEX_FILE_CHOOSE_ELEM)).sendKeys(bib_file.getAbsolutePath());
@@ -101,6 +105,11 @@ public class ProjectManager {
 
     }
 
+    /**
+     * adding a reviewer to a project
+     * @param driver
+     * @param user
+     */
     public void addReviewer( WebDriver driver, RelisUser user){
 
         // go to the users page

@@ -10,12 +10,19 @@ import java.util.ArrayList;
 public class Project {
 
 
+    // the project name
     private String project_name;
-
+    // the project owner;
     private RelisUser project_owner;
-
+    // the all reviewers for the current project
     private ArrayList<RelisUser> reviewer = new ArrayList<>();
 
+    /**
+     *
+     * @param relisUser the user to compare with the project owner
+     * @return  true if relisUser is equals to this current project owner
+     * otherwise false;
+     */
     public boolean isProjectFor(RelisUser relisUser){
         return project_owner != null && relisUser.equals(project_owner);
 

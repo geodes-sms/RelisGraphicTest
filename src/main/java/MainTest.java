@@ -50,7 +50,7 @@ public class MainTest {
 //      // projectManager.importBibTexPapers(webDriver,"");
 //    projectManager.addReviewer(webDriver, new RelisUser());
 
-    Utility.generateRelisUserSQL();
+    Utility.showAllRelisUser();
   }
 
 

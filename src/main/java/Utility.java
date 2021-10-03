@@ -96,18 +96,28 @@ public class Utility {
             System.out.println(e.getMessage());
         }
     }
+
+    /**
+     * all the user in RelisUser Object from a file
+     * that contains the user information in csv format
+     * @return
+     */
     private static ArrayList<RelisUser> CreateMockUsers() {
 
         try{
 
-            BufferedReader reader = (BufferedReader) FileUtils.getFileReaderFor("src/main/resources/users/users.csv");
-
+            // open the .csv file
+            BufferedReader reader = (BufferedReader) FileUtils
+                    .getFileReaderFor("src/main/resources/users/users.csv");
+            // the headear that contains the informations rows
             String header = reader.readLine();
+            // now extract all the lines
             String lines = FileUtils.getAllLine(reader);
-            System.out.println(header);
+            // get the RelisUser Object for every line which represent a ReliUser object
             ArrayList<RelisUser> data = extractRelisUser(lines);
+            // then return that data
             return data;
-        } catch (Exception e){
+        } catch (Exception e){ // exception???
 
             System.out.println(e.getMessage());
             return null;
@@ -117,9 +127,24 @@ public class Utility {
 
     }
 
+    /**
+     * get all the mocks user for the test
+     * @return
+     */
     public static ArrayList<RelisUser> getMocksRelisUser(){
 
         return CreateMockUsers();
 
+    }
+
+
+    /**
+     * display all the relis user
+     */
+    public static  void showAllRelisUser(){
+
+        ArrayList<RelisUser> users=  getMocksRelisUser();
+
+        users.forEach(System.out::println);
     }
 }
