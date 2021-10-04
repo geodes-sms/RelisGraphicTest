@@ -11,8 +11,8 @@ public class MainTest {
 
 
 
-    public static  String mt_project  = "src/main/resources/project/mt.php";
-    public static String mt = "Model transformation";
+
+
   static RelisUser getMockUser(){
 
       RelisUser user = new RelisUser();
@@ -23,34 +23,23 @@ public class MainTest {
       return user;
   }
 
-  static RelisUser getMockConnectUser(){
 
-    RelisUser user = new RelisUser();
-    user.setUsername("admin");
-    user.setPassword("123");
-    return user;
-  }
 
   public static void main(String[] args) {
 
 
 
-
+//
 //    Initialiazer init = new Initialiazer();
 //    init.init();
 //    WebDriver webDriver = init.getWebDriver();
 //   Connexion connexion = new Connexion();
-//   connexion.registerUser(webDriver,getMockUser());
-//   // connexion.connect(webDriver,getMockConnectUser());
+//  // connexion.registerUser(webDriver,getMockUser());
+//   connexion.connect(webDriver,getMockConnectUser());
 //    ProjectManager projectManager = new ProjectManager();
 //
 //    projectManager.openProject(webDriver, mt);
-//   // projectManager.uploadFromBibTeXPaper(webDriver,"src/main/resources/bibtex/one.bib")
-//      // projectManager.createProject(webDriver, mt_project);
-//      // projectManager.importBibTexPapers(webDriver,"");
-//    projectManager.addReviewer(webDriver, new RelisUser());
 
-    Utility.showAllRelisUser();
   }
 
 

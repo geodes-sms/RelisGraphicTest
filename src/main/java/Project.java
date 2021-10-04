@@ -24,7 +24,7 @@ public class Project {
      * otherwise false;
      */
     public boolean isProjectFor(RelisUser relisUser){
-        return project_owner != null && relisUser.equals(project_owner);
+        return relisUser != null && relisUser.equals(project_owner);
 
     }
 

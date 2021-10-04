@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RelisUser {
+public class RelisUser implements Comparable<RelisUser> {
 
     // relis user fields
     private String full_name;
@@ -67,5 +67,11 @@ public class RelisUser {
 
     }
 
+    @Override
+    public int compareTo(RelisUser o) {
+
+        if(o != null) return this.full_name.compareTo(o.full_name);
+        return 0;
+    }
 }
 

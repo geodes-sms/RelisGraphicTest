@@ -2,8 +2,11 @@ import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Utility {
+
+    private static ArrayList<RelisUser> relisUsers = new ArrayList<>();
 
 
     /**
@@ -87,11 +90,6 @@ public class Utility {
             }
             bf.flush();
 
-
-
-
-
-
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
@@ -133,7 +131,7 @@ public class Utility {
      */
     public static ArrayList<RelisUser> getMocksRelisUser(){
 
-        return CreateMockUsers();
+        return getRelisUsers();
 
     }
 
@@ -143,8 +141,81 @@ public class Utility {
      */
     public static  void showAllRelisUser(){
 
-        ArrayList<RelisUser> users=  getMocksRelisUser();
+        ArrayList<RelisUser> users=  getRelisUsers();
 
-        users.forEach(System.out::println);
+        users.stream()
+                .sorted()
+                .forEach(p -> System.out.println(p));
+    }
+
+    public static RelisUser getRandomUser(){
+
+        ArrayList<RelisUser> data = getRelisUsers();
+        Random r = new Random();
+        int i = r.nextInt(0,data.size());
+
+        return data.get(i);
+
+    }
+
+    /**
+     *  get a relis user by it full name
+     * @param full_name
+     * @return
+     */
+    public static RelisUser getUserByFullName(String full_name){
+        ArrayList<RelisUser> data = getRelisUsers();
+
+        return data.stream()
+                .filter(p -> p.getFull_name().equals(full_name))
+                .findFirst().orElse(null);
+
+    }
+
+    /**
+     *  get a relis user by it user_username
+     * @param userName
+     * @return
+     */
+    public static RelisUser getUserByUserName(String userName){
+        ArrayList<RelisUser> data = getRelisUsers();
+        data.forEach(p-> System.out.println(p.getUsername()));
+
+        return data.stream()
+                .filter(p -> p.getUsername().equals(userName))
+                .findFirst().orElse(null);
+
+    }
+
+    /**
+     * get the admin relis user
+     * @return
+     */
+    public static RelisUser getAdminUser(){
+        RelisUser admin = new RelisUser();
+        admin.setUsername("admin");
+        admin.setPassword("123");
+        admin.setFull_name("Admin");
+        admin.setUser_state("1");
+        admin.setUser_active("1");
+        admin.setUser_usergroup("1");
+        admin.setUser_email("info@relis.ca");
+        admin.setCreate_by("1");;
+        admin.setCreation_time("2020-06-22 19:49:48");
+        return admin;
+    }
+
+
+    /**
+     * get all relis users
+     * @return
+     */
+    public static ArrayList<RelisUser> getRelisUsers() {
+        if(relisUsers.size() == 0 ){
+          relisUsers.add(getAdminUser());
+          ArrayList<RelisUser> users = getMocksRelisUser();
+            relisUsers.addAll(users);
+        }
+        return relisUsers;
     }
 }
