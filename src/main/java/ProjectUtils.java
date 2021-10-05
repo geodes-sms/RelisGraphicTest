@@ -27,6 +27,15 @@ public class ProjectUtils {
     public static final String CLASS_REMOVE_PROJECT_USER = "fa-trash";
 
 
+    /**
+     * PAPERS MANAGEMENT
+     */
+
+    public static final String ID_ALL_PAPERS_TABLE = "datatable-responsive";
+    public static final String LK_DELETE_ALL_PAPERS_BUTTON = "Delete all";
+    public static final String LK_CONFIRM_DELETE_ALL_PAPERS = "Continue to delete";
+    public static final String ID_PAPERS_INFOS = "datatable-responsive_info";
+    public static final String  ID_NEXT_PAPERS_PAGE ="datatable-responsive_next";
     /*****************************************************************************************
      *
      *
@@ -47,10 +56,13 @@ public class ProjectUtils {
     public static final String GUEST_ROLE = "Guest";
 
 
+
     /********************************************************************************
      *
      * Project tested
      */
 
     public static String model_transformation_project = "Model transformation";
+    public static final String CSS_OPENED_PROJECT_NAME = ".x_title h3" ;
+    public static final String BIBTEX_FILE1 = "src/main/resources/bibtex/my_pub.bib";
 }

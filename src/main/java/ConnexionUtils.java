@@ -20,4 +20,5 @@ public class ConnexionUtils {
     public static final String class_Captcha_Check_Box = "rc-anchor-logo-img";
 
 
+    public static final String CLASS_CONNECTED_USER_PROFILE_NAME = "user-profile";
 }

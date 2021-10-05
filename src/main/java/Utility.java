@@ -1,7 +1,12 @@
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.Random;
 
 public class Utility {
@@ -217,5 +222,14 @@ public class Utility {
             relisUsers.addAll(users);
         }
         return relisUsers;
+    }
+
+    public static boolean hasClass(WebElement element,String className){
+
+        String classes= element.getAttribute("class");
+        Optional<String> classFindResult = Arrays.stream(classes.split(" "))
+                .filter(el -> el.equals(className))
+                .findFirst();
+        return classFindResult.isPresent();
     }
 }

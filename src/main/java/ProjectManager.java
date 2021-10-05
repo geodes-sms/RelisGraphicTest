@@ -1,22 +1,25 @@
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.function.BiFunction;
 
 public class ProjectManager {
 
 
-    private static String BIBTEX_FILE1 = "src/main/resources/bibtex/my_pub.bib";
-    protected File bib_file = new File(BIBTEX_FILE1);
+
+    private static String KEY ="";
+
+    // BI-FUNCTION USED
+
+    // check if a paper is present given the list of paper
+    private static final BiFunction<WebDriver, List<WebElement>,Integer> paperIsPresent =
+            ProjectManager::checkPaperPresence;
+    // delete a paper
+    private static final BiFunction<WebDriver,List<WebElement>,Integer> deletePaper_func
+            = ProjectManager::deletePaper;
 
     public void createProject(WebDriver driver, String fileName) {
 
@@ -40,8 +43,21 @@ public class ProjectManager {
 
     public void openProject(WebDriver driver, String projectName) {
         //TODO a completer !!!
-        driver.findElement(By.className("fa-paper-plane")).click();
+        driver.findElement(By.cssSelector(ProjectUtils.CLASS_OPEN_PROJECT)).click();
 
+    }
+
+    /**
+     *  delete all the papers for the current open project
+     * @param driver
+     */
+    public void deleteAllPapers(WebDriver driver){
+
+        openAllPaper(driver);
+        // click the delete all button
+        driver.findElement(By.linkText(ProjectUtils.LK_DELETE_ALL_PAPERS_BUTTON)).click();
+        // confirm the deletion
+        driver.findElement(By.linkText(ProjectUtils.LK_CONFIRM_DELETE_ALL_PAPERS)).click();
     }
 
     /**
@@ -52,7 +68,7 @@ public class ProjectManager {
      */
     public void uploadFromBibTeXPaper(WebDriver driver, String fileName) {
 
-        MainTest.sleep(5);
+
         String bib_msg = FileUtils.getLinesFrom(fileName);
 
         // open the all paper menu
@@ -91,11 +107,9 @@ public class ProjectManager {
         // push the import menu
         driver.findElement(By.linkText(PaperUtils.LK_IMPORT_PAPER)).click();
         //choose using Bibtex option
-        //driver.findElement(By.linkText(PaperUtils.LK_BIBTEX_IMPORT_MODE)).click();
-        // driver.findElement(By.xpath(".//ul/li[2]/ul/li[2]/a")).click();
         new WebDriverWait(driver, 5).until(ExpectedConditions.elementToBeClickable(
                 By.linkText(PaperUtils.LK_BIBTEX_IMPORT_MODE))).click();
-
+        File bib_file = new File(fileName);
         // we gotta choose the file and import all the papers from it
         driver.findElement(By.name(PaperUtils.NAME_BIBTEX_FILE_CHOOSE_ELEM)).sendKeys(bib_file.getAbsolutePath());
         driver.findElement(By.className(PaperUtils.CLASS_UPLOAD_IMPORTED_PAPERS_BUTTON)).click();
@@ -103,7 +117,7 @@ public class ProjectManager {
         // now we  commit the imported papers
         driver.findElement(By.className(PaperUtils.CLASS_UPLOAD_IMPORTED_PAPERS_BUTTON)).click();
         // back to the all papers
-        driver.findElement(By.className(PaperUtils.CLASS_BACK_FROM_PAPERS_IMPORT_BUTTON)).click();
+        //driver.findElement(By.className(PaperUtils.CLASS_BACK_FROM_PAPERS_IMPORT_BUTTON)).click();
 
     }
 
@@ -131,9 +145,11 @@ public class ProjectManager {
        // we gotta choose a specific role
         WebElement list_of_roles = driver.findElement(By.id(ProjectUtils.ID_ALL_USER_ROLE_FOR_A_PROJECT));
         List<WebElement> roles = list_of_roles.findElements(By.tagName("li"));
+        // we choose the user role and click it
         roles.stream()
                 .filter(p -> role.equals(p.getText()))
-                        .findFirst().get().click();
+                .findFirst()
+                .ifPresent(WebElement::click);
 
         driver.findElement(By.className(ProjectUtils.CLASS_SUCCESS_BUTTON)).click();
 
@@ -198,6 +214,114 @@ public class ProjectManager {
 
     }
 
+    /**
+     *  get all the papers from a project
+     * @param driver
+     * @return
+     */
+    private int work_through_paper(WebDriver driver, BiFunction<WebDriver,List<WebElement>,Integer> work,
+                                   String COUNT_MODE){
+
+        try {
+            openAllPaper(driver);
+            // select the table that contains the papers
+            WebElement table = driver.findElement(By.id(ProjectUtils.ID_PROJECT_TABLE_USERS));
+
+            WebElement element ;
+            int result =0;
+
+            while (true){
+                try{
+                    // get web element for the next click link
+                    element = driver.findElement(By.id(ProjectUtils.ID_NEXT_PAPERS_PAGE));
+                    // get all the papers present from the current table
+                    List<WebElement> other_papers = table.findElements(By.tagName("tr"));
+                    // we remove the first web element which is the table header
+                    other_papers.remove(0);
+                    result = (COUNT_MODE.equals(PaperUtils.COUNT_PAPER_MODE))?
+                         (result+other_papers.size()): work.apply(driver,other_papers);
+                    // do we did the change that we want??
+                    if(!COUNT_MODE.equals(PaperUtils.COUNT_PAPER_MODE) && result == 1)
+                        return result; // so we return
+
+                    // there is no next paper ?
+                    if(Utility.hasClass(element,"disabled")) break;
+                    element.findElement(By.linkText("Next")).click();
+                } catch (Exception e){
+                    System.out.println("ERROR " + e.getMessage());
+                    return 0;
+                }
+            }
+            return  result;
+
+        } catch (Exception e){
+            return  0;
+        }
+
+    }
+
+    /**
+     *
+     * get the length of the papers for the current project
+     * @param driver
+     * @return
+     */
+    public  int getProjectPapersLength(WebDriver driver){
+
+        return work_through_paper(driver,null,PaperUtils.COUNT_PAPER_MODE);
+    }
+
+    /**
+     * delete a specific paper using his key
+     * @param driver
+     * @param papers
+     */
+    private static int deletePaper(WebDriver driver, List<WebElement> papers){
+
+        // get the web element for the paper to delete
+        WebElement user_manager = getUserWebElement(papers, KEY);
+        if (user_manager != null){ // do we found the paper?
+            // if so , we delete it
+            user_manager.findElement(By.className(ProjectUtils.CLASS_REMOVE_PROJECT_USER)).click();
+            Alert alert = driver.switchTo().alert();
+            alert.accept();
+            return 1;
+        }
+        return 0;
+
+    }
+
+    /**
+     *  delete a given paper identified by his key
+     *
+     * @param driver
+     * @param key
+     * @return
+     */
+    public  void deletePaperByKey(WebDriver driver, String key){
+        KEY= key;
+        work_through_paper(driver,deletePaper_func,"");
+    }
+
+    /**
+     * check if a specific paper exist in a project
+     * @param driver
+     * @param key
+     * @return
+     */
+    public boolean isPresentPaper(WebDriver driver, String key){
+        KEY = key;
+        int papers = work_through_paper(driver,paperIsPresent,"");
+
+        return papers == 1;
+    }
+    private static int checkPaperPresence(WebDriver driver, List<WebElement> papers){
+
+        // get the web element for the paper to delete
+        WebElement user_manager = getUserWebElement(papers, KEY);
+        return (user_manager == null) ? 0:1;
+    }
+
 
 
 
@@ -208,12 +332,11 @@ public class ProjectManager {
      * @param user_name
      * @return
      */
-    private WebElement getUserWebElement( List<WebElement> users_data, String user_name){
+    private static WebElement getUserWebElement( List<WebElement> users_data, String user_name){
 
 
         for(int i=0; i< users_data.size(); i++){
             WebElement user = users_data.get(i);
-            System.out.println(user.getText());
             List<WebElement> user_info= user.findElements(By.tagName("td"));
 
             for (int j = 0; j < user_info.size(); j++)
@@ -231,15 +354,13 @@ public class ProjectManager {
      */
     public void chooseWebElement( List<WebElement> data, String cond){
 
-        for (int i = 0; i < data.size(); i++)
-        {
-            if(data.get(i).getText().equals( cond)){
-                data.get(i).click();
-                break;
-            }
-        }
-
+        data.stream()
+                .filter(elem -> elem.getText().equals(cond))
+                .findFirst().
+                ifPresent(WebElement::click);
     }
+
+
 
 
 

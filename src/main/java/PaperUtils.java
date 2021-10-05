@@ -23,4 +23,8 @@ public class PaperUtils {
     public static final String CLASS_UPLOAD_IMPORTED_PAPERS_BUTTON = "btn-success";
     public static final String CLASS_BACK_FROM_PAPERS_IMPORT_BUTTON = "btn-danger";
 
+    public static final String DELETED_PAPER_MODE = "DELETE";
+    public static final String EDIT_PAPER_MODE = "EDIT";
+    public static final String SEARCH_MODE = "SEARCH";
+    public static final String COUNT_PAPER_MODE = "COUNT PAPER";
 }
