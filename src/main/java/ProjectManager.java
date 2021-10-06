@@ -1,25 +1,30 @@
+import lombok.NonNull;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
+
 import java.util.List;
-import java.util.function.BiFunction;
+
 
 public class ProjectManager {
 
 
 
-    private static String KEY ="";
 
-    // BI-FUNCTION USED
+    // FUNCTIONS PROGRAMMING
 
     // check if a paper is present given the list of paper
-    private static final BiFunction<WebDriver, List<WebElement>,Integer> paperIsPresent =
+    private static final ThirdParamsFunctions paperIsPresent =
             ProjectManager::checkPaperPresence;
     // delete a paper
-    private static final BiFunction<WebDriver,List<WebElement>,Integer> deletePaper_func
+    private static final ThirdParamsFunctions deletePaper_func
             = ProjectManager::deletePaper;
+    private static  final  FourthParamsFunctions hasARole
+            = ProjectManager::HasARole;
+
+
 
     public void createProject(WebDriver driver, String fileName) {
 
@@ -84,7 +89,7 @@ public class ProjectManager {
     }
 
 
-    private void openAllPaper(WebDriver driver) {
+    private static void openAllPaper(WebDriver driver) {
 
         // go to the paper
         driver.findElement(By.className(PaperUtils.CLASS_NAME_OPEN_PAPER)).click();
@@ -100,7 +105,6 @@ public class ProjectManager {
      * @param driver
      * @param fileName
      */
-
     public void importBibTexPapers(WebDriver driver, String fileName) {
 
 
@@ -131,6 +135,7 @@ public class ProjectManager {
 
         // go to the users page
         driver.findElement(By.className(ProjectUtils.CLASS_PROJECT_USERS)).click();
+
         // push the + button
         driver.findElement(By.className(ProjectUtils.CLASS_ADD_USER_BUTTON)).click();
         // now we show all the users
@@ -139,7 +144,8 @@ public class ProjectManager {
         // we have the list that contains all the users
         List<WebElement> links = users_ul.findElements(By.tagName("li"));
         // choose the user to assign as a reviewer
-        chooseWebElement(links, user.getFull_name());
+        WebElement webElement = Utility.chooseWebElement(links, user.getFull_name());
+        if(webElement != null) webElement.click();
         // show the  all users role
         driver.findElement(By.id(ProjectUtils.ID_USER_ROLES_OPTIONS)).click();
        // we gotta choose a specific role
@@ -161,6 +167,7 @@ public class ProjectManager {
      * @param user
      */
     public void addReviewer(WebDriver driver, RelisUser user){
+
 
         this.addRoleForProject(driver,user,ProjectUtils.REVIEWER_ROLE);
     }
@@ -214,50 +221,16 @@ public class ProjectManager {
 
     }
 
+
     /**
      *  get all the papers from a project
      * @param driver
      * @return
      */
-    private int work_through_paper(WebDriver driver, BiFunction<WebDriver,List<WebElement>,Integer> work,
-                                   String COUNT_MODE){
-
-        try {
-            openAllPaper(driver);
-            // select the table that contains the papers
-            WebElement table = driver.findElement(By.id(ProjectUtils.ID_PROJECT_TABLE_USERS));
-
-            WebElement element ;
-            int result =0;
-
-            while (true){
-                try{
-                    // get web element for the next click link
-                    element = driver.findElement(By.id(ProjectUtils.ID_NEXT_PAPERS_PAGE));
-                    // get all the papers present from the current table
-                    List<WebElement> other_papers = table.findElements(By.tagName("tr"));
-                    // we remove the first web element which is the table header
-                    other_papers.remove(0);
-                    result = (COUNT_MODE.equals(PaperUtils.COUNT_PAPER_MODE))?
-                         (result+other_papers.size()): work.apply(driver,other_papers);
-                    // do we did the change that we want??
-                    if(!COUNT_MODE.equals(PaperUtils.COUNT_PAPER_MODE) && result == 1)
-                        return result; // so we return
-
-                    // there is no next paper ?
-                    if(Utility.hasClass(element,"disabled")) break;
-                    element.findElement(By.linkText("Next")).click();
-                } catch (Exception e){
-                    System.out.println("ERROR " + e.getMessage());
-                    return 0;
-                }
-            }
-            return  result;
-
-        } catch (Exception e){
-            return  0;
-        }
-
+    private static int work_through_paper(WebDriver driver, Functions work,
+                                          String COUNT_MODE, String subject){
+        openAllPaper(driver);
+        return work_through_table(driver, work,COUNT_MODE, subject, "");
     }
 
     /**
@@ -268,18 +241,19 @@ public class ProjectManager {
      */
     public  int getProjectPapersLength(WebDriver driver){
 
-        return work_through_paper(driver,null,PaperUtils.COUNT_PAPER_MODE);
+        return work_through_paper(driver,null,PaperUtils.COUNT_PAPER_MODE,"");
     }
 
     /**
      * delete a specific paper using his key
-     * @param driver
-     * @param papers
+     * @param driver web driver
+     * @param papers the list of the papers
+     * @return  1 if the paper is deleted or not existing
      */
-    private static int deletePaper(WebDriver driver, List<WebElement> papers){
+    private static int deletePaper(WebDriver driver, List<WebElement> papers,String paper){
 
         // get the web element for the paper to delete
-        WebElement user_manager = getUserWebElement(papers, KEY);
+        WebElement user_manager = getUserWebElement(papers, paper);
         if (user_manager != null){ // do we found the paper?
             // if so , we delete it
             user_manager.findElement(By.className(ProjectUtils.CLASS_REMOVE_PROJECT_USER)).click();
@@ -294,31 +268,32 @@ public class ProjectManager {
     /**
      *  delete a given paper identified by his key
      *
-     * @param driver
-     * @param key
-     * @return
+     * @param driver the web driver
+     * @param key the id of the paper
+     *
      */
     public  void deletePaperByKey(WebDriver driver, String key){
-        KEY= key;
-        work_through_paper(driver,deletePaper_func,"");
+
+        work_through_paper(driver,deletePaper_func,"",key);
     }
 
     /**
      * check if a specific paper exist in a project
-     * @param driver
-     * @param key
-     * @return
+     * @param driver the current web driver
+     * @param key the paper identified by the key
+     * @return true if the paper exist otherwise false
      */
     public boolean isPresentPaper(WebDriver driver, String key){
-        KEY = key;
-        int papers = work_through_paper(driver,paperIsPresent,"");
+        int papers = work_through_paper(driver,paperIsPresent,"",key);
 
         return papers == 1;
     }
-    private static int checkPaperPresence(WebDriver driver, List<WebElement> papers){
+
+
+    private static int checkPaperPresence(WebDriver driver, List<WebElement> papers,String paper){
 
         // get the web element for the paper to delete
-        WebElement user_manager = getUserWebElement(papers, KEY);
+        WebElement user_manager = getUserWebElement(papers, paper);
         return (user_manager == null) ? 0:1;
     }
 
@@ -328,9 +303,9 @@ public class ProjectManager {
 
     /**
      * get the specific user from a project users
-     * @param users_data
-     * @param user_name
-     * @return
+     * @param users_data the list of the users
+     * @param user_name the user that we're looking for
+     * @return the web element for the user passed if exists otherwise null
      */
     private static WebElement getUserWebElement( List<WebElement> users_data, String user_name){
 
@@ -347,17 +322,172 @@ public class ProjectManager {
     }
 
 
-    /**
-     * choose and click a web element if the list item text is equal the the param cond
-     * @param data
-     * @param cond
+    /***
+     *
+     * @param users the list of users
+     * @param user_name the username that we are looking for
+     * @param role the user role
+     * @return the user web element if exist otherwise null
      */
-    public void chooseWebElement( List<WebElement> data, String cond){
+    private static WebElement checkUserRoleWebElement( List<WebElement> users, String user_name, String role){
 
-        data.stream()
-                .filter(elem -> elem.getText().equals(cond))
-                .findFirst().
-                ifPresent(WebElement::click);
+
+        for(int i=0; i< users.size(); i++){
+
+            WebElement user = users.get(i);
+            List<WebElement> user_info= user.findElements(By.tagName("td"));
+            String current_user_name = user_info.get(1).getText();
+            String current_user_role = user_info.get(2).getText();
+            if(current_user_name.equals(user_name) && current_user_role.equals(role))
+               return user;
+        }
+        return null;
+
+    }
+
+    /**
+     *
+     * @param users the list of the users
+     * @param user the current user we're looking for
+     * @param role the user role
+     * @return true if the user exist and has the role(param role) otherwise false
+     */
+    private static int HasARole( WebDriver driver,List<WebElement> users, String user,String role){
+
+       return   (checkUserRoleWebElement(users,user,role) != null)? 1: 0;
+
+    }
+
+
+
+
+
+
+
+    /**
+     *
+     * @param driver the wen driver
+     * @param user the user
+     * @return true if the user has a reviewer role
+     */
+    public static boolean isAReviewer(WebDriver driver,@NonNull RelisUser user){
+
+        int x = work_through_userRoles(driver,hasARole,
+                user.getFull_name()
+        ,ProjectUtils.REVIEWER_ROLE);
+        return x ==1;
+    }
+
+    /**
+     *
+     * @param driver the wen driver
+     * @param user the user
+     * @return true if the user has a project manager role
+     */
+    public static boolean isAProjectManager(WebDriver driver, @NonNull RelisUser  user){
+        int x = work_through_userRoles(driver,hasARole,
+                user.getFull_name()
+                ,ProjectUtils.PROJECT_MANAGER_ROLE);
+        return x ==1;
+
+    }
+
+    /**
+     *
+     * @param driver the wen driver
+     * @param user the user
+     * @return true if the user has a validator role
+     */
+    public static boolean isAValidator(WebDriver driver, @NonNull RelisUser  user){
+        int x = work_through_userRoles(driver,hasARole,
+                user.getFull_name()
+                ,ProjectUtils.VALIDATOR_ROLE);
+        return x ==1;
+    }
+    /**
+     *
+     * @param driver the wen driver
+     * @param user the user
+     * @return true if the user has a guest role
+     */
+    public static boolean isAGuestUser(WebDriver driver, @NonNull RelisUser  user){
+        int x = work_through_userRoles(driver,hasARole,
+                user.getFull_name()
+                ,ProjectUtils.GUEST_ROLE);
+        return x ==1;
+
+    }
+
+
+    private static int work_through_userRoles(WebDriver driver, Functions action,
+                                              String subject, String role){
+
+        // go to the users page
+        driver.findElement(By.className(ProjectUtils.CLASS_PROJECT_USERS)).click();
+        return work_through_table(driver,action, "",subject,role);
+    }
+    /***
+     *
+     * @param driver the web driver
+     * @param action a function
+     * @param COUNT_MODE do we count the items of the table??
+     * @param subject the item we're looking for
+     * @param role the user role
+     * @return 1 if the everything went normally otherwise 0
+     */
+    private static int work_through_table(WebDriver driver, Functions action, String COUNT_MODE,
+                                          String subject, String role){
+
+        try {
+            // select the table that contains the papers
+            WebElement table = driver.findElement(By.id(ProjectUtils.ID_PROJECT_TABLE_USERS));
+
+            WebElement element ;
+            int result =0;
+
+            while (true){
+                try{
+                    // get web element for the next click link
+                    element = driver.findElement(By.id(ProjectUtils.ID_NEXT_PAPERS_PAGE));
+                    // get all the papers present from the current table
+                    List<WebElement> other_papers = table.findElements(By.tagName("tr"));
+                    // we remove the first web element which is the table header
+                    other_papers.remove(0);
+                    result = (COUNT_MODE.equals(PaperUtils.COUNT_PAPER_MODE))?
+                            (result+other_papers.size()):
+                            (!role.equals("")) ?((FourthParamsFunctions) action).apply(driver,other_papers,subject,role)
+                                    :((ThirdParamsFunctions) action).apply(driver,other_papers,subject);
+                    // do we did the change that we want??
+                    if(!COUNT_MODE.equals(PaperUtils.COUNT_PAPER_MODE) && result == 1)
+                        return result; // so we return
+
+                    // there is no next table  ?
+                    if(Utility.hasClass(element,"disabled")) break;
+                    element.findElement(By.linkText("Next")).click();
+                } catch (Exception e){
+                    System.out.println("ERROR " + e.getMessage());
+                    return 0;
+                }
+            }
+            return  result;
+
+        } catch (Exception e){
+            return  0;
+        }
+
+
+    }
+
+
+    public void assginReviewerForScreening(WebDriver driver){
+
+        // we go to the project phases
+        driver.findElement(By.className(ProjectUtils.CLASS_HOME_PROJECT)).click();
+        // we choose the screening phase
+        Screening screening = new Screening();
+        screening.setUp(driver);
+        screening.startUserScreeningPhase();
+
     }
 
 

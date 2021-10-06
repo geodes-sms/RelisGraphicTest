@@ -2,12 +2,17 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+
+
 import static org.testng.Assert.*;
 
 public class ProjectTest {
 
     WebDriver driver;
+
     private static final ProjectManager projectManager = new ProjectManager();
+
     @BeforeTest
     public void runSetUp(){
 
@@ -39,7 +44,7 @@ public class ProjectTest {
         assertEquals(title, "Project : " +ProjectUtils.model_transformation_project);
 
     }
-    @Test(priority = 3)
+   // @Test(priority = 3)
     public void importBibTexTest(){
         projectManager.importBibTexPapers(driver,ProjectUtils.BIBTEX_FILE1);
 
@@ -48,7 +53,7 @@ public class ProjectTest {
 
     }
 
-    @Test(priority = 4)
+    //@Test(priority = 4)
     public void deleteProjectPaperByKey(){
         String key = "Syriani2008";
         projectManager.deletePaperByKey(driver,key);
@@ -57,12 +62,99 @@ public class ProjectTest {
         assertFalse(is_deleted);
 
     }
-    @Test(priority = 5)
+    //@Test(priority = 5)
     public void deleteAllPaper(){
 
        projectManager.deleteAllPapers(driver);
         int papersLength = projectManager.getProjectPapersLength(driver);
         assertEquals(papersLength,0);
+    }
+   // @Test(priority = 6)
+    public void addReviewerTest(){
 
+        RelisUser reviewer =  Utility.getRandomUser();
+        System.out.println("Reviewer choosed " + reviewer);
+        projectManager.addReviewer(driver,reviewer);
+        boolean is_a_reviewer = ProjectManager.isAReviewer(driver, reviewer);
+        assertTrue(is_a_reviewer);
+        DataBase.getInstance().addReviewer(reviewer);
+
+    }
+
+   // @Test(priority = 7)
+    public void addProjectManagerTest(){
+        RelisUser pm =  Utility.getRandomUser();
+
+        projectManager.addProjectManager(driver,pm);
+        boolean projectManager = ProjectManager.isAProjectManager(driver, pm);
+        assertTrue(projectManager);
+        DataBase.getInstance().addProjectManager(pm);
+    }
+
+  //  @Test(priority = 7)
+    public void addValidatorTest(){
+        RelisUser validator =  Utility.getRandomUser();
+
+        projectManager.addValidator(driver,validator);
+        boolean is_a_validator = ProjectManager.isAValidator(driver, validator);
+        assertTrue(is_a_validator);
+        DataBase.getInstance().addValidator(validator);
+    }
+
+  //  @Test(priority = 7)
+    public void addGuestRoleTest(){
+        RelisUser guest =  Utility.getRandomUser();
+
+        projectManager.addUserAsGuest(driver,guest);
+        boolean guestUser = ProjectManager.isAGuestUser(driver, guest);
+        assertTrue(guestUser);
+        DataBase.getInstance().addGuestUser(guest);
+
+    }
+
+   // @Test(priority = 8)
+    public void removeReviewer(){
+
+        RelisUser reviewer = DataBase.getInstance().GetAReviewer();
+        projectManager.removeUserRole(driver,reviewer);
+        boolean not_reviewer = !ProjectManager.isAReviewer(driver, reviewer);
+        assertTrue(not_reviewer);
+        DataBase.getInstance().deleteReviewer(reviewer);
+    }
+
+    //@Test(priority = 9)
+    public void removeProjectManager(){
+
+        RelisUser pm = DataBase.getInstance().getAProjectManager();
+        projectManager.removeUserRole(driver,pm);
+        boolean not_pm = !ProjectManager.isAProjectManager(driver, pm);
+        assertTrue(not_pm);
+        DataBase.getInstance().deleteProjectManager(pm);
+    }
+   // @Test(priority = 10)
+    public void removeValidator(){
+
+        RelisUser validator = DataBase.getInstance().getAValidator();
+        projectManager.removeUserRole(driver,validator);
+        boolean not_validator = !ProjectManager.isAReviewer(driver, validator);
+        assertTrue(not_validator);
+        DataBase.getInstance().deleteValidator(validator);
+    }
+    //@Test(priority = 11)
+    public void removeGuestUserRole(){
+
+        RelisUser guest = DataBase.getInstance().getAGuestUser();
+        projectManager.removeUserRole(driver,guest);
+        boolean not_guest = !ProjectManager.isAReviewer(driver, guest);
+        assertTrue(not_guest);
+        DataBase.getInstance().addGuestUser(guest);
+    }
+
+
+    @Test(priority = 12)
+    public void test(){
+
+        projectManager.assginReviewerForScreening(driver);
+        assertTrue(true);
     }
 }

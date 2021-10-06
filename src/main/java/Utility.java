@@ -1,13 +1,9 @@
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public class Utility {
 
@@ -157,9 +153,7 @@ public class Utility {
 
         ArrayList<RelisUser> data = getRelisUsers();
         Random r = new Random();
-        int i = r.nextInt(0,data.size());
-
-        return data.get(i);
+        return data.get(r.nextInt(0,data.size()));
 
     }
 
@@ -184,7 +178,6 @@ public class Utility {
      */
     public static RelisUser getUserByUserName(String userName){
         ArrayList<RelisUser> data = getRelisUsers();
-        data.forEach(p-> System.out.println(p.getUsername()));
 
         return data.stream()
                 .filter(p -> p.getUsername().equals(userName))
@@ -218,7 +211,7 @@ public class Utility {
     public static ArrayList<RelisUser> getRelisUsers() {
         if(relisUsers.size() == 0 ){
           relisUsers.add(getAdminUser());
-          ArrayList<RelisUser> users = getMocksRelisUser();
+          ArrayList<RelisUser> users = CreateMockUsers();
             relisUsers.addAll(users);
         }
         return relisUsers;
@@ -232,4 +225,23 @@ public class Utility {
                 .findFirst();
         return classFindResult.isPresent();
     }
+
+    /**
+     * choose and click a web element if the list item text is equal the the param cond
+     * @param data
+     * @param cond
+     * @return
+     */
+    public  static WebElement chooseWebElement(List<WebElement> data, String cond){
+
+
+        Optional<WebElement> element = data.stream()
+                .filter(elem -> elem.getText().equals(cond))
+                .findFirst();
+        if (element.isPresent()){
+            return element.get();
+        }
+        return null;
+    }
+
 }

@@ -10,6 +10,7 @@ public class ProjectUtils {
 
     public static final String CLASS_PROJECT_USERS = "fa-user";
     public static final String CLASS_ADD_USER_BUTTON = "fa-plus";
+    public static final String CLASS_HOME_PROJECT = "fa-home";
     // web element for show or hide all relis users
     public static final String CLASS_SHOW_ALL_USERS = "select2-selection__arrow";
     // web element for the list of relis users
