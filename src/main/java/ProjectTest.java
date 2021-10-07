@@ -1,9 +1,22 @@
+import controller.ConnexionController;
+import controller.ProjectManager;
+import controller.ScreeningController;
+import databases.DataBase;
+import databases.PapersDataBase;
+import model.DatabaseInfo;
+import model.Paper;
+import model.RelisUser;
+import model.Screening;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import utils.*;
+import view.ScreeningView;
 
 
+import java.util.ArrayList;
+import java.util.Random;
 
 import static org.testng.Assert.*;
 
@@ -12,6 +25,9 @@ public class ProjectTest {
     WebDriver driver;
 
     private static final ProjectManager projectManager = new ProjectManager();
+    private static final  ConnexionController connexion = new ConnexionController();
+    private static final ScreeningController screening_controller= new ScreeningController();
+
 
     @BeforeTest
     public void runSetUp(){
@@ -22,11 +38,10 @@ public class ProjectTest {
     }
 
 
-    @Test(priority = 1)
+  @Test(priority = 1)
     public void ConnexionTest(){
 
         RelisUser user = Utility.getUserByUserName("admin");
-        Connexion connexion = new Connexion();
         connexion.connect(driver, user);
         String user_name = driver.findElement(By.className(
                 ConnexionUtils.CLASS_CONNECTED_USER_PROFILE_NAME)).getText();
@@ -38,13 +53,13 @@ public class ProjectTest {
     @Test(priority = 2)
     public void openProjectTest(){
 
-        projectManager.openProject(driver,ProjectUtils.model_transformation_project);
+        projectManager.openProject(driver, ProjectUtils.model_transformation_project);
         String title  = driver.findElement(By.cssSelector(ProjectUtils
                 .CSS_OPENED_PROJECT_NAME)).getText();
         assertEquals(title, "Project : " +ProjectUtils.model_transformation_project);
 
     }
-   // @Test(priority = 3)
+   @Test(priority = 3)
     public void importBibTexTest(){
         projectManager.importBibTexPapers(driver,ProjectUtils.BIBTEX_FILE1);
 
@@ -53,7 +68,7 @@ public class ProjectTest {
 
     }
 
-    //@Test(priority = 4)
+   @Test(priority = 4)
     public void deleteProjectPaperByKey(){
         String key = "Syriani2008";
         projectManager.deletePaperByKey(driver,key);
@@ -69,7 +84,7 @@ public class ProjectTest {
         int papersLength = projectManager.getProjectPapersLength(driver);
         assertEquals(papersLength,0);
     }
-   // @Test(priority = 6)
+    @Test(priority = 6)
     public void addReviewerTest(){
 
         RelisUser reviewer =  Utility.getRandomUser();
@@ -81,7 +96,7 @@ public class ProjectTest {
 
     }
 
-   // @Test(priority = 7)
+   @Test(priority = 7)
     public void addProjectManagerTest(){
         RelisUser pm =  Utility.getRandomUser();
 
@@ -91,7 +106,7 @@ public class ProjectTest {
         DataBase.getInstance().addProjectManager(pm);
     }
 
-  //  @Test(priority = 7)
+    @Test(priority = 8)
     public void addValidatorTest(){
         RelisUser validator =  Utility.getRandomUser();
 
@@ -101,7 +116,7 @@ public class ProjectTest {
         DataBase.getInstance().addValidator(validator);
     }
 
-  //  @Test(priority = 7)
+    @Test(priority = 9)
     public void addGuestRoleTest(){
         RelisUser guest =  Utility.getRandomUser();
 
@@ -112,7 +127,7 @@ public class ProjectTest {
 
     }
 
-   // @Test(priority = 8)
+    @Test(priority = 10)
     public void removeReviewer(){
 
         RelisUser reviewer = DataBase.getInstance().GetAReviewer();
@@ -122,7 +137,7 @@ public class ProjectTest {
         DataBase.getInstance().deleteReviewer(reviewer);
     }
 
-    //@Test(priority = 9)
+    @Test(priority = 11)
     public void removeProjectManager(){
 
         RelisUser pm = DataBase.getInstance().getAProjectManager();
@@ -131,7 +146,7 @@ public class ProjectTest {
         assertTrue(not_pm);
         DataBase.getInstance().deleteProjectManager(pm);
     }
-   // @Test(priority = 10)
+    @Test(priority = 12)
     public void removeValidator(){
 
         RelisUser validator = DataBase.getInstance().getAValidator();
@@ -140,7 +155,7 @@ public class ProjectTest {
         assertTrue(not_validator);
         DataBase.getInstance().deleteValidator(validator);
     }
-    //@Test(priority = 11)
+    @Test(priority = 13)
     public void removeGuestUserRole(){
 
         RelisUser guest = DataBase.getInstance().getAGuestUser();
@@ -151,10 +166,56 @@ public class ProjectTest {
     }
 
 
-    @Test(priority = 12)
-    public void test(){
-
-        projectManager.assginReviewerForScreening(driver);
+    @Test(priority = 14)
+    private void addSomeReviewers(){
+        int i = 0;
+        ArrayList<RelisUser> relisUsers = new ArrayList<>();
+        do relisUsers.add(Utility.getRandomUser()); while( i++ < 4);
+        relisUsers.forEach(
+                user-> projectManager.addReviewer(driver,user)
+        );
         assertTrue(true);
     }
+    @Test(priority = 15)
+    public void assignReviewers(){
+
+       ArrayList<RelisUser> reviewers =
+               projectManager.assginReviewerForScreening(driver,Utility.getCurrentConnectedUser(driver));
+
+        ArrayList<RelisUser> assigned_reviewers = screening_controller.getAssignedReviewers(driver);
+        reviewers.removeAll(assigned_reviewers);
+        assertTrue(reviewers.isEmpty());
+
+        //assertTrue(true);
+    }
+
+
+    @Test(priority = 16)
+    public void startScreening(){
+        ArrayList<RelisUser> assigned_reviewers = screening_controller.getAssignedReviewers(driver);
+        assigned_reviewers.parallelStream().forEach(user ->{
+            Screening sc = new Screening();
+            user.addScreening(sc);
+            user.setUpCurrentScreeningPhase();
+            screening_controller.makeReadyForScreening(user); // TODO : complete decision
+            PapersDataBase.getInstance().setMockCriteria(); // TODO criteria extraction
+            screening_controller.finishScreening(user);
+        });
+
+        driver.quit();
+
+
+    }
+
+
+
+   // @Test(priority = 17)
+    public void Next(){
+
+        RelisUser ui = Utility.getUserByFullName("Brandice Soall");
+        System.out.println(ui);
+        assertTrue(true);
+    }
+
+
 }
