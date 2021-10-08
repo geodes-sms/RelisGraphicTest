@@ -114,7 +114,7 @@ public class ScreeningController {
         while (size-- > 0){
            String key = driver.findElement(By.className(ScreeningUtils.CLASS_CURRENT_SCREENING_PAPER)).getText();
 
-           String decision = user.getPaperDecision(key);
+           String decision = user.getPaperDecision(extrackPaperKey(key));
             if (decision.equals("TRUE")) screeningView.includePaper(driver);
             else screeningView.excludePaper(driver, decision);
         }

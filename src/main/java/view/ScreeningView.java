@@ -1,25 +1,18 @@
 package view;
 
 import model.RelisUser;
-import model.Screening;
 import org.openqa.selenium.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.locks.Condition;
 import java.util.stream.Collectors;
-
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.*;
 
 public class ScreeningView {
 
-
-
-    private ArrayList<WebElement> screening_phases;
 
     private static void open_current_screening_phase(WebDriver driver) {
         if(screening_options_menu_exist(driver))
@@ -39,6 +32,9 @@ public class ScreeningView {
         // open the screening phase
         ((JavascriptExecutor)driver).executeScript("arguments[0].click();",
                 element.findElement(By.className(ScreeningUtils.CLASS_GOTO_PHASE)));
+
+        driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
+
     }
 
 
@@ -46,7 +42,15 @@ public class ScreeningView {
         try{
             WebElement element =  driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU));
 
-            if(element != null) element.click();
+            try{
+                WebElement exist = element.findElement(
+                        By.linkText(ScreeningUtils.LK_SCREENING_MY_ASSIGMENTS_PAGE)
+                );
+
+            } catch ( Exception o){
+                element.click();
+            }
+           //if(element != null) element.click();
             return true;
         }catch(Exception e) {
             return false;}
@@ -162,8 +166,8 @@ public class ScreeningView {
      *
      */
     private static void showProgressScreening(WebDriver driver) {
-
-        driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
+        open_current_screening_phase(driver);
+        //driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
         new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
                 (By.linkText(ScreeningUtils.LK_SCREENING_PROGRESS_PAGE))
         )).sendKeys(Keys.ENTER);
@@ -176,7 +180,7 @@ public class ScreeningView {
     public static void showMyAssignment(WebDriver driver){
 
         open_current_screening_phase(driver);
-        driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
+        //driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
         new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
                 (By.linkText(ScreeningUtils.LK_SCREENING_MY_ASSIGMENTS_PAGE))
         )).sendKeys(Keys.ENTER);
@@ -189,7 +193,7 @@ public class ScreeningView {
      */
     public static void  showAllAssigmentsPage(WebDriver driver){
         open_current_screening_phase(driver);
-        driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
+        //driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
         new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
                 (By.linkText(ScreeningUtils.LK_ALL_ASSIGNMENTS))
         )).sendKeys(Keys.ENTER);
@@ -203,7 +207,7 @@ public class ScreeningView {
     public static void showMyPendingAssignmentsPage(WebDriver driver){
 
         open_current_screening_phase(driver);
-        driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
+        //driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
         new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
                 (By.linkText(ScreeningUtils.LK_MY_PENDING_PAPERS))
         )).sendKeys(Keys.ENTER);
@@ -216,7 +220,7 @@ public class ScreeningView {
      */
     public static void showScreeningPhasePage(WebDriver driver){
         open_current_screening_phase(driver);
-        driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
+        //driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
         new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
                 (By.linkText(ScreeningUtils.LK_SCREEN_PAPERS))
         )).sendKeys(Keys.ENTER);
@@ -228,7 +232,7 @@ public class ScreeningView {
      */
     public static void showAllScreenedAssignmentsPage(WebDriver driver) {
         open_current_screening_phase(driver);
-        driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
+       // driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
         new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
                 (By.linkText(ScreeningUtils.LK_ALL_SCREENED_PAPERS))
         )).sendKeys(Keys.ENTER);
@@ -285,6 +289,7 @@ public class ScreeningView {
 
     public void  saveAndGetNextPaperForScreening(WebDriver driver){
         driver.findElement(By.cssSelector(ScreeningUtils.CSS_BUTTON_SAVE_AND_NEXT_PAPER)).click();
+
     }
 
     private void chooseCriteria(WebDriver driver, String criteria){

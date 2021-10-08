@@ -3,8 +3,6 @@ import controller.ProjectManager;
 import controller.ScreeningController;
 import databases.DataBase;
 import databases.PapersDataBase;
-import model.DatabaseInfo;
-import model.Paper;
 import model.RelisUser;
 import model.Screening;
 import org.openqa.selenium.By;
@@ -12,13 +10,11 @@ import org.openqa.selenium.WebDriver;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import utils.*;
-import view.ScreeningView;
-
-
 import java.util.ArrayList;
-import java.util.Random;
 
 import static org.testng.Assert.*;
+
+
 
 public class ProjectTest {
 
@@ -59,14 +55,15 @@ public class ProjectTest {
         assertEquals(title, "Project : " +ProjectUtils.model_transformation_project);
 
     }
-   @Test(priority = 3)
-    public void importBibTexTest(){
-        projectManager.importBibTexPapers(driver,ProjectUtils.BIBTEX_FILE1);
 
-        int imported_papers_length = projectManager.getProjectPapersLength(driver);
-        assertEquals(imported_papers_length,98);
+    @Test(priority = 3)
+    public void deleteAllPaper(){
 
+        projectManager.deleteAllPapers(driver);
+        int papersLength = projectManager.getProjectPapersLength(driver);
+        assertEquals(papersLength,0);
     }
+
 
    @Test(priority = 4)
     public void deleteProjectPaperByKey(){
@@ -77,13 +74,15 @@ public class ProjectTest {
         assertFalse(is_deleted);
 
     }
-    //@Test(priority = 5)
-    public void deleteAllPaper(){
+    @Test(priority = 3)
+    public void importBibTexTest(){
+        projectManager.importBibTexPapers(driver,ProjectUtils.BIBTEX_FILE1);
 
-       projectManager.deleteAllPapers(driver);
-        int papersLength = projectManager.getProjectPapersLength(driver);
-        assertEquals(papersLength,0);
+        int imported_papers_length = projectManager.getProjectPapersLength(driver);
+        assertEquals(imported_papers_length,98);
+
     }
+
     @Test(priority = 6)
     public void addReviewerTest(){
 
@@ -186,7 +185,6 @@ public class ProjectTest {
         reviewers.removeAll(assigned_reviewers);
         assertTrue(reviewers.isEmpty());
 
-        //assertTrue(true);
     }
 
 
