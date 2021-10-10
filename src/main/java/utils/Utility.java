@@ -369,6 +369,8 @@ public class Utility {
 
     }
 
+
+
     /**
      *
      * @param paper the web element that contains paper info
@@ -391,5 +393,11 @@ public class Utility {
     }
 
 
+    public static Paper getPaperByKey(ArrayList<Paper> paperArrayList, String key){
+        return paperArrayList.stream()
+                .filter(p -> p.getKey().equals(key))
+                .findFirst()
+                .orElse(null);
+    }
 
 }

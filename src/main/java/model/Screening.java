@@ -1,18 +1,15 @@
 package model;
 
 import controller.ConnexionController;
-import controller.ProjectManager;
+import controller.ProjectController;
 import databases.PapersDataBase;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.openqa.selenium.*;
 import utils.*;
-import view.ScreeningView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @AllArgsConstructor
@@ -21,11 +18,13 @@ import java.util.Random;
 public class Screening {
 
 
-
+    private int excluded_papers =0;
+    private int included_papers = 0;
+    private int in_conflict_papers = 0;
     private RelisUser current_reviewer = null;
 
 
-    private ArrayList<String> my_assignments = new ArrayList<>();
+    private ArrayList<Paper> my_assignments = new ArrayList<>();
 
 
 
@@ -36,27 +35,114 @@ public class Screening {
         current_reviewer.setDriver(initialiazer.getWebDriver());
         ConnexionController connexion = new ConnexionController();
         connexion.connect(current_reviewer.getDriver(), current_reviewer);
-        ProjectManager projectManager  = new ProjectManager();
+        ProjectController projectManager  = new ProjectController();
+
         projectManager.openProject(current_reviewer.getDriver(), "");
 
     }
 
+    private Paper getPaper(Paper p){
 
-    public String getNextDecision(String key){
-        boolean includ = new Random().nextBoolean();
-        //Paper paper = PapersDataBase.getInstance().getPaper(key);
-        if(includ){
+        return my_assignments.stream()
+                        .filter(p::equals)
+                        .findFirst()
+                .orElse(null);
+    }
 
+    synchronized public String getNextDecision(Paper paper, PaperDecision decision){
+
+        Paper p = Utility.getPaperByKey(my_assignments,paper.getKey());
+        assert p != null;
+        if(decision == PaperDecision.INCLUDED){
+            p.incrementIncludeCount(1);
             return "TRUE";
-        } else {
-            return   PapersDataBase.getInstance().nextCriteria();
+
+        } else if(decision == PaperDecision.EXCLUDED){
+            p.incrementExcludeCount(1);
+            return p.getCriteria().getName();
+        } else{
+            p.setDecision(PaperDecision.IN_CONFLICT);
+            paper.addObserver(this.getCurrent_reviewer());
+
+
+            PaperDecision lastDecision = paper.getLastDecision();
+            if(lastDecision == PaperDecision.INCLUDED){
+
+                p.setCriteria(PapersDataBase.getInstance().nextCriteriaValue());
+                p.setLastDecision(PaperDecision.EXCLUDED);
+                paper.setLastDecision(PaperDecision.EXCLUDED);
+                paper.setLast_decision_user(current_reviewer);
+
+                //System.out.println("EXCLUDE CASE " + p.getCriteria());
+
+
+                return p.getCriteria().getName();
+
+            } else if(lastDecision == PaperDecision.EXCLUDED){
+
+                RelisUser u = paper.getLast_decision_user();
+
+                Criteria c = PapersDataBase.getInstance().getNextCriteriaFrom(u.getExclusionCriteria(paper));
+                if (c == null) {
+
+                    paper.setLastDecision(PaperDecision.INCLUDED);
+                    paper.setLast_decision_user(current_reviewer);
+
+                    p.setLastDecision(PaperDecision.INCLUDED);
+                   // paper.notifyChange();
+
+                    return "TRUE";
+                }
+                else {
+                    p.setCriteria(c);
+                    p.setLastDecision(PaperDecision.EXCLUDED);
+                    paper.setLastDecision(PaperDecision.EXCLUDED);
+                    paper.setLast_decision_user(current_reviewer);
+                    //paper.notifyChange();
+
+                    return p.getCriteria().getName();
+                }
+
+            } else {
+
+                boolean nextDecision = new Random().nextBoolean();
+                    if (nextDecision) {
+                        paper.setLastDecision(PaperDecision.INCLUDED);
+                        p.setLastDecision(PaperDecision.INCLUDED);
+                        paper.setLast_decision_user(current_reviewer);
+                        return "TRUE";
+
+                    }  else {
+
+                        Criteria c = PapersDataBase.getInstance().nextCriteriaValue();
+                        p.setCriteria(c);
+                        p.setLastDecision(PaperDecision.EXCLUDED);
+                        paper.setLastDecision(PaperDecision.EXCLUDED);
+                        paper.setLast_decision_user(current_reviewer);
+                        return p.getCriteria().getName();
+
+                    }
+
+
+
+            }
+
+
         }
 
     }
 
+    public PaperDecision getDecisionFor(Paper paper) {
+
+        Optional<Paper> p = Optional.of(this.my_assignments.stream()
+                .filter(p1 -> p1.equals(paper))
+                .findFirst()
+                .get());
+
+        return p.get().getDecision();
 
 
-
+    }
 
 
 //    private void showTableItem(WebElement tr){
@@ -67,18 +153,49 @@ public class Screening {
 //    }
 
 
+    public void updatePapersDecisionMetric(Paper p){
 
 
+        Paper p2 = getPaperByKey(p.getKey());
+        if(p.isInConflict() && p2.isInConflict()){
+            p2.incrementConflictCount(1);
+            if(p.getLastDecision() == PaperDecision.INCLUDED)
+                p2.incrementExcludeCount(1);
+                p2.getCriteria().increment(1);
+            }else {
+            p2.incrementIncludeCount(1);
+        }
+
+    }
 
 
+    public Criteria getPaperExclusionCriteria( Paper paper){
+
+        return Utility.getPaperByKey(my_assignments,paper.getKey()).getCriteria();
+    }
+
+    public void printInfo(){
+    int x= 0,y=0,z=0;
 
 
+        for (int i = 0; i < my_assignments.size(); i++) {
+
+            x += my_assignments.get(i).getInclude_count();
+            y += my_assignments.get(i).getExclude_count();
+            z += my_assignments.get(i).getConflict_count();
+        }
+        System.out.println("["+current_reviewer);
+        System.out.print("include paper=" + x);
+        System.out.print(", exclude paper=" + y) ;
+        System.out.println(", in conflict=" + z+" ]");
+
+    }
 
 
+    public Paper getPaperByKey(String key) {
 
-
-
-
+        return Utility.getPaperByKey(my_assignments,key);
+    }
 
 
 

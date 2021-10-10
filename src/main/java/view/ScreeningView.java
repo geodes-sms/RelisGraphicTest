@@ -60,6 +60,7 @@ public class ScreeningView {
 
     private static ArrayList<WebElement> work_through_table(WebDriver driver){
 
+        driver.findElement(By.className(ProjectUtils.CLASS_HOME_PROJECT)).click();
         // select the table that contains the screening phaseas
         WebElement table = driver.findElement(By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE));
 
@@ -112,7 +113,7 @@ public class ScreeningView {
         users.remove(users.size()-1);
         // we select some random users
         ArrayList<RelisUser> reviewers = chooseUserforScreening(users);
-        // we submit the assoignment
+        // we submit the assaignment
         driver.findElement(By.className(ScreeningUtils.CLASS_SUCCESS_BUTTON)).click();
         return reviewers;
     }
@@ -193,7 +194,6 @@ public class ScreeningView {
      */
     public static void  showAllAssigmentsPage(WebDriver driver){
         open_current_screening_phase(driver);
-        //driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
         new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
                 (By.linkText(ScreeningUtils.LK_ALL_ASSIGNMENTS))
         )).sendKeys(Keys.ENTER);
@@ -245,6 +245,8 @@ public class ScreeningView {
     public static  void  showMyScreenedAssignmentsPage(WebDriver driver){
         open_current_screening_phase(driver);
         driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
+       // new RuntimeException(.addSuppressed(4));
+
         new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
                 (By.linkText(ScreeningUtils.LK_MY_SCREENED_PAPERS))
         )).sendKeys(Keys.ENTER);
@@ -287,30 +289,58 @@ public class ScreeningView {
         Utility.chooseWebElementAndClick(buttons, ScreeningUtils.EXCLUDE_PAPER_DECISION);
     }
 
+    /**
+     * function for saving the current decision
+     * for the current paper for screening
+     * and pass to the next paper
+     * @param driver
+     */
     public void  saveAndGetNextPaperForScreening(WebDriver driver){
         driver.findElement(By.cssSelector(ScreeningUtils.CSS_BUTTON_SAVE_AND_NEXT_PAPER)).click();
 
     }
 
+    /**
+     * the method is used by the 'getExcludePaper()' function
+     * to choose the correct criteria for the exclusion
+     * @param driver the current web driver
+     * @param criteria the criteria for the exlcusion
+     */
     private void chooseCriteria(WebDriver driver, String criteria){
 
         WebElement criteria_menu = driver.findElement(By.id(ScreeningUtils.ID_CRITERIA_OPTIONS));
         criteria_menu.click();
         List<WebElement> options = criteria_menu.findElements(By.tagName("option"));
         // we remove the first one which is the 'select...'
-        //options.remove(0);
-        System.out.println("choosing criteria =>" + criteria);
+        options.remove(0);
         Utility.chooseWebElementAndClick(options,criteria);
 
     }
 
+    /**
+     * this method is for choosing
+     * to exclude a paper and pass
+     * to the next screening paper
+     * @param driver the web driver
+     * @param criteria the criteria of exclusion
+     */
     public void excludePaper(WebDriver driver,String criteria){
       //  getExcludePaperButton(driver);
         chooseCriteria(driver,criteria);
         saveAndGetNextPaperForScreening(driver);
     }
+
+    /**
+     *
+     * this function will click on the include button
+     * for a screening phase and pass to the next paper
+     * for screening
+     * @param driver the web driver
+     */
     public void includePaper(WebDriver driver){
+        // click the 'include' button
         getIncludePaperButton(driver);
+        // pass to the next paper for screening
         saveAndGetNextPaperForScreening(driver);
     }
 

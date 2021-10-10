@@ -23,4 +23,7 @@ public class ConnexionUtils {
 
 
     public static final String CLASS_CONNECTED_USER_PROFILE_NAME = "user-profile";
+
+    public static final String CLASS_LOG_OUT_BUTTON = "fa-sign-out";
 }
+

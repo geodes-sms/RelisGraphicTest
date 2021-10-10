@@ -1,8 +1,8 @@
 package controller;
 
 import lombok.NonNull;
+import model.Paper;
 import model.RelisUser;
-import model.Screening;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProjectManager {
+public class ProjectController {
 
 
 
@@ -24,12 +24,12 @@ public class ProjectManager {
 
     // check if a paper is present given the list of paper
     private static final ThirdParamsFunctions paperIsPresent =
-            ProjectManager::checkPaperPresence;
+            ProjectController::checkPaperPresence;
     // delete a paper
     private static final ThirdParamsFunctions deletePaper_func
-            = ProjectManager::deletePaper;
+            = ProjectController::deletePaper;
     private static  final FourthParamsFunctions hasARole
-            = ProjectManager::HasARole;
+            = ProjectController::HasARole;
 
 
 
@@ -61,7 +61,7 @@ public class ProjectManager {
 
     /**
      *  delete all the papers for the current open project
-     * @param driver
+     * @param driver the web driver
      */
     public void deleteAllPapers(WebDriver driver){
 
@@ -225,6 +225,25 @@ public class ProjectManager {
             Alert alert = driver.switchTo().alert();
             alert.accept();
         }
+
+    }
+
+    public void removeAllProjectUsers(WebDriver driver){
+        // go to the users page
+        driver.findElement(By.className(ProjectUtils.CLASS_PROJECT_USERS)).click();
+        WebElement table = driver.findElement(By.id(ProjectUtils.ID_PROJECT_TABLE_USERS));
+        Utility.sleep(5);
+        WebElement elements = table.findElement(By.tagName("tbody"));
+        List<WebElement> users = elements.findElements(By.tagName("tr"));
+        //users.remove(0);
+        users.forEach(p-> System.out.println("User " + p.getText()));
+
+        for (int i = 0; i < users.size(); i++) {
+            WebElement u = users.get(i);
+            List<WebElement> k = u.findElements(By.tagName("td"));
+            removeUserRole(driver, Utility.getUserByFullName(k.get(1).getText()));
+        }
+
 
     }
 
@@ -497,22 +516,12 @@ public class ProjectManager {
 
     }
 
-    public void getAllPapers(WebDriver driver){
+    public ArrayList<Paper> getAllPapers(WebDriver driver){
         openAllPaper(driver);
-        Utility.getAllPapers(driver);
+        return Utility.getAllPapers(driver);
     }
 
-    public void startScreeningPhase(WebDriver driver){
 
-
-//        ArrayList<RelisUser> reviewers = Screening.getReviewer(driver);
-//
-//        RelisUser relisUser = reviewers.get(0);
-//        Screening screening = new Screening(driver,relisUser);
-
-
-
-    }
 
 
 

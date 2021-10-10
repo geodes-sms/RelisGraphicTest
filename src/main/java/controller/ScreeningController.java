@@ -83,9 +83,16 @@ public class ScreeningController {
         return Utility.work_through_table(user.getDriver());
 
     }
-    public ArrayList<String> getUserPapersAssignments(RelisUser user){
-        ScreeningView.showMyPendingAssignmentsPage(user.getDriver());
-        return Utility.work_through_table(user.getDriver());
+    public ArrayList<Paper> getUserPapersAssignments(RelisUser user){
+        ScreeningView.showMyAssignment(user.getDriver());
+        ArrayList<String> papersKeys=  Utility.work_through_table(user.getDriver());
+        ArrayList<Paper> p = new ArrayList<>();
+        papersKeys.forEach(
+                paperKey ->{
+                    p.add((Paper) PapersDataBase.getInstance().getPaper(paperKey).clone());
+                }
+        );
+        return p;
     }
 
     public void setUserCurrentAssignmentForScreening(RelisUser user){
@@ -114,9 +121,20 @@ public class ScreeningController {
         while (size-- > 0){
            String key = driver.findElement(By.className(ScreeningUtils.CLASS_CURRENT_SCREENING_PAPER)).getText();
 
-           String decision = user.getPaperDecision(extrackPaperKey(key));
-            if (decision.equals("TRUE")) screeningView.includePaper(driver);
-            else screeningView.excludePaper(driver, decision);
+           String paperKey =extrackPaperKey(key);
+            Paper paper = PapersDataBase.getInstance().getPaper(paperKey);
+           assert  paper != null;
+
+
+           String decision = user.getPaperDecision(paper, paper.getDecision());
+            if (decision.equals("TRUE")){
+                screeningView.includePaper(driver);
+              //  System.out.println("paper:>" + paper +" ;{ INCLUDED}");
+            }
+            else{
+                screeningView.excludePaper(driver, decision);
+               // System.out.println("paper:>" + paper +" ;{ EXCLUDED}");
+            }
         }
 
 

@@ -2,9 +2,12 @@ package controller;
 
 import model.RelisUser;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import utils.ConnexionUtils;
 import utils.Utility;
+
+import java.security.Key;
 
 public class ConnexionController {
 
@@ -60,6 +63,21 @@ public class ConnexionController {
     }
 
 
+
+    public void disConnect(WebDriver driver, RelisUser connectedUser){
+
+
+        driver.findElement(By.linkText(connectedUser.getFull_name())).sendKeys(Keys.ENTER);
+        driver.findElement(By.className(ConnexionUtils.CLASS_LOG_OUT_BUTTON)).click();
+
+    }
+
+
+
+    public void reconnectUser(WebDriver driver, RelisUser user){
+        disConnect(driver,user);
+        connect(driver,user);
+    }
     /**
      * run the different connexion test
      * 1 . when is connected

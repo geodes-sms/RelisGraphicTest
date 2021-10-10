@@ -14,6 +14,7 @@ public class DataBase {
     private static final ArrayList<RelisUser> validators = new ArrayList<>();
     private static final ArrayList<RelisUser> guests = new ArrayList<>();
 
+
     /**
      *  we use a single instance for this classe
      * @return the single instance

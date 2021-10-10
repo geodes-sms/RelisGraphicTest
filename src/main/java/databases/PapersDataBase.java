@@ -1,22 +1,29 @@
 package databases;
-
-import model.DatabaseInfo;
+import model.Criteria;
 import model.Paper;
+import model.ScreeningDecisionMaker;
 import org.openqa.selenium.WebDriver;
-import utils.Utility;
 import view.ScreeningView;
-
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Random;
 
+
+/***
+ * @author Mahamat Youssouf Issa
+ *  9/10/2021
+ *
+ */
 public class PapersDataBase  {
 
 
 
     private static PapersDataBase db_instance =null;
     ArrayList<Paper> papers_db =new ArrayList<>();
-    ArrayList<String> criteria = new ArrayList<>();
+    ArrayList<Criteria> criteria = new ArrayList<>();
+
+    ScreeningDecisionMaker decisionMaker = new ScreeningDecisionMaker();
+
+
 
 
     /**
@@ -54,10 +61,15 @@ public class PapersDataBase  {
         papers_db.removeIf(p -> p.getKey().equals(key));
     }
 
-    public void setData(WebDriver driver){
 
-        ScreeningView.showAllAssigmentsPage(driver);
-        Utility.work_through_table(driver);
+    public void setData(ArrayList<Paper> papers){
+
+        papers_db.addAll(papers);
+        decisionMaker.setUpperBoundPaperLength(papers.size());
+        decisionMaker.makeDecision();
+        papers_db = decisionMaker.applyDecisionForPapers(papers_db);
+        papers_db.forEach(p -> System.out.println("Data : " + p));
+      //v  papers_db.addAll(Utility.work_through_table(driver));
     }
 
     /**
@@ -66,6 +78,7 @@ public class PapersDataBase  {
      * @return the paper if exist otherwise null
      */
     public Paper getPaper(String key) {
+
         return papers_db.stream()
                 .filter(p-> p.getKey().equals(key))
                 .findFirst()
@@ -73,20 +86,65 @@ public class PapersDataBase  {
     }
 
     public void setMockCriteria(){
-        criteria.add("Criteria 1");
-        criteria.add("Criteria 2");
+        criteria.add(new Criteria( "Criteria 1",0));
+        criteria.add(new Criteria("Criteria 2",0));
     }
 
 
     public boolean isCriteria(String cr){
-        return criteria.stream()
-                .filter(critere-> critere.equals(cr))
+        return criteria
+                .stream()
+                .filter(critere-> critere.getName().equals(cr))
                 .findFirst()
                 .orElse(null) != null;
     }
 
     public String nextCriteria() {
 
+        return criteria.get(new Random().nextInt(0,criteria.size())).getName();
+    }
+
+    public Criteria nextCriteriaValue(){
         return criteria.get(new Random().nextInt(0,criteria.size()));
     }
+    public Criteria getNextCriteriaWithout(Criteria c){
+
+        if(criteria.size() == 1) return null;
+        return criteria.stream()
+                .sorted()
+                .filter( c1 -> !c1.getName().equals(c.getName()))
+                .findFirst()
+                .get();
+
+    }
+
+    public Criteria getNextCriteriaFrom(Criteria r){
+
+        int pos = criteria.indexOf(r);
+        assert pos != -1;
+        return ((pos+1) < criteria.size())?
+               criteria.get(pos+1):
+                null;
+    }
+
+    public void commitChanges(){
+
+
+        papers_db.stream()
+                .forEach(Paper::notifyChange);
+    }
+
+    public void showCriteriaPercentage(){
+
+        for (int i = 0; i < criteria.size(); i++) {
+            Criteria c1 =criteria.get(i);
+            papers_db.forEach(paper ->{
+
+                if( (c1 != null && paper.getCriteria() != null) && c1.equals(paper.getCriteria()))
+                    c1.increment(1);
+            });
+        }
+        criteria.forEach(System.out::println);
+    }
+
 }

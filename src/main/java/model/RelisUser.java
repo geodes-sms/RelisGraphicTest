@@ -4,15 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import utils.Utility;
-
 import java.util.ArrayList;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RelisUser implements Comparable<RelisUser> {
+public class RelisUser implements Comparable<RelisUser>,Observer {
 
     // relis user fields
     private String full_name;
@@ -28,6 +26,7 @@ public class RelisUser implements Comparable<RelisUser> {
 
     private WebDriver driver= null;
     private ArrayList<Screening> my_screening= new ArrayList<>();
+    private Screening current_screening ;
 
     /**
      * Redefinition of the equals method
@@ -95,25 +94,55 @@ public class RelisUser implements Comparable<RelisUser> {
 
     public void setUpCurrentScreeningPhase(){
 
-        if(my_screening.size() == 0) return;
-        Screening screening = my_screening.get(0);
-        screening.setCurrent_reviewer(this);
-        screening.setUp();
+        current_screening = new Screening();
+
+        current_screening.setCurrent_reviewer(this);
+        current_screening.setUp();
     }
 
     public Screening getCurrentScreeningPhase(){
-        return (my_screening.size() == 0) ? null: my_screening.get(0);
+       // System.out.println("size = " + my_screening.size());
+        return (my_screening.size() == 0) ? current_screening: my_screening.get(0);
     }
 
     public int getAssignmentsLength(){
         return getCurrentScreeningPhase().getMy_assignments().size();
     }
 
-    public String getPaperDecision(String key){
-        return getCurrentScreeningPhase().getNextDecision(key);
+    public String getPaperDecision(Paper key, PaperDecision decision){
+        return getCurrentScreeningPhase().getNextDecision(key, decision);
     }
 
 
+    public PaperDecision getPaperDecision(Paper paper) {
 
+        Screening c = getCurrentScreeningPhase();
+        return  c != null ? c.getDecisionFor( paper) : null;
+
+    }
+
+    public Criteria getExclusionCriteria(Paper p){
+        Screening c = getCurrentScreeningPhase();
+        return  c != null ? c.getPaperExclusionCriteria(p) : null;
+    }
+
+    @Override
+    public void update(Observable observable) {
+
+        Paper p = (Paper) observable;
+        getCurrentScreeningPhase().updatePapersDecisionMetric(p);
+
+    }
+
+
+    public Paper getPaper(String key) {
+
+        return current_screening.getPaperByKey(key);
+    }
+
+    public void showStatistic(){
+
+        current_screening.printInfo();
+    }
 }
 
