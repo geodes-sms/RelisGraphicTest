@@ -144,5 +144,10 @@ public class RelisUser implements Comparable<RelisUser>,Observer {
 
         current_screening.printInfo();
     }
+
+    public int CountByExcludedCriteria(Criteria c1) {
+
+        return current_screening.CountExcludeByCriteria(c1);
+    }
 }
 

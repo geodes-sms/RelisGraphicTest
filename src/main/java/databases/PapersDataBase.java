@@ -139,9 +139,7 @@ public class PapersDataBase  {
         for (int i = 0; i < criteria.size(); i++) {
             Criteria c1 =criteria.get(i);
             papers_db.forEach(paper ->{
-
-                if( (c1 != null && paper.getCriteria() != null) && c1.equals(paper.getCriteria()))
-                    c1.increment(1);
+                c1.increment(paper.takeExcludedWithCriteria( c1));
             });
         }
         criteria.forEach(System.out::println);

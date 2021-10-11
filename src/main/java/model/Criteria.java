@@ -11,14 +11,14 @@ public class Criteria {
 
     private String name;
 
-    private int count;
+    private int count = 0;
 
 
 
     public boolean equals(Object o){
 
         Criteria criteria = (Criteria) o;
-        return this.name.equals(criteria.getName());
+        return this.name.equals(criteria.name);
     }
 
     @Override

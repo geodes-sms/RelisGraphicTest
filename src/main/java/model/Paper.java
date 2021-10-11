@@ -63,7 +63,7 @@ public class Paper implements Observable ,Cloneable{
         return this.decision == PaperDecision.EXCLUDED;
     }
     public boolean isInConflict(){
-        return this.decision == PaperDecision.IN_CONFLICT;
+        return this.decision == PaperDecision.NO_DECISION_YET;
     }
 
     @Override
@@ -93,18 +93,12 @@ public class Paper implements Observable ,Cloneable{
 
 
         for (int i = 0; i < reviewers.size(); i++) {
-            Paper p1 = reviewers.get(i).getPaper(key);
-
-            System.out.println("Reviewer number " + reviewers);
-            RelisUser current = reviewers.get(i);
-            for (int j=0; j< p1.reviewers.size(); j++){
-
-                RelisUser user = reviewers.get(j);
-                Paper p2 = user.getPaper(key);
-                if(decision == PaperDecision.IN_CONFLICT){
-                    current.update(p2);
-                }
-
+            RelisUser relisUser = reviewers.get(i);
+            Paper p1 = relisUser.getPaper(key);
+            for (int j = 0; j < reviewers.size(); j++) {
+                Paper p2 = reviewers.get(j).getPaper(key);
+                if ((i != j) && (p1.isIn_a_conflict() || p2.isIn_a_conflict()))
+                    relisUser.update(p2);
             }
         }
     }
@@ -138,4 +132,7 @@ public class Paper implements Observable ,Cloneable{
         return this.key.equals(p.getKey());
     }
 
+    public int takeExcludedWithCriteria(Criteria c1) {
+        return reviewers.stream().mapToInt(user -> user.CountByExcludedCriteria(c1)).sum();
+    }
 }

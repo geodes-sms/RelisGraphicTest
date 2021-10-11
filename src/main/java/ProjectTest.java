@@ -220,7 +220,6 @@ public class ProjectTest {
         ArrayList<RelisUser> assigned_reviewers = screening_controller.getAssignedReviewers(driver);
 
         assigned_reviewers.parallelStream()
-                //.filter(p-> !(p.getFull_name().equals("Barthel Crichton")))
                 .forEach(user ->{
 
             user.setUpCurrentScreeningPhase();

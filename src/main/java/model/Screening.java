@@ -59,6 +59,7 @@ public class Screening {
 
         } else if(decision == PaperDecision.EXCLUDED){
             p.incrementExcludeCount(1);
+            p.getCriteria().increment(1);
             return p.getCriteria().getName();
         } else{
             p.setDecision(PaperDecision.IN_CONFLICT);
@@ -72,7 +73,7 @@ public class Screening {
                 p.setLastDecision(PaperDecision.EXCLUDED);
                 paper.setLastDecision(PaperDecision.EXCLUDED);
                 paper.setLast_decision_user(current_reviewer);
-
+                p.getCriteria().increment(1);
                 //System.out.println("EXCLUDE CASE " + p.getCriteria());
 
 
@@ -99,7 +100,7 @@ public class Screening {
                     paper.setLastDecision(PaperDecision.EXCLUDED);
                     paper.setLast_decision_user(current_reviewer);
                     //paper.notifyChange();
-
+                    p.getCriteria().increment(1);
                     return p.getCriteria().getName();
                 }
 
@@ -119,6 +120,7 @@ public class Screening {
                         p.setLastDecision(PaperDecision.EXCLUDED);
                         paper.setLastDecision(PaperDecision.EXCLUDED);
                         paper.setLast_decision_user(current_reviewer);
+                        p.getCriteria().increment(1);
                         return p.getCriteria().getName();
 
                     }
@@ -156,16 +158,15 @@ public class Screening {
     public void updatePapersDecisionMetric(Paper p){
 
 
-        Paper p2 = getPaperByKey(p.getKey());
-        if(p.isInConflict() && p2.isInConflict()){
-            p2.incrementConflictCount(1);
-            if(p.getLastDecision() == PaperDecision.INCLUDED)
-                p2.incrementExcludeCount(1);
-                p2.getCriteria().increment(1);
-            }else {
-            p2.incrementIncludeCount(1);
+        Paper my_paper = getPaperByKey(p.getKey());
+        assert  my_paper != null;
+        my_paper.incrementConflictCount(1);
+        if(my_paper.getLastDecision() == PaperDecision.INCLUDED){
+            my_paper.incrementIncludeCount(1);
+        } else{
+            my_paper.incrementExcludeCount(1);
+            my_paper.getCriteria().increment(1);
         }
-
     }
 
 
@@ -198,5 +199,15 @@ public class Screening {
     }
 
 
+    public int CountExcludeByCriteria(Criteria c1) {
 
+
+        return   my_assignments
+                .stream()
+                .filter(p -> p.getCriteria() != null)
+                .filter(p -> p.getCriteria().equals(c1))
+                .mapToInt(p->  1)
+                .sum();
+
+    }
 }
