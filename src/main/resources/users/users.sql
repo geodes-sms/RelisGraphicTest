@@ -1,4 +1,4 @@
-INSERT INTO users (user_name, user_username, user_mail, user_usergroup, user_password,creation_time, create_by, user_state, user_active) VALUES
+INSERT INTO users (user_name, user_username, user_mail, user_usergroup, user_password,creation_time, created_by, user_state, user_active) VALUES
 ("Mufi Papen","mpapen0","mpapen0@seesaa.net",1,"053279b252e47fafd3c1fe265ae05170","2021-09-30 12:10:18",1,1,1),
 ("Tanner Duker","tduker1","tduker1@bloomberg.com",2,"a2a1a5799473bd51870cf45a0ed551d5","2021-05-06 03:59:18",1,1,1),
 ("Ignacio Lang","ilang2","ilang2@wufoo.com",1,"8c4b9bf3707870b23fc5e6144b0f9b42","2021-07-06 16:25:56",1,1,1),

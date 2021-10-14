@@ -57,7 +57,7 @@ public class ProjectUtils {
     public static final String VALIDATOR_ROLE = "Validator";
     public static final String PROJECT_MANAGER_ROLE = "Project manager";
     public static final String GUEST_ROLE = "Guest";
-
+    public static final String LK_CURRENT_PROJECT = "Project";
 
 
     /********************************************************************************

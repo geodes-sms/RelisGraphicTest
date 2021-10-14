@@ -20,6 +20,12 @@ public class Project {
     // the all reviewers for the current project
     private ArrayList<RelisUser> reviewer = new ArrayList<>();
 
+
+    private Screening screening;
+
+    private Classification classification;
+
+
     /**
      *
      * @param relisUser the user to compare with the project owner

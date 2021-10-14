@@ -43,7 +43,7 @@ public class ScreeningDecisionMaker {
 
     }
 
-    public ArrayList<Paper> applyDecisionForPapers(ArrayList<Paper> papers){
+    public ArrayList<Paper> applyDecisionForPapers(ArrayList<Paper> papers) throws CloneNotSupportedException {
         ArrayList<Paper> result = new ArrayList<>();
         for (int i = 0; i < INCLUDED; i++) {
 
@@ -55,7 +55,7 @@ public class ScreeningDecisionMaker {
         for (int i = 0; i < EXCLUDED; i++) {
             Paper p = papers.remove(random.nextInt(0, papers.size()-1));
             p.setDecision(PaperDecision.EXCLUDED);
-            p.setCriteria(PapersDataBase.getInstance().nextCriteriaValue());
+            p.setCriteria((Criteria) PapersDataBase.getInstance().nextCriteriaValue().clone());
             result.add(p);
 
         }

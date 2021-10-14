@@ -259,7 +259,6 @@ public class Utility {
         WebElement element = chooseWebElement(data,conditon);
 
         if (element != null) element.click();
-        else System.out.println("critere invalide !!!");
     }
     public static void checkWindownSize(WebDriver driver){
 

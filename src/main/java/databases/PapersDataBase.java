@@ -1,11 +1,11 @@
 package databases;
-import model.Criteria;
-import model.Paper;
-import model.ScreeningDecisionMaker;
+import model.*;
 import org.openqa.selenium.WebDriver;
 import view.ScreeningView;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.function.BiFunction;
 
 
 /***
@@ -62,7 +62,7 @@ public class PapersDataBase  {
     }
 
 
-    public void setData(ArrayList<Paper> papers){
+    public void setData(ArrayList<Paper> papers) throws CloneNotSupportedException {
 
         papers_db.addAll(papers);
         decisionMaker.setUpperBoundPaperLength(papers.size());
@@ -136,13 +136,17 @@ public class PapersDataBase  {
 
     public void showCriteriaPercentage(){
 
-        for (int i = 0; i < criteria.size(); i++) {
-            Criteria c1 =criteria.get(i);
-            papers_db.forEach(paper ->{
-                c1.increment(paper.takeExcludedWithCriteria( c1));
-            });
-        }
+        criteria.forEach(cr ->{
+          int count = ScreeningPhase.getCriteriaStatitics(cr);
+          cr.setCount(count);
+          });
         criteria.forEach(System.out::println);
     }
 
+
+
+
+  public ArrayList<Paper> getPapers() {
+        return papers_db;
+  }
 }

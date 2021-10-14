@@ -1,8 +1,7 @@
 package controller;
 
 import lombok.NonNull;
-import model.Paper;
-import model.RelisUser;
+import model.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -31,7 +30,8 @@ public class ProjectController {
     private static  final FourthParamsFunctions hasARole
             = ProjectController::HasARole;
 
-
+  private static final ScreeningController screening_controller = new ScreeningController();
+  private static final ScreeningPhaseController screeningPhaseController = new ScreeningPhaseController();
 
     public void createProject(WebDriver driver, String fileName) {
 
@@ -56,6 +56,12 @@ public class ProjectController {
     public void openProject(WebDriver driver, String projectName) {
         //TODO a completer !!!
         driver.findElement(By.cssSelector(ProjectUtils.CLASS_OPEN_PROJECT)).click();
+        try {
+
+          driver.findElement(By.className(PaperUtils.LINK_TEXT_ALL_PAPER));
+        } catch (Exception e){
+          driver.findElement(By.className(ProjectUtils.CLASS_HOME_PROJECT)).click();
+        }
 
     }
 
@@ -516,11 +522,22 @@ public class ProjectController {
 
     }
 
-    public ArrayList<Paper> getAllPapers(WebDriver driver){
+    public static ArrayList<Paper> getAllPapers(WebDriver driver){
         openAllPaper(driver);
         return Utility.getAllPapers(driver);
     }
 
+
+
+
+    public ScreeningPhase startScreeningPhase(WebDriver driver, Project project){
+
+      String openedPhaseName = screening_controller.setUpCurrentPhase(driver,project);
+
+      return   project.getScreening().getphaseByName(openedPhaseName);
+
+
+    }
 
 
 

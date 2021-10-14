@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Criteria {
+public class Criteria implements Cloneable{
 
     private String name;
 
@@ -18,6 +18,7 @@ public class Criteria {
     public boolean equals(Object o){
 
         Criteria criteria = (Criteria) o;
+      System.out.println(this +" VS " + criteria);
         return this.name.equals(criteria.name);
     }
 
@@ -29,5 +30,9 @@ public class Criteria {
 
     public void increment(int i) {
         count += i;
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+      return super.clone();
     }
 }

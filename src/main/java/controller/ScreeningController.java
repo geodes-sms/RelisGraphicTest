@@ -1,151 +1,68 @@
 package controller;
 
-import databases.PapersDataBase;
-import model.Paper;
-import model.RelisUser;
-import model.Screening;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
+import model.*;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import utils.ScreeningUtils;
-import utils.Utility;
 import view.ScreeningView;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 public class ScreeningController {
 
-
-    private ArrayList<String> assignments = new ArrayList<>();
-    private static final ScreeningView screeningView = new ScreeningView();
-    private ArrayList<WebElement> screening_phases;
+  private final ScreeningPhaseController phaseController = new ScreeningPhaseController();
 
 
-    /**
-     *  get all the assigned papers
-     * @param driver the web driver
-     */
-    public void getAllAssignmentsData(WebDriver driver){
-        if(assignments.size() == 0){
-            ScreeningView.showAllAssigmentsPage(driver);
-            Utility.work_through_table(driver);
-        }
+  private static final ScreeningView views = new ScreeningView();
+
+  /**
+   * set the screening phase
+   * @param driver the web driver
+   */
+  public void getScreeningPhaseData(WebDriver driver, Screening screening){
+      screening.setScreeningPhaseName(phaseController.getScreeningPhaseName(driver));
+      screening.showScreeningPhase();
+      //openScreeningPhaseByName(driver, Screening.getScreeningByIndex(1));
+
+  }
 
 
-    }
-    public void startUserScreeningPhase( RelisUser user){
-        openCurrentScreeningPhase(user.getDriver());
-        //driver.findElement(By.linkText(ScreeningUtils.LK_DASHBORD_LINK)).click();
-       // screeningView.openScreeningPage(driver);
+  public void openScreeningPhaseByName(WebDriver driver, String name){
 
-    }
+    views.openScreeningPhaseByName(driver,name);
+  }
 
-    /**
-     *
-     * @param driver
-     * @return
-     */
-    public ArrayList<RelisUser> getAssignedReviewers(WebDriver driver){
+  public String openNextPhase(WebDriver driver){
 
-        return ScreeningView.getReviewer(driver);
-    }
-
-    public void openCurrentScreeningPhase(WebDriver driver){
-        screeningView.openScreeningPage(driver);
-    }
+    return views.openNextScreeningPhase(driver);
 
 
-
-    public ArrayList<String> getAllAssignmentsPapers(RelisUser user_screening){
-
-        ScreeningView.showMyAssignment(user_screening.getDriver());
-        return Utility.work_through_table(user_screening.getDriver());
-
-    }
-
-    public ArrayList<String> getUserPendingAssignments(RelisUser user){
-        ScreeningView.showMyPendingAssignmentsPage(user.getDriver());
-        return Utility.work_through_table(user.getDriver());
-    }
-
-    public ArrayList<String> getUserScreenedAssignements(RelisUser user){
-
-        ScreeningView.showAllScreenedAssignmentsPage(user.getDriver());
-        return Utility.work_through_table(user.getDriver());
-    }
-
-    public ArrayList<String> getAllScreenedAssignments(RelisUser user){
-        ScreeningView.showAllScreenedAssignmentsPage(user.getDriver());
-        return Utility.work_through_table(user.getDriver());
-
-    }
-    public ArrayList<Paper> getUserPapersAssignments(RelisUser user){
-        ScreeningView.showMyAssignment(user.getDriver());
-        ArrayList<String> papersKeys=  Utility.work_through_table(user.getDriver());
-        ArrayList<Paper> p = new ArrayList<>();
-        papersKeys.forEach(
-                paperKey ->{
-                    p.add((Paper) PapersDataBase.getInstance().getPaper(paperKey).clone());
-                }
-        );
-        return p;
-    }
-
-    public void setUserCurrentAssignmentForScreening(RelisUser user){
-        user.getCurrentScreeningPhase().setMy_assignments(getUserPapersAssignments(user));
-    }
+  }
 
 
-    public void makeReadyForScreening(RelisUser user){
-        setUserCurrentAssignmentForScreening(user);
-        openCurrentScreeningPhase(user.getDriver());
+  public ScreeningPhase assignReviewers(WebDriver driver,Project project){
+    String current_phase_name = openNextPhase(driver);
+    ScreeningPhase phase = project.getScreening().getScreeningphaseByName(current_phase_name);
+    phaseController.assignReviewers(driver,phase);
+    return phase;
 
-    }
+  }
+  public String setUpCurrentPhase(WebDriver driver, Project project){
 
-    private String extrackPaperKey(String sentence){
+    String phaseName = openNextPhase(driver);
+    ScreeningPhase phase = project.getScreening().getScreeningphaseByName(phaseName);
+    if(phase != null)
+      phase.setUpPhase(driver);
+    return phaseName;
+  }
+  public void startTheCurrentPhase(ScreeningPhase phase){
 
-        sentence = sentence.substring(8);
-        int pos = sentence.indexOf(" ");
-
-        return sentence.substring(0,pos);
-
-    }
-    public void finishScreening(RelisUser user){;
-        int size = user.getAssignmentsLength();
-
-        WebDriver driver = user.getDriver();
-        while (size-- > 0){
-           String key = driver.findElement(By.className(ScreeningUtils.CLASS_CURRENT_SCREENING_PAPER)).getText();
-
-           String paperKey =extrackPaperKey(key);
-            Paper paper = PapersDataBase.getInstance().getPaper(paperKey);
-           assert  paper != null;
+    phase.startThisPhaseScreening();
+  }
 
 
-           String decision = user.getPaperDecision(paper, paper.getDecision());
-            if (decision.equals("TRUE")){
-                screeningView.includePaper(driver);
-              //  System.out.println("paper:>" + paper +" ;{ INCLUDED}");
-            }
-            else{
-                screeningView.excludePaper(driver, decision);
-               // System.out.println("paper:>" + paper +" ;{ EXCLUDED}");
-            }
-        }
+  public void resolveConflict(WebDriver driver,ScreeningPhase phase){
 
-
-
-
-
-
-    }
-
-
-
+    phaseController.resolveConflict(driver,phase);
+  }
 
 
 }

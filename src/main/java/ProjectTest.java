@@ -1,19 +1,17 @@
-import controller.ConnexionController;
-import controller.ProjectController;
-import controller.ScreeningController;
+import controller.*;
+import controller.ScreeningPhaseController;
 import databases.DataBase;
 import databases.PapersDataBase;
-import model.Paper;
-import model.RelisUser;
-import model.Screening;
+import model.*;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterTest;
+
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import utils.*;
+import view.ScreeningView;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 
 import static org.testng.Assert.*;
@@ -23,11 +21,12 @@ import static org.testng.Assert.*;
 public class ProjectTest {
 
     WebDriver driver;
+    Project project;
 
     private static final ProjectController projectManager = new ProjectController();
     private static final  ConnexionController connexion = new ConnexionController();
-    private static final ScreeningController screening_controller= new ScreeningController();
-
+    //private static final ScreeningPhaseController screening_controller= new ScreeningPhaseController();
+    private static final ScreeningController sc = new ScreeningController();
 
 
     @BeforeTest
@@ -36,6 +35,12 @@ public class ProjectTest {
         Initialiazer init = new Initialiazer();
         init.init();
         driver = init.getWebDriver();
+        project = new Project();
+        project.setProject_name("Model Transformation");
+        Screening screening = new Screening();
+
+        project.setScreening(screening);
+
     }
 
 
@@ -57,7 +62,10 @@ public class ProjectTest {
         projectManager.openProject(driver, ProjectUtils.model_transformation_project);
         String title  = driver.findElement(By.cssSelector(ProjectUtils
                 .CSS_OPENED_PROJECT_NAME)).getText();
+
+        sc.getScreeningPhaseData(driver,project.getScreening());
         assertEquals(title, "Project : " +ProjectUtils.model_transformation_project);
+
 
     }
 
@@ -97,14 +105,13 @@ public class ProjectTest {
         assertEquals(imported_papers_length,98);
 
     }
-
     @Test(priority = 6)
-    public void setDaya(){
+    public void setDaya() throws CloneNotSupportedException {
 
-        ArrayList<Paper> p = projectManager.getAllPapers(driver);
+        ArrayList<Paper> p = ProjectController.getAllPapers(driver);
         PapersDataBase.getInstance().setMockCriteria(); // TODO criteria extraction
-        System.out.println("PAPER: " + p.get(0));
-        PapersDataBase.getInstance().setData(p);
+
+        //PapersDataBase.getInstance().setData(p);
         assertTrue(true);
 
     }
@@ -190,53 +197,50 @@ public class ProjectTest {
 //        DataBase.getInstance().addGuestUser(guest);
 //    }
 //
-//
-//    @Test(priority = 15)
-//    private void addSomeReviewers(){
-//        int i = 0;
-//        ArrayList<RelisUser> relisUsers = new ArrayList<>();
-//        do relisUsers.add(Utility.getRandomUser()); while( i++ < 4);
-//        relisUsers.forEach(
-//                user-> projectManager.addReviewer(driver,user)
-//        );
-//        assertTrue(true);
-//    }
-    @Test(priority = 16)
+
+  // @Test(priority = 15)
+    private void addSomeReviewers(){
+        int i = 0;
+        ArrayList<RelisUser> relisUsers = new ArrayList<>();
+        do relisUsers.add(Utility.getRandomUser()); while( i++ < 4);
+        relisUsers.forEach(
+                user-> projectManager.addReviewer(driver,user)
+        );
+        assertTrue(true);
+    }
+   @Test(priority = 16)
     public void assignReviewers(){
 
-       ArrayList<RelisUser> reviewers =
-               projectManager.assginReviewerForScreening(driver,Utility.getCurrentConnectedUser(driver));
 
-        ArrayList<RelisUser> assigned_reviewers = screening_controller.getAssignedReviewers(driver);
-        reviewers.removeAll(assigned_reviewers);
-        assertTrue(reviewers.isEmpty());
+      ScreeningPhase phase = sc.assignReviewers(driver,project);
+      phase.printInfo();
+      assertTrue(true);
+
+
+
 
     }
 
 
 
-    @Test(priority = 17)
+   @Test(priority = 17)
     public void startScreening(){
-        ArrayList<RelisUser> assigned_reviewers = screening_controller.getAssignedReviewers(driver);
 
-        assigned_reviewers.parallelStream()
-                .forEach(user ->{
+        ScreeningPhase screeningPhase  = projectManager.startScreeningPhase(driver, project);
+        // start the screening phase
+        screeningPhase.startThisPhaseScreening();
+        // now the screening phase is finish
+        // get the screening result of the website
+        String result = ScreeningView.extractScreeningResult(driver);
+        // compare with the data that we have here
+        boolean correct = screeningPhase.correctResultOfScreeningPhase(result);
 
-            user.setUpCurrentScreeningPhase();
-            screening_controller.makeReadyForScreening(user); // TODO : complete decision
+        assertTrue(correct);
 
-            screening_controller.finishScreening(user);
+        sc.resolveConflict(driver, screeningPhase);
 
-        });
+        project.getScreening().showScreeningPhase();
 
-        PapersDataBase.getInstance().commitChanges();
-        assigned_reviewers.forEach(
-                p-> p.getCurrentScreeningPhase().printInfo()
-        );
-        System.out.println("BIG INFO");
-        PapersDataBase.getInstance().showCriteriaPercentage();
-
-       // driver.quit();
 
 
     }
@@ -250,12 +254,26 @@ public class ProjectTest {
 //        connexion.connect(driver,connected);
 //        driver.quit();
 //    }
-   // @Test(priority = 17)
+  // @Test(priority = 18)
     public void Next(){
+//
+//      screening_controller.openCurrentScreeningPhase(driver);
+//      PapersDataBase.getInstance().resolveAllConflicts();
+//      screening_controller.resolveConflict(driver);
+//        assertTrue(true);
+    }
 
-        RelisUser ui = Utility.getUserByFullName("Brandice Soall");
-        System.out.println(ui);
-        assertTrue(true);
+    @Test(priority = 20)
+    public void test(){
+
+
+//      String phaseName = sc.openNextPhase(driver);
+//      ScreeningPhase screeningPhase = project.getScreening().getScreeningphaseByName(phaseName);
+//      sc.resolveConflict(driver, screeningPhase);
+
+
+
+
     }
 
 
