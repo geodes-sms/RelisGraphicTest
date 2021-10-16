@@ -156,9 +156,11 @@ public class PhaseWork  implements Observer {
 
     for (int i = 0; i < pendingAssignments.size(); i++) {
 
-      included += pendingAssignments.get(i).getInclude_count();
-      excluded += pendingAssignments.get(i).getExclude_count();
-      conflict += pendingAssignments.get(i).getConflict_count();
+
+      Paper paper = pendingAssignments.get(i);
+      if(paper.isExcluded()) excluded +=1;
+      else if(paper.isIncluded()) included +=1;
+      else conflict +=1;
     }
     System.out.println("[" + participant);
     System.out.print("include paper=" + included);
@@ -189,9 +191,17 @@ public class PhaseWork  implements Observer {
     excluded=0;included=0;conflict=0;
     for (int i = 0; i < pendingAssignments.size(); i++) {
 
-      included += pendingAssignments.get(i).getInclude_count();
-      excluded += pendingAssignments.get(i).getExclude_count();
-      conflict += pendingAssignments.get(i).getConflict_count();
+
+      Paper paper = pendingAssignments.get(i);
+      if (paper.isExcluded()) excluded += 1;
+      else if (paper.isIncluded()) included += 1;
+      else {
+        System.out.println(paper);
+        conflict += 1;
+        if(paper.getLastDecision() == PaperDecision.INCLUDED)
+            included +=1;
+        else excluded +=1;
+      }
     }
     System.out.println("[ General Statistics");
     System.out.print("include paper=" + included);
@@ -243,5 +253,32 @@ public class PhaseWork  implements Observer {
   public String getUsersResultOfScreeing(){
     printInfo();
     return participant.getFull_name()+","+included+","+excluded+","+conflict;
+  }
+
+  public void closeDriver() {
+
+    participant.getDriver().quit();
+  }
+
+  public void updateChanges() {
+
+    pendingAssignments.stream()
+            .filter(p-> p.getDecision() == PaperDecision.IN_CONFLICT)
+            .forEach(
+                    paper -> {
+                      Paper updatedPaper = phase.getPaperByKey(paper.getKey());
+                      if(updatedPaper.getDecision() != paper.getDecision()){
+
+                        paper.setDecision(updatedPaper.getDecision());
+                        if(paper.getDecision() == PaperDecision.EXCLUDED)
+                          paper.setCriteria(updatedPaper.getCriteria());
+                      } else if((updatedPaper.getDecision() == PaperDecision.EXCLUDED
+                      && paper.getLastDecision() == PaperDecision.EXCLUDED))
+                      {
+                        paper.setCriteria(updatedPaper.getCriteria());
+                      }
+
+                    }
+            );
   }
 }

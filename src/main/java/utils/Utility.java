@@ -1,5 +1,6 @@
 package utils;
 
+import controller.ProjectController;
 import model.Paper;
 import model.RelisUser;
 import org.openqa.selenium.By;
@@ -332,21 +333,14 @@ public class Utility {
 
     }
 
-    /**
-     *
-     * @param driver the web driver
-     * @return return all the papers for the project
-     */
-    public static   ArrayList<Paper> getAllPapers(WebDriver driver){
-        // select the table that contains the screening phaseas
-        WebElement table = driver.findElement(By.id(ProjectUtils.ID_PROJECT_TABLE_USERS));
+
+    private static ArrayList<Paper> getAllPapersFrom(WebDriver driver, WebElement table){
+
 
         WebElement element;
         ArrayList<Paper> assigments= new ArrayList<>();
         while (true){
             try{
-                // get web element for the next click link
-                element = driver.findElement(By.id(ProjectUtils.ID_NEXT_PAPERS_PAGE));
                 // get all the papers present from the current table
                 List<WebElement> papers = table.findElements(By.tagName("tr"));
                 // we remove the first web element which is the table header
@@ -356,15 +350,36 @@ public class Utility {
                     assigments.add(paper_key);
 
                 });
+                // get web element for the next click link
+                element = driver.findElement(By.id(ProjectUtils.ID_NEXT_PAPERS_PAGE));
                 // there is no next table  ?
                 if(Utility.hasClass(element,"disabled")) break;
                 element.findElement(By.linkText("Next")).click();
             } catch (Exception e){
-                System.out.println("ERROR " + e.getMessage());
+                break;
 
             }
         }
         return assigments;
+    }
+    /**
+     *
+     * @param driver the web driver
+     * @return return all the papers for the project
+     */
+    public static   ArrayList<Paper> getAllPapers(WebDriver driver){
+        ProjectController.openAllPapersPage(driver);
+        // select the table that contains the screening phaseas
+        WebElement table = driver.findElement(By.id(ProjectUtils.ID_PROJECT_TABLE_USERS));
+        return getAllPapersFrom(driver,table);
+
+    }
+
+    public static ArrayList<Paper> getAllPapersToCLassify(WebDriver driver){
+        ProjectController.openAllPapersPage(driver);
+        // select the table that contains the screening phaseas
+        WebElement table = driver.findElement(By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE));
+        return getAllPapersFrom(driver,table);
 
     }
 
@@ -398,5 +413,8 @@ public class Utility {
                 .findFirst()
                 .orElse(null);
     }
+
+
+
 
 }

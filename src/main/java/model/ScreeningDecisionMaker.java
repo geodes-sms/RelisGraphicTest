@@ -49,6 +49,7 @@ public class ScreeningDecisionMaker {
 
             Paper p = papers.remove(random.nextInt(0, papers.size()-1));
             p.setDecision(PaperDecision.INCLUDED);
+            p.setInclude_count(1);
             result.add(p);
 
         }
@@ -56,6 +57,7 @@ public class ScreeningDecisionMaker {
             Paper p = papers.remove(random.nextInt(0, papers.size()-1));
             p.setDecision(PaperDecision.EXCLUDED);
             p.setCriteria((Criteria) PapersDataBase.getInstance().nextCriteriaValue().clone());
+            p.setExclude_count(1);
             result.add(p);
 
         }
@@ -63,6 +65,7 @@ public class ScreeningDecisionMaker {
         for (int i = 0; i < IN_CONFLICT; i++) {
             Paper p = papers.remove(random.nextInt(0, papers.size()));
             p.setDecision(PaperDecision.IN_CONFLICT);
+            p.setConflict_count(1);
             result.add(p);
         }
         return result;

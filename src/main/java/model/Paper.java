@@ -104,6 +104,25 @@ public class Paper implements Observable ,Cloneable{
         }
     }
 
+
+    public void propageConflictResolutionChange(){
+
+        for(PhaseWork user : reviewers){
+
+          Paper paper = user.getPaperByKey(key);
+          if(paper.getLastDecision() != decision){
+              paper.setDecision(decision);
+
+              paper.setLastDecision(decision);
+              if(decision == PaperDecision.EXCLUDED)
+                  paper.setCriteria(criteria);
+
+          } else if(paper.getLastDecision() == decision
+                && paper.criteria != criteria){
+              paper.setCriteria(criteria);
+          }
+        }
+    }
     private boolean isIn_a_conflict() {
         return decision == PaperDecision.IN_CONFLICT;
     }
@@ -141,20 +160,19 @@ public class Paper implements Observable ,Cloneable{
   public void resolveConflict(){
       ArrayList<PaperDecision> decisions = new ArrayList<>();
 
-    System.out.println("resolving the conflict \n paper=> " + this);
       this.reviewers.forEach(
         user->{
           decisions.add(user.getPaperByKey(key).getLastDecision());
         }
-
       );
 
       int index =  new Random().nextInt(0,decisions.size());
       this.decision = decisions.get(index);
-    System.out.println("FInal Decision = " + decision);
       if(decision == PaperDecision.EXCLUDED){
         criteria = reviewers.get(index).getPaperByKey(key).getCriteria();
       }
+
+      //propageConflictResolutionChange();
 
     }
 }

@@ -33,6 +33,10 @@ public class ProjectController {
   private static final ScreeningController screening_controller = new ScreeningController();
   private static final ScreeningPhaseController screeningPhaseController = new ScreeningPhaseController();
 
+    public static void openAllPapersPage(WebDriver driver) {
+        openAllPaper(driver);
+    }
+
     public void createProject(WebDriver driver, String fileName) {
 
         // open the file and check if exist
@@ -537,6 +541,15 @@ public class ProjectController {
       return   project.getScreening().getphaseByName(openedPhaseName);
 
 
+    }
+
+
+
+    public void openProjectListPage(WebDriver driver){
+
+        WebElement menu = driver.findElement(By.className(ProjectUtils.CLASS_SIDEBAR_FOOTER_MENU));
+        List<WebElement> links = menu.findElements(By.tagName("a"));
+        links.get(0).click();
     }
 
 

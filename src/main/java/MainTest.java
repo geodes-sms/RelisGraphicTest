@@ -1,6 +1,7 @@
 
 import model.RelisUser;
 import model.ScreeningDecisionMaker;
+import utils.Utility;
 
 public class MainTest {
 
@@ -23,9 +24,7 @@ public class MainTest {
   public static void main(String[] args) {
 
 
-      ScreeningDecisionMaker decision = new ScreeningDecisionMaker();
-      decision.setUpperBoundPaperLength(98);
-      decision.makeDecision();
+      Utility.showAllRelisUser();
 
 
   }

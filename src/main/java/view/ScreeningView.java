@@ -1,15 +1,10 @@
 package view;
-
-import databases.PapersDataBase;
 import model.*;
 import org.openqa.selenium.*;
-
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.*;
@@ -140,46 +135,15 @@ public class ScreeningView {
           return getReviewer(driver);
         }
 
-        List<WebElement> users = driver.findElements(By.className("form-group"));
-        users.remove( users.size()-1);
-        users.remove(users.size()-1);
         // we select some random users
-        ArrayList<RelisUser> reviewers = chooseUserforScreening(users);
+        ArrayList<RelisUser> reviewers = Views.chooseUserforScreening(driver,4);
         // we submit the assaignment
         driver.findElement(By.className(ScreeningUtils.CLASS_SUCCESS_BUTTON)).click();
         return reviewers;
     }
 
 
-    private  static ArrayList<RelisUser> chooseUserforScreening(List<WebElement> users){
 
-        Random random = new Random();
-
-        ArrayList<RelisUser> reviewers = new ArrayList<>();
-        if(users.size() < 4){
-            users.forEach( elem ->
-                    {
-                        RelisUser user  = Utility.getUserByFullName(elem.getText());
-                        reviewers.add(user);
-                        elem.findElement(By.tagName("span")).click();
-                    }
-            );
-
-        } else{
-
-            do{
-                // choose a random user
-                int size = users.size();
-                int i = random.nextInt(0,size);
-                WebElement userWebELment = users.remove(i);
-                RelisUser user  = Utility.getUserByFullName(userWebELment.getText());
-                reviewers.add(user);
-                userWebELment.findElement(By.tagName("span")).click();
-            } while (reviewers.size() < 4);
-        }
-
-        return reviewers;
-    }
 
     /**
      * return all the reviewers for the current project
@@ -189,9 +153,7 @@ public class ScreeningView {
         open_current_screening_phase(driver);
         // go to screening menu
         showProgressScreening(driver);
-        WebElement element =  driver.findElement(By.className("x_content"));
-
-        return   setReviewer(element);
+        return   Views.extractUsers(driver);
 
     }
 
@@ -287,21 +249,7 @@ public class ScreeningView {
     }
 
 
-    private static ArrayList<RelisUser> setReviewer(WebElement element){
-        ArrayList<String> userName= new ArrayList<>(Arrays.asList(element.getText().split("\n")));
-        userName.remove(0);
-        userName.remove(userName.size()-1);
-        ArrayList<RelisUser> reviewer = new ArrayList<>();
-        userName.stream()
-                .map(p -> {
-                    int i = p.indexOf(":");
-                    return p.substring(0,i);
-                })
-                .forEach(full_name
-                        -> reviewer.add(Utility.getUserByFullName(full_name))
-                );
-        return reviewer;
-    }
+
 
     public void openScreeningPage(WebDriver driver){
         open_current_screening_phase(driver);
@@ -479,7 +427,7 @@ public class ScreeningView {
       List<WebElement> table= driver.findElements(By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE));
       List<WebElement> inputs = table.get(1).findElements(By.tagName("tr"));
       inputs.remove(0);
-      inputs.remove(0);;
+      inputs.remove(0);
       List<WebElement> users_decision = new ArrayList<>();
       AtomicInteger index= new AtomicInteger(0);
       inputs.forEach(u-> {
@@ -498,8 +446,6 @@ public class ScreeningView {
           for (WebElement user : decisions) {
           List<WebElement> tds = user.findElements(By.tagName("td"));
           Paper paper = phase.getPaperByKey(key);
-
-          //System.out.println("Resolving paper" + paper);
           // we change the user decision in order to resolve the conflict
           if (!(tds.get(3).getText().equals(paper.getDecision().toString()))
             || (paper.getDecision() != PaperDecision.INCLUDED && !tds.get(4).getText().equals(paper.getCriteria().getName()))) {
@@ -553,6 +499,11 @@ public class ScreeningView {
 
   }
 
+    /**
+     * this method retrieve every users data from the 'statistic' page
+     * @param driver the web driver
+     * @return the users data result in a string
+     */
   private static String getUsersResultOfScreeing(WebElement driver) {
 
 
@@ -578,6 +529,15 @@ public class ScreeningView {
   }
 
 
+    /**
+     *
+     * this function extract the data from the 'statistic page'
+     * like the global included papers numbers, excluded papers number
+     * ond also every user who participated in the screening phase
+     *
+     * @param driver the current web driver
+     * @return the string of all the data separed by '\n'
+     */
   public static String extractScreeningResult(WebDriver driver){
 
       driver.findElement(By.linkText(ScreeningUtils.LK_STATISTICS_BUTTON)).click();
@@ -586,7 +546,6 @@ public class ScreeningView {
 
       String data = getGlobalScreeningResult(result_data.get(0));
       data += getUsersResultOfScreeing(result_data.get(2));
-      System.out.println("data= \n" + data);
       return data;
 
   }

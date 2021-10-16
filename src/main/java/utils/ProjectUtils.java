@@ -29,6 +29,8 @@ public class ProjectUtils {
     public static final String CLASS_EDIT_PROJECT_USER = "fa-edit";
     public static final String CLASS_REMOVE_PROJECT_USER = "fa-trash";
 
+    public static final String CLASS_SIDEBAR_FOOTER_MENU = "sidebar-footer";
+
 
     /**
      * PAPERS MANAGEMENT

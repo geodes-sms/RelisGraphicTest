@@ -14,6 +14,7 @@ import java.nio.file.Watchable;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Stream;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -133,7 +134,7 @@ public class ScreeningPhase {
 
     public String toString(){
 
-      String papers_str = "[ ";
+      String papers_str = "";
       for (Paper p : papers)
         papers_str += p+", \n";
 
@@ -144,10 +145,7 @@ public class ScreeningPhase {
         "In concflict paper => " + paperInConflictCount+"\n]";
     }
 
-    public void expandChanges(){
 
-      papers.forEach(Paper::notifyChange);
-    }
 
   public void addPaper(Paper paper) {
     papers.add(paper);
@@ -171,9 +169,13 @@ public class ScreeningPhase {
 
     });
 
+
+
     papers.forEach(Paper::notifyChange);
     participants.forEach(PhaseWork::printInfo);
+    participants.forEach(PhaseWork::closeDriver);
   }
+
 
   public PhaseWork getPhaseWorkByUserFullName(String userFullName) {
 
@@ -184,9 +186,19 @@ public class ScreeningPhase {
 
 
   public String getDataByFormat( ){
+      int x= 0,y=0,z=0;
 
-    return ""+includedPaperCout+","+excludedPapeCount+","+ paperInConflictCount
-      +",0,0,"+ papers.size();
+
+      for (Paper paper : papers) {
+
+          if(paper.isIncluded())
+              x +=1;
+          else if (paper.isExcluded())
+              y +=1;
+          else z +=1;
+      }
+
+    return ""+x+","+y+","+ z +",0,0,"+ papers.size();
 
   }
   public boolean correctResultOfScreeningPhase(String result){
@@ -220,6 +232,16 @@ public class ScreeningPhase {
       .filter(p-> p.getDecision() == PaperDecision.IN_CONFLICT)
       .forEach(
         Paper::resolveConflict
+      );
+
+      propageChanges();
+
+  }
+
+  private void propageChanges(){
+
+      participants.forEach(
+              PhaseWork::updateChanges
       );
   }
 }

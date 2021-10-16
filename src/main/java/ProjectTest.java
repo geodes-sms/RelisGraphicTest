@@ -25,6 +25,7 @@ public class ProjectTest {
 
     private static final ProjectController projectManager = new ProjectController();
     private static final  ConnexionController connexion = new ConnexionController();
+    private static final ClassificationController classControler = new ClassificationController();
     //private static final ScreeningPhaseController screening_controller= new ScreeningPhaseController();
     private static final ScreeningController sc = new ScreeningController();
 
@@ -38,6 +39,8 @@ public class ProjectTest {
         project = new Project();
         project.setProject_name("Model Transformation");
         Screening screening = new Screening();
+        Classification classification = new Classification();
+        project.setClassification(classification);
 
         project.setScreening(screening);
 
@@ -68,7 +71,6 @@ public class ProjectTest {
 
 
     }
-
     //@Test(priority = 3)
     public void deleteAllPaper(){
 
@@ -97,7 +99,7 @@ public class ProjectTest {
         assertFalse(is_deleted);
 
     }
-    //@Test(priority = 5)
+   // @Test(priority = 5)
     public void importBibTexTest(){
         projectManager.importBibTexPapers(driver,ProjectUtils.BIBTEX_FILE1);
 
@@ -105,7 +107,7 @@ public class ProjectTest {
         assertEquals(imported_papers_length,98);
 
     }
-    @Test(priority = 6)
+    //@Test(priority = 6)
     public void setDaya() throws CloneNotSupportedException {
 
         ArrayList<Paper> p = ProjectController.getAllPapers(driver);
@@ -208,7 +210,7 @@ public class ProjectTest {
         );
         assertTrue(true);
     }
-   @Test(priority = 16)
+   //@Test(priority = 16)
     public void assignReviewers(){
 
 
@@ -223,23 +225,32 @@ public class ProjectTest {
 
 
 
-   @Test(priority = 17)
+   //@Test(priority = 17)
     public void startScreening(){
 
         ScreeningPhase screeningPhase  = projectManager.startScreeningPhase(driver, project);
-        // start the screening phase
-        screeningPhase.startThisPhaseScreening();
-        // now the screening phase is finish
-        // get the screening result of the website
-        String result = ScreeningView.extractScreeningResult(driver);
-        // compare with the data that we have here
-        boolean correct = screeningPhase.correctResultOfScreeningPhase(result);
 
-        assertTrue(correct);
+        while (screeningPhase != null){
 
-        sc.resolveConflict(driver, screeningPhase);
+            // start the screening phase
+            screeningPhase.startThisPhaseScreening();
+            // now the screening phase is finish
+            // get the screening result of the website
+            String result = ScreeningView.extractScreeningResult(driver);
+            // compare with the data that we have here
+            boolean correct = screeningPhase.correctResultOfScreeningPhase(result);
 
-        project.getScreening().showScreeningPhase();
+            assertTrue(correct);
+
+            sc.resolveConflict(driver, screeningPhase);
+            result = ScreeningView.extractScreeningResult(driver);
+            correct = screeningPhase.correctResultOfScreeningPhase(result);
+            assertTrue(correct);
+            projectManager.openProjectListPage(driver);
+            projectManager.openProject(driver,project.getProject_name());
+            screeningPhase  = projectManager.startScreeningPhase(driver, project);
+        };
+
 
 
 
@@ -266,13 +277,9 @@ public class ProjectTest {
     @Test(priority = 20)
     public void test(){
 
-
-//      String phaseName = sc.openNextPhase(driver);
-//      ScreeningPhase screeningPhase = project.getScreening().getScreeningphaseByName(phaseName);
-//      sc.resolveConflict(driver, screeningPhase);
-
-
-
+        classControler.openClassificationPhase(driver);
+       classControler.assignClassificators(driver,project.getClassification());
+       driver.quit();
 
     }
 
