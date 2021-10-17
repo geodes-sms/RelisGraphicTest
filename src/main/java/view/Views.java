@@ -1,15 +1,16 @@
 package view;
 
+import controller.ProjectController;
+import model.Paper;
 import model.RelisUser;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import utils.Utility;
+import utils.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.function.BiFunction;
 
 public class Views {
 
@@ -80,6 +81,55 @@ public class Views {
                         -> reviewer.add(Utility.getUserByFullName(full_name))
                 );
         return reviewer;
+    }
+
+
+    public static void clickLiWebElement(WebElement ul, String name){
+        Utility.sleep(1);
+        for (WebElement li : ul.findElements(By.tagName("li"))){
+            if(li.getText().equals(name)){
+                li.findElement(By.tagName("a")).sendKeys(Keys.ENTER);
+            }
+
+        }
+    }
+
+
+    public static WebElement work_through_table(WebDriver driver, BiFunction<List<WebElement>,String,WebElement>
+            action, String params){
+
+        try {
+            // select the table that contains the papers
+            WebElement table = driver.findElement(By.id(ProjectUtils.ID_PROJECT_TABLE_USERS));
+
+            WebElement element ;
+            WebElement result = null;
+
+            while (true){
+                try{
+                    // get web element for the next click link
+                    element = driver.findElement(By.id(ProjectUtils.ID_NEXT_PAPERS_PAGE));
+                    // get all the papers present from the current table
+                    List<WebElement> other_papers = table.findElements(By.tagName("tr"));
+                    // we remove the first web element which is the table header
+                    other_papers.remove(0);
+
+                    result = action.apply(other_papers,params);
+                    if( result != null) return result;
+                    // there is no next table  ?
+                    if(Utility.hasClass(element,"disabled")) break;
+                    element.findElement(By.linkText("Next")).click();
+                } catch (Exception e){
+                    return null;
+                }
+            }
+            return  result;
+
+        } catch (Exception e){
+            return  null;
+        }
+
+
     }
 
 

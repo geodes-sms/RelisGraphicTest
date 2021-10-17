@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.*;
 import view.ScreeningView;
+import view.Views;
 
 import java.io.File;
 
@@ -471,7 +472,7 @@ public class ProjectController {
      * @param role the user role
      * @return 1 if the everything went normally otherwise 0
      */
-    private static int work_through_table(WebDriver driver, Functions action, String COUNT_MODE,
+    public static int work_through_table(WebDriver driver, Functions action, String COUNT_MODE,
                                           String subject, String role){
 
         try {

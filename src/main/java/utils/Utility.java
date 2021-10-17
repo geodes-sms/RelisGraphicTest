@@ -212,7 +212,14 @@ public class Utility {
         return admin;
     }
 
+    public static RelisUser GetMyInfo(){
 
+        RelisUser user = new RelisUser();
+        user.setPassword("azerty10");
+        user.setUsername("youssouf1");
+        user.setFull_name("Issa");
+        return user;
+    }
     /**
      * get all relis users
      * @return
@@ -220,6 +227,8 @@ public class Utility {
     public static ArrayList<RelisUser> getRelisUsers() {
         if(relisUsers.size() == 0 ){
           relisUsers.add(getAdminUser());
+          relisUsers.add(GetMyInfo());
+
           ArrayList<RelisUser> users = CreateMockUsers();
             relisUsers.addAll(users);
         }
@@ -334,7 +343,7 @@ public class Utility {
     }
 
 
-    private static ArrayList<Paper> getAllPapersFrom(WebDriver driver, WebElement table){
+    public static ArrayList<Paper> getAllPapersFrom(WebDriver driver, WebElement table){
 
 
         WebElement element;
@@ -414,7 +423,19 @@ public class Utility {
                 .orElse(null);
     }
 
+    public static String extractYearFrom(String title){
+        String year= "";
+        int i=0,j=0;
 
+        while (i < title.length()){
 
-
+            if(Character.isDigit(title.charAt(i))){
+                while (j++ < 4)
+                year += title.charAt(i++);
+                break;
+            }
+            i++;
+        }
+        return (year.equals(""))? "2021": year;
+    }
 }

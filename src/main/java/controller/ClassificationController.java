@@ -5,9 +5,7 @@ import model.Paper;
 import org.openqa.selenium.WebDriver;
 import utils.Utility;
 import view.ClassificationView;
-import view.ScreeningView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ClassificationController {
@@ -31,10 +29,8 @@ public class ClassificationController {
 
         if(classification == null ) return;
         ArrayList<Paper> toClassify = Utility.getAllPapersToCLassify(driver);
+
         classification.setPapersToClassify(toClassify);
-
-
-        openUserPendingPapers(driver);
 
     }
 
@@ -54,7 +50,49 @@ public class ClassificationController {
     public void assignClassificators(WebDriver driver, Classification classification){
 
         views.assign_classificator(driver,classification);
-        System.out.println(classification);
 
+
+    }
+
+    public void assign_validators(WebDriver driver, Classification classification){
+        views.assign_validator(driver,classification);
+        System.out.println(classification);
+    }
+    public void classifNextPaper(WebDriver driver,Classification classification){
+
+        views.classifyPaper(driver,classification);
+    }
+
+    /**
+     * this method finish classifies every paper
+     * @param driver the web driver
+     * @param classification objecy
+     */
+    public void finishClassificationPhase(WebDriver driver, Classification classification){
+
+        while (true){
+
+            try {
+
+                views.classifyPaper(driver,classification);
+            } catch (Exception e){
+                e.printStackTrace();
+                break;
+            }
+
+        }
+    }
+
+    public void finishValidationPhase(WebDriver driver, Classification classification){
+
+
+        while (true){
+            try {
+
+                views.validateNextPaper(driver,classification);
+            }catch (Exception e){
+                e.printStackTrace();
+                break;}
+        }
     }
 }

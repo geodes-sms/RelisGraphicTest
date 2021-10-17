@@ -1,0 +1,5 @@
+Domain{Collaborative system,Artificial Intelligence,Compilation,HOT,E-commerce}
+Transformation Language{ATL,Henshin,MoTiF,QVT}
+Source language{UML,Java,SySML,DSL}
+Target language{UML,Java,SySML,DSL}
+Scope{Inplace,Outplace,Exogenous}

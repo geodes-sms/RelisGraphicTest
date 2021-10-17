@@ -341,7 +341,7 @@ public class ScreeningView {
    * @param driver the web driver
    * @param critere the criteria we wanna choose
    */
-  private static void chooseConflictCriteria(WebDriver driver, String critere){
+  public static void chooseConflictCriteria(WebDriver driver, String critere){
 
 
     driver.findElement(By.className(ScreeningUtils.CLASS_CRITERIA_OPTIONS_RESOLVING_CONFLICT)).click();

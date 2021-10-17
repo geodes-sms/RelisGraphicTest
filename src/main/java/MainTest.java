@@ -1,4 +1,5 @@
 
+import databases.DataBase;
 import model.RelisUser;
 import model.ScreeningDecisionMaker;
 import utils.Utility;
@@ -23,8 +24,7 @@ public class MainTest {
 
   public static void main(String[] args) {
 
-
-      Utility.showAllRelisUser();
+      System.out.println(Utility.extractYearFrom("alimah"));
 
 
   }

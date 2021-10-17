@@ -1,8 +1,12 @@
 package databases;
 
+import com.google.common.collect.ArrayListMultimap;
 import model.RelisUser;
+import utils.FileUtils;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class DataBase {
@@ -14,6 +18,45 @@ public class DataBase {
     private static final ArrayList<RelisUser> validators = new ArrayList<>();
     private static final ArrayList<RelisUser> guests = new ArrayList<>();
 
+    Random random = new Random();
+    private static  ArrayListMultimap<String,String> dataClassification;
+
+
+    public static void setClassificationData(){
+
+        dataClassification = ArrayListMultimap.create();
+        extractClassificationData();
+
+
+    }
+
+    public static void extractClassificationData(){
+
+        try {
+            String lines = FileUtils.getLinesFrom("src/main/resources/classification.txt");
+            for (String line : lines.split("\n")){
+
+                String fieldName = line.substring(0,line.indexOf("{"));
+                int pos = line.indexOf("{")+1,nextPos=0;
+                while (pos  < line.length() ){
+                     nextPos = line.indexOf(",",pos);
+                    if(nextPos == -1) nextPos = line.indexOf("}",pos);
+                    String optins = line.substring(pos,nextPos);
+                    dataClassification.put(fieldName,optins);
+                    pos = nextPos+1;
+
+                }
+
+            }
+
+        } catch (Exception e) {e.printStackTrace();};
+    }
+
+    public String getNextClassificationCategory(String category){
+        List<String> fields = dataClassification.get(category);
+        int index = random.nextInt(0,fields.size());
+        return fields.get(index);
+    }
 
     /**
      *  we use a single instance for this classe
@@ -22,7 +65,11 @@ public class DataBase {
     public static DataBase getInstance(){
 
         if(db == null)
+        {
             db = new DataBase();
+            setClassificationData();
+        }
+
         return db;
     }
 

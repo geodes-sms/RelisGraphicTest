@@ -50,7 +50,7 @@ public class ProjectTest {
   @Test(priority = 1)
     public void ConnexionTest(){
 
-        RelisUser user = Utility.getUserByUserName("admin");
+        RelisUser user = Utility.getUserByUserName("youssouf1");
         connexion.connect(driver, user);
         String user_name = driver.findElement(By.className(
                 ConnexionUtils.CLASS_CONNECTED_USER_PROFILE_NAME)).getText();
@@ -278,8 +278,10 @@ public class ProjectTest {
     public void test(){
 
         classControler.openClassificationPhase(driver);
-       classControler.assignClassificators(driver,project.getClassification());
-       driver.quit();
+        classControler.setUpAClassification(driver,project.getClassification());
+
+        classControler.finishValidationPhase(driver,project.getClassification());
+       //driver.quit();
 
     }
 
