@@ -2,6 +2,7 @@ package utils;
 
 import controller.ProjectController;
 import model.Paper;
+import model.QA_Paper;
 import model.RelisUser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -13,6 +14,7 @@ import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.function.BiFunction;
 
 public class Utility {
 
@@ -218,6 +220,7 @@ public class Utility {
         user.setPassword("azerty10");
         user.setUsername("youssouf1");
         user.setFull_name("Issa");
+        user.setUser_usergroup("1");
         return user;
     }
     /**
@@ -336,12 +339,68 @@ public class Utility {
             }
             return assigments;
         } catch ( Exception e){
+            e.printStackTrace();
             return new ArrayList<>();
         }
 
 
     }
 
+
+    public static   ArrayList<String> work_through_table_function(WebDriver driver, BiFunction
+                                                                  <List<WebElement>,Object,Integer> function
+                                                        ,Object sujet, By elem){
+
+
+        try{
+
+            // select the table that contains the screening phaseas
+            WebElement table = driver.findElement(elem);
+
+            WebElement element;
+            ArrayList<String> assigments= new ArrayList<>();
+            while (true){
+                try{
+                    // get web element for the next click link
+                    element = driver.findElement(By.id(ProjectUtils.ID_NEXT_PAPERS_PAGE));
+                    // get all the papers present from the current table
+                    List<WebElement> papers = table.findElements(By.tagName("tr"));
+                    // we remove the first web element which is the table header
+                    papers.remove(0);
+
+                    function.apply(papers,sujet);
+                    // there is no next table  ?
+                    if(Utility.hasClass(element,"disabled")) break;
+                    element.findElement(By.linkText("Next")).click();
+                } catch (Exception e){
+                    System.out.println("ERROR " + e.getMessage());
+
+                }
+            }
+            return assigments;
+        } catch ( Exception e){
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+
+
+    }
+
+    public static ArrayList<String> work_through_table_id(WebDriver driver,BiFunction<List<WebElement>
+            ,Object,Integer> functions,Object obj){
+
+        By by = By.id(ProjectUtils.ID_PROJECT_TABLE_USERS);
+        return work_through_table_function(driver,functions,obj,by);
+
+    }
+
+    public static ArrayList<String> work_through_table_class(WebDriver driver,BiFunction<List<WebElement>
+            ,Object,Integer> functions,Object obj){
+
+        By by = By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE);
+        return work_through_table_function(driver,functions,obj,by);
+
+    }
 
     public static ArrayList<Paper> getAllPapersFrom(WebDriver driver, WebElement table){
 
@@ -371,6 +430,46 @@ public class Utility {
         }
         return assigments;
     }
+
+    public static ArrayList<Paper> getPapersForClassi(WebDriver driver, WebElement tables){
+
+
+        WebElement element;
+        ArrayList<Paper> assigments= new ArrayList<>();
+        while (true){
+            try{
+                WebElement table = driver.findElement(By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE));
+                // get all the papers present from the current table
+                List<WebElement> papers = table.findElements(By.tagName("tr"));
+                // we remove the first web element which is the table header
+                papers.remove(0);
+                papers.forEach(paper ->{
+                    Paper paper_key = getPaper(paper);
+                    assigments.add(paper_key);
+
+                });
+                // get web element for the next click link
+                try {
+                    element = driver.findElement(By.linkText(">"));
+                    System.out.println("on a une autre page");
+                    element.click();
+                    Utility.sleep(10);
+                } catch (Exception e) {
+                    System.out.println("on n'a pas d'autre page");
+                    break;
+                };
+
+                // there is no next table  ?
+
+            } catch (Exception e){
+                System.out.println("error " + e.getMessage());
+                e.printStackTrace();
+                break;
+
+            }
+        }
+        return assigments;
+    }
     /**
      *
      * @param driver the web driver
@@ -388,7 +487,7 @@ public class Utility {
         ProjectController.openAllPapersPage(driver);
         // select the table that contains the screening phaseas
         WebElement table = driver.findElement(By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE));
-        return getAllPapersFrom(driver,table);
+        return getPapersForClassi(driver,table);
 
     }
 
@@ -416,7 +515,11 @@ public class Utility {
     }
 
 
+
+
     public static Paper getPaperByKey(ArrayList<Paper> paperArrayList, String key){
+
+
         return paperArrayList.stream()
                 .filter(p -> p.getKey().equals(key))
                 .findFirst()
@@ -437,5 +540,33 @@ public class Utility {
             i++;
         }
         return (year.equals(""))? "2021": year;
+    }
+
+    /**
+     * find a paper by his title
+     * @param papers
+     * @param title
+     * @return a paper
+     */
+    public static Paper getPaperByTitle(ArrayList<Paper> papers, String title) {
+
+        return papers.stream()
+                .filter(paper -> paper.getTitle().equals(title))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * find a paper by his title
+     * @param papers
+     * @param title
+     * @return a paper
+     */
+    public static QA_Paper getQA_PaperByTitle(ArrayList<QA_Paper> papers, String title) {
+
+        return papers.stream()
+                .filter(paper -> paper.getPaper_title().equals(title))
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -1,5 +1,6 @@
 package controller;
 
+import databases.DataBase;
 import databases.PapersDataBase;
 import model.*;
 import org.openqa.selenium.By;
@@ -52,8 +53,8 @@ public class ScreeningPhaseController {
         return ScreeningView.getReviewer(driver);
     }
 
-    public void openCurrentScreeningPhase(WebDriver driver){
-        screeningView.openScreeningPage(driver);
+    public String openCurrentScreeningPhase(WebDriver driver){
+        return screeningView.openScreeningPage(driver);
     }
 
     public ArrayList<String> getScreeningPhaseName(WebDriver driver){
@@ -86,7 +87,9 @@ public class ScreeningPhaseController {
     }
     public static ArrayList<Paper> getUserPapersAssignments(PhaseWork user){
         ScreeningView.showMyAssignment(user.getParticipant().getDriver());
+
         ArrayList<String> papersKeys=  Utility.work_through_table(user.getParticipant().getDriver());
+       // System.out.println("Phase \n" + user.getPhase());
         ArrayList<Paper> p = new ArrayList<>();
         papersKeys.forEach(
                 paperKey ->{
@@ -97,13 +100,14 @@ public class ScreeningPhaseController {
     }
 
 
-
-
-
-
+    /**
+     * this method assigns all the reviewers for a screening phase
+     * @param driver the web driver
+     * @param phase the current screening phase
+     */
     public void assignReviewers(WebDriver driver, ScreeningPhase phase){
 
-      ArrayList<RelisUser> users = ScreeningView.assign_papers(driver);
+      ArrayList<RelisUser> users = ScreeningView.assign_papers(driver,phase.getNumberOfUsers());
       users.forEach(p -> {
 
         PhaseWork phaseWork = new PhaseWork();
@@ -147,6 +151,23 @@ public class ScreeningPhaseController {
 
   }
 
+  public void makeReadyForScreeningpPhase(WebDriver driver, ScreeningPhase phase){
+
+
+      if(phase.getParticipantNumbers() == 0){
+          assignReviewers(driver,phase);
+      }
+      if(phase.getPapersLength() == 0)
+          phase.setUpPhase(driver);
+  }
+
+
+  public ScreeningPhase getCurrentScreeningPhase(WebDriver driver, Screening screening){
+      if(screening == null) return null;
+
+      String phaseName = openCurrentScreeningPhase(driver);
+      return screening.getScreeningphaseByName(phaseName);
+  }
 
 
 

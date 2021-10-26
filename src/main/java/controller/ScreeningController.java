@@ -53,9 +53,15 @@ public class ScreeningController {
       phase.setUpPhase(driver);
     return phaseName;
   }
-  public void startTheCurrentPhase(ScreeningPhase phase){
+  public void startTheCurrentPhase(WebDriver driver, Screening screening){
 
+    ScreeningPhase phase = phaseController.getCurrentScreeningPhase(driver,screening);
+    phaseController.makeReadyForScreeningpPhase(driver, phase);
     phase.startThisPhaseScreening();
+  }
+
+  public ScreeningPhase getCurrentScreeningPhase(WebDriver driver, Screening screening){
+    return phaseController.getCurrentScreeningPhase(driver,screening);
   }
 
 
@@ -63,6 +69,8 @@ public class ScreeningController {
 
     phaseController.resolveConflict(driver,phase);
   }
+
+
 
 
 }

@@ -41,4 +41,10 @@ public class ClassificationUtils {
     public static final String CSS_INCORRECT_PAPER = "a[title='Not correct']";
     public static final String LK_VALIDATED_PAPERS = "Validated papers";
 
+    public static final String DOMAINS_FIELD = "Domain";
+    public static final String TRANSFORMATION_LANG = "Transformation Language";
+    public static final String SOURCE_LANG_FIELD = "Source language";
+    public static final String TARGET_LANG_FIELD ="Target language";
+    public static final String SCOPE_FIELD = "Scope";
+
 }

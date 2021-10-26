@@ -214,7 +214,7 @@ public class PhaseWork  implements Observer {
 
     ScreeningView.showScreeningPhasePage(participant.getDriver());
     int size = pendingAssignments.size();
-
+    System.out.println("size= " + size +"\nparticipant=" + participant);
     WebDriver driver = participant.getDriver();
     while (size-- > 0) {
       String key = driver.findElement(By.className(ScreeningUtils.CLASS_CURRENT_SCREENING_PAPER)).getText();

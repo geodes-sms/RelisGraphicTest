@@ -28,6 +28,7 @@ public class ScreeningUtils {
 
     public static final String CLASS_SCREENING_DECISION = "screen_decision";
     public static final String LK_SCREENING_MY_ASSIGMENTS_PAGE = "My assignments";
+    public static final String LK_SCREENING_ONLINE_MY_ASSIGNMENTS_PAGE = "My Assignments";
     public static final String LK_ALL_ASSIGNMENTS ="All Assignments" ;
     public static final String LK_ALL_SCREENED_PAPERS = "All Screened";
     public static final String LK_MY_SCREENED_PAPERS = "My screened";

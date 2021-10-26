@@ -12,13 +12,14 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class Classification {
 
-    private ArrayList<Paper> papersToClassify;
+    private ArrayList<Paper> papersToClassify = new ArrayList<>();
 
-    private ArrayList<RelisUser> classificators;
-    private ArrayList<RelisUser> validators;
+    private ArrayList<RelisUser> classificators = new ArrayList<>();
+    private ArrayList<RelisUser> validators = new ArrayList<>();
     private int number_of_classifier = 1;
     private int number_of_validator = 1;
 
+    private ArrayList<ClassificatedPaper> classificatedPapers;
 
     public String toString(){
 
@@ -42,9 +43,37 @@ public class Classification {
 
 
     public Paper getPaper(String  key){
+        System.out.println("key search =" +key);
         return Utility.getPaperByKey(papersToClassify,key);
     }
 
 
 
+    public ClassificatedPaper getClassifiedPaperByKey(String key){
+
+        return classificatedPapers.stream()
+                .filter(p-> p.getPaper().getKey().equals(key))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void classifyAllPapers(){
+
+        papersToClassify.forEach(paper->{
+            ClassificatedPaper classificatedPaper = new ClassificatedPaper(paper);
+            classificatedPaper.classify();
+            if(classificatedPapers == null){
+                classificatedPapers = new ArrayList<>();
+            }
+            classificatedPapers.add(classificatedPaper);
+        });
+
+    }
+
+    public int getClassifierLength() {
+        return classificators.size();
+    }
+    public int getPapersToClassifyLength(){
+        return papersToClassify.size();
+    }
 }

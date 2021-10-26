@@ -10,12 +10,15 @@ import java.util.Random;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Paper implements Observable ,Cloneable{
+public  class Paper implements Observable ,Cloneable{
 
-    private String key;
+    protected String key;
 
-    private String title;
-    private String year;
+    protected String title;
+    protected String year;
+
+
+
     private Criteria criteria;
     private PaperDecision decision;
 
@@ -26,6 +29,53 @@ public class Paper implements Observable ,Cloneable{
     private int include_count;
     private int exclude_count;
     private int conflict_count;
+
+
+    @Override
+    public void notifyChange() {
+
+
+        for (int i = 0; i < reviewers.size(); i++) {
+            PhaseWork phaseWork = reviewers.get(i);
+            Paper p1 = phaseWork.getPaperByKey(key);
+            for (int j = 0; j < reviewers.size(); j++) {
+                Paper p2 = reviewers.get(j).getPaperByKey(key);
+                if ((i != j) && (p1.isIn_a_conflict() || p2.isIn_a_conflict()))
+                    phaseWork.update(p2);
+            }
+        }
+    }
+
+
+    public void propageConflictResolutionChange(){
+
+        for(PhaseWork user : reviewers){
+
+            Paper paper = user.getPaperByKey(key);
+            if(paper.getLastDecision() != decision){
+                paper.setDecision(decision);
+
+                paper.setLastDecision(decision);
+                if(decision == PaperDecision.EXCLUDED)
+                    paper.setCriteria(criteria);
+
+            } else if(paper.getLastDecision() == decision
+                    && paper.criteria != criteria){
+                paper.setCriteria(criteria);
+            }
+        }
+    }
+    private boolean isIn_a_conflict() {
+        return decision == PaperDecision.IN_CONFLICT;
+    }
+
+    public boolean IsIncluded(){
+        return decision == PaperDecision.INCLUDED;
+    }
+    public boolean IsExcluded(){
+        return decision== PaperDecision.EXCLUDED;
+    }
+
 
 
 
@@ -90,52 +140,6 @@ public class Paper implements Observable ,Cloneable{
     }
 
     @Override
-    public void notifyChange() {
-
-
-        for (int i = 0; i < reviewers.size(); i++) {
-            PhaseWork phaseWork = reviewers.get(i);
-            Paper p1 = phaseWork.getPaperByKey(key);
-            for (int j = 0; j < reviewers.size(); j++) {
-                Paper p2 = reviewers.get(j).getPaperByKey(key);
-                if ((i != j) && (p1.isIn_a_conflict() || p2.isIn_a_conflict()))
-                    phaseWork.update(p2);
-            }
-        }
-    }
-
-
-    public void propageConflictResolutionChange(){
-
-        for(PhaseWork user : reviewers){
-
-          Paper paper = user.getPaperByKey(key);
-          if(paper.getLastDecision() != decision){
-              paper.setDecision(decision);
-
-              paper.setLastDecision(decision);
-              if(decision == PaperDecision.EXCLUDED)
-                  paper.setCriteria(criteria);
-
-          } else if(paper.getLastDecision() == decision
-                && paper.criteria != criteria){
-              paper.setCriteria(criteria);
-          }
-        }
-    }
-    private boolean isIn_a_conflict() {
-        return decision == PaperDecision.IN_CONFLICT;
-    }
-
-    public boolean IsIncluded(){
-        return decision == PaperDecision.INCLUDED;
-    }
-    public boolean IsExcluded(){
-        return decision== PaperDecision.EXCLUDED;
-    }
-
-
-    @Override
     public Object clone(){
 
         try {
@@ -146,33 +150,33 @@ public class Paper implements Observable ,Cloneable{
         return new Paper();
     }
 
+    /***
+     * Resolve the papers decision conflict
+     by choosing a random decision from all the user decision
+     */
+    public void resolveConflict(){
+        ArrayList<PaperDecision> decisions = new ArrayList<>();
+
+        this.reviewers.forEach(
+                user->{
+                    decisions.add(user.getPaperByKey(key).getLastDecision());
+                }
+        );
+
+        int index =  new Random().nextInt(0,decisions.size());
+        this.decision = decisions.get(index);
+        if(decision == PaperDecision.EXCLUDED){
+            criteria = reviewers.get(index).getPaperByKey(key).getCriteria();
+        }
+
+        //propageConflictResolutionChange();
+
+    }
     @Override
     public boolean equals(Object o){
         Paper p = (Paper) o;
         return this.key.equals(p.getKey());
-    }
-
-
-  /***
-   * Resolve the papers decision conflict
-   by choosing a random decision from all the user decision
-   */
-  public void resolveConflict(){
-      ArrayList<PaperDecision> decisions = new ArrayList<>();
-
-      this.reviewers.forEach(
-        user->{
-          decisions.add(user.getPaperByKey(key).getLastDecision());
-        }
-      );
-
-      int index =  new Random().nextInt(0,decisions.size());
-      this.decision = decisions.get(index);
-      if(decision == PaperDecision.EXCLUDED){
-        criteria = reviewers.get(index).getPaperByKey(key).getCriteria();
-      }
-
-      //propageConflictResolutionChange();
 
     }
+
 }

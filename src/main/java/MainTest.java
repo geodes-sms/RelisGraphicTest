@@ -1,39 +1,15 @@
-
-import databases.DataBase;
-import model.RelisUser;
-import model.ScreeningDecisionMaker;
+import org.testng.TestListenerAdapter;
+import org.testng.TestNG;
 import utils.Utility;
 
 public class MainTest {
 
-
-
-
-
-  static RelisUser getMockUser(){
-
-      RelisUser user = new RelisUser();
-      user.setUser_email("mahamatyoussoufi@yahoo.com");
-      user.setUsername("john2020");
-      user.setPassword("mondaymyday");
-      user.setFull_name("John Teller");
-      return user;
-  }
-
-
-
-  public static void main(String[] args) {
-
-      System.out.println(Utility.extractYearFrom("alimah"));
-
-
-  }
-
-
-
-
-
-
-
-
+    public static void main(String[] args) {
+//        TestListenerAdapter tla = new TestListenerAdapter();
+//        TestNG testng = new TestNG();
+//        testng.setTestClasses(new Class[] {ProjectTest.class});
+//        testng.addListener(tla);
+//        testng.run();
+        Utility.showAllRelisUser();
+    }
 }

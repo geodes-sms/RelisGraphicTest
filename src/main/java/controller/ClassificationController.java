@@ -2,7 +2,10 @@ package controller;
 
 import model.Classification;
 import model.Paper;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import utils.ProjectUtils;
+import utils.ScreeningUtils;
 import utils.Utility;
 import view.ClassificationView;
 
@@ -14,6 +17,13 @@ public class ClassificationController {
     private static final ClassificationView views = new ClassificationView();
 
     public void openClassificationPhase(WebDriver driver){
+
+        try {
+
+            driver.findElement(By.linkText(ScreeningUtils.LK_DASHBORD_LINK)).click();
+        }catch (Exception e){
+            driver.findElement(By.linkText(ProjectUtils.LK_CURRENT_PROJECT)).click();
+        }
 
         views.openClassification(driver);
     }
@@ -31,6 +41,7 @@ public class ClassificationController {
         ArrayList<Paper> toClassify = Utility.getAllPapersToCLassify(driver);
 
         classification.setPapersToClassify(toClassify);
+        classification.classifyAllPapers();
 
     }
 
@@ -60,7 +71,20 @@ public class ClassificationController {
     }
     public void classifNextPaper(WebDriver driver,Classification classification){
 
+
         views.classifyPaper(driver,classification);
+    }
+
+    private void makeReadyForClassification(WebDriver driver, Classification classification){
+
+        openClassificationPhase(driver);
+        if(classification.getClassifierLength() == 0){
+            assignClassificators(driver,classification);
+        }
+        if(classification.getPapersToClassifyLength() == 0){
+            setUpAClassification(driver,classification);
+        }
+
     }
 
     /**
@@ -70,8 +94,8 @@ public class ClassificationController {
      */
     public void finishClassificationPhase(WebDriver driver, Classification classification){
 
+        makeReadyForClassification(driver,classification);
         while (true){
-
             try {
 
                 views.classifyPaper(driver,classification);

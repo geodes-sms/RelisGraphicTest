@@ -21,13 +21,17 @@ public class ScreeningDecisionMaker {
 
     private int EXCLUDED;
 
-    private int IN_CONFLICT;
+    private int IN_CONFLICT=0;
 
     private Object model;
 
     Random random = new Random();
-    public void makeDecision(){
+    public void makeDecision(int number){
 
+        if(number == 1){
+            makeSingLeUserDecision();
+            return;
+        }
         int rest = UpperBoundPaperLength;
 
         INCLUDED  = random.nextInt(random.nextInt(
@@ -43,6 +47,16 @@ public class ScreeningDecisionMaker {
 
     }
 
+    public void makeSingLeUserDecision(){
+
+        int rest = UpperBoundPaperLength;
+        INCLUDED  = random.nextInt(UpperBoundPaperLength/2, rest);
+        EXCLUDED = rest - INCLUDED;
+        System.out.println("INCLUDE = " + INCLUDED);
+        System.out.println("EXCLUDED " + EXCLUDED);
+
+    }
+
     public ArrayList<Paper> applyDecisionForPapers(ArrayList<Paper> papers) throws CloneNotSupportedException {
         ArrayList<Paper> result = new ArrayList<>();
         for (int i = 0; i < INCLUDED; i++) {
@@ -54,7 +68,7 @@ public class ScreeningDecisionMaker {
 
         }
         for (int i = 0; i < EXCLUDED; i++) {
-            Paper p = papers.remove(random.nextInt(0, papers.size()-1));
+            Paper p = papers.remove(random.nextInt(0, papers.size()));
             p.setDecision(PaperDecision.EXCLUDED);
             p.setCriteria((Criteria) PapersDataBase.getInstance().nextCriteriaValue().clone());
             p.setExclude_count(1);

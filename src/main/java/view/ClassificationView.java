@@ -1,18 +1,9 @@
 package view;
 
-import controller.ClassificationController;
 import controller.ProjectController;
-import databases.DataBase;
-import jdk.jshell.execution.Util;
-import lombok.val;
-import model.Classification;
-import model.Paper;
-import model.QualityAssement;
-import model.RelisUser;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+
+import model.*;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.*;
@@ -21,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.BiFunction;
-import java.util.random.RandomGenerator;
+
 
 import static utils.ClassificationUtils.*;
 
@@ -77,7 +68,7 @@ public class ClassificationView {
      */
     public void assign_classificator(WebDriver driver, Classification classification){
 
-        openAssignClassificatorPage(driver);
+        Views.openUserAssignmentPage(driver, CSS_ASSIGN_CLASSIFICATORS_PAGE);
 
         WebElement rest_papers = driver.findElement(By.cssSelector("#home b"));
         if(rest_papers.getText().equals("Number of papers to assign :0")){
@@ -123,23 +114,7 @@ public class ClassificationView {
     }
 
 
-    /**
-     * return the web element of a 'menu' of the left side bar
-     * like an example the 'classification menu'
-     * @param driver the web driver
-     * @param name the menu name
-     * @return a web element for the menu with name=name
-     */
-    private WebElement getSideBarMenuOptionsOf(WebDriver driver, String name){
 
-        WebElement ul = driver.findElement(By.className(CLASS_SIDE_BAR_MENU));
-        List<WebElement> li = ul.findElements(By.tagName("li"));
-
-        return li.stream()
-                .filter(p-> p.getText().equals(name))
-                .findFirst()
-                .orElse(null);
-    }
     private void getValidators(WebDriver driver, Classification classification){
 
         showProgressBarForValidationPhase(driver);
@@ -229,7 +204,7 @@ public class ClassificationView {
         WebElement classifyPaperSection = panels.get(1);
         WebElement ul = classifyPaperSection.findElement(By.tagName("ul"));
         try {
-            Views.clickLiWebElement(ul,"Correct");
+            Views.clickLiWebElement(driver,ul,"Correct");
         } catch (Exception e){};
 
 
@@ -242,35 +217,36 @@ public class ClassificationView {
         openClassifyPaperPage(driver);
         String key = getNextPaperForClassification(driver);
         Paper paper = classification.getPaper(key);
+        System.out.println("paper to classify=" + paper);
         assert paper != null;
+        ClassificatedPaper classificatedPaper = classification.getClassifiedPaperByKey(key);
         List<WebElement> inputs = driver.findElements(By.className(CLASS_FORM_GROUP));
         int index=0;
         for (WebElement input : inputs){
             if(index == 0){
                 WebElement textArea = input.findElement(By.cssSelector(CSS_INPUT_TEXT));
-                textArea.sendKeys(paper.getTitle());
+                textArea.sendKeys(classificatedPaper.getTransFormationName());
             } else if (index >=1 && index <= 5){
                 String labelCategory = input.findElement(By.tagName("label")).getText();
-                String choice = DataBase.getInstance().getNextClassificationCategory(labelCategory);
-                System.out.println("choice =" + choice);
-                chooseEntryOptions(driver,input, choice);
+                chooseEntryOptions(driver,input, classificatedPaper.getCategoryValue(labelCategory));
             } else if(index >= 8 && index < 10){
                 WebElement checkBox =  input.findElement(By.className(CLASS_SWITCH_CKECKBOX));
-                if(new Random().nextBoolean())checkBox.click();
+                if(index == 9) if(classificatedPaper.isBidirectional()) checkBox.click();
+                else if(classificatedPaper.isIndustrial()) checkBox.click();
             } else if (index == 10){
 
-                input.findElement(By.cssSelector(CSS_INPUT_TEXT)).sendKeys("4");
+                input.findElement(By.cssSelector(CSS_INPUT_TEXT)).sendKeys(
+                        classificatedPaper.getNumberOfCitations()+""
+                );
             } else if(index == 11){
                 input.findElement(By.cssSelector(CSS_INPUT_TEXT)).sendKeys(
-                        Utility.extractYearFrom(paper.getKey())
+                        classificatedPaper.getYear()
                 );
             }
             index++;
         }
 
         driver.findElement(By.className(CLASS_BTN_SUCCES)).click();
-        //driver.findElement(By.id(ClassificationUtils.ID_DOMAIN_CLASSIFICATION_FIELD)).click();
-
 
     }
 
@@ -371,50 +347,10 @@ public class ClassificationView {
      *****************************************************************************************************/
     public void openClassification(WebDriver driver){
 
-        driver.findElement(By.linkText(ProjectUtils.LK_CURRENT_PROJECT)).click();
-        driver.findElement(By.className(ProjectUtils.CLASS_HOME_PROJECT)).click();
-
-        openClassificationPhase(driver, ClassificationUtils.CLASSIFICATION_NAME);
+        Views.openProjectPhase(driver, ClassificationUtils.CLASSIFICATION_NAME,
+                CSS_GOTO_CLASSIFICATION);
     }
 
-    /**
-     * open the classification phase
-     * @param driver the web driver
-     * @param phaseName the word classification
-     */
-    private void openClassificationPhase(WebDriver driver, String phaseName){
-
-        // select the table that contains the screening phaseas
-        WebElement table = driver.findElement(By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE));
-
-        System.out.println(table.getText());
-        // get all the systematic review phases
-        List<WebElement> trs = table.findElements(By.tagName("tr"));
-        trs.remove(0);
-        // we remove the first web element which is the table header
-
-        for(WebElement element : trs){
-
-            List<WebElement> tds = element.findElements(By.tagName("td"));
-
-            WebElement phase = tds.get(0);
-            if((phase !=null) && phase.getText().equals(phaseName)){
-                WebElement gotoPhae;
-
-                try{
-                    gotoPhae = tds.get(4).
-                            findElement(By.cssSelector(ClassificationUtils.CSS_GOTO_CLASSIFICATION));
-                    gotoPhae.sendKeys(Keys.ENTER);
-                } catch (Exception e){
-                    element.findElement(By.cssSelector(ClassificationUtils.CSS_UNLOCK_CLASSIFICATION))
-                            .sendKeys(Keys.ENTER);
-                    openClassificationPhase(driver, phaseName);
-                }
-
-                return;
-            }
-        }
-    }
 
 
     /**
@@ -423,13 +359,17 @@ public class ClassificationView {
      */
     public void openMyPendingPapersToClassify(WebDriver driver){
 
-        WebElement classification_menu = getSideBarMenuOptionsOf(driver,CLASSIFICATION_NAME);
+        WebElement classification_menu = Views.getSideBarMenuOptionsOf(driver,CLASSIFICATION_NAME);
 
         try {
             classification_menu.findElement(By.linkText(LK_MY_PENDING_PAPERS_TO_CLASSIFY)).click();
         } catch (Exception e){
+            JavascriptExecutor je = (JavascriptExecutor) driver;
+            je.executeScript("arguments[0].scrollIntoView(true);",
+                    classification_menu.findElement(By.linkText(CLASSIFICATION_NAME)));
             classification_menu.findElement(By.linkText(CLASSIFICATION_NAME)).click();
-            Views.clickLiWebElement(classification_menu,LK_MY_PENDING_PAPERS_TO_CLASSIFY);
+            Views.clickLiWebElement(driver,
+                    classification_menu,LK_MY_PENDING_PAPERS_TO_CLASSIFY);
         }
 
     }
@@ -441,13 +381,16 @@ public class ClassificationView {
      */
     public void openAllPaperToCLassifyPage(WebDriver driver){
 
-        WebElement menu = getSideBarMenuOptionsOf(driver,CLASSIFICATION_NAME);
+        WebElement menu = Views.getSideBarMenuOptionsOf(driver,CLASSIFICATION_NAME);
 
         try {
             menu.findElement(By.linkText(LK_ALL_PAPERS_TO_CLASSIFY)).sendKeys(Keys.ENTER);
         } catch (Exception e){
+            JavascriptExecutor je = (JavascriptExecutor) driver;
+            je.executeScript("arguments[0].scrollIntoView(true);",
+                    menu.findElement(By.linkText(CLASSIFICATION_NAME)));
             menu.findElement(By.linkText(CLASSIFICATION_NAME)).click();
-            Views.clickLiWebElement(menu,LK_ALL_PAPERS_TO_CLASSIFY);
+            Views.clickLiWebElement(driver,menu,LK_ALL_PAPERS_TO_CLASSIFY);
         }
 
     }
@@ -458,27 +401,20 @@ public class ClassificationView {
      */
     public void showProgressBarForValidationPhase(WebDriver driver){
 
-        WebElement menu = getSideBarMenuOptionsOf(driver,CLASSIFICATION_NAME);
+        WebElement menu = Views.getSideBarMenuOptionsOf(driver,CLASSIFICATION_NAME);
 
         try {
             menu.findElement(By.linkText(LK_CLASSIFICATION_PROGRESS)).sendKeys(Keys.ENTER);
         } catch (Exception e){
-            menu.findElement(By.linkText(CLASSIFICATION_NAME)).click();
-            Views.clickLiWebElement(menu,LK_CLASSIFICATION_PROGRESS);
+            JavascriptExecutor je = (JavascriptExecutor) driver;
+            je.executeScript("arguments[0].scrollIntoView(true);",
+                    menu.findElement(By.linkText(LK_VALIDATION_MENU)));
+            menu.findElement(By.linkText(LK_VALIDATION_MENU)).click();
+            Views.clickLiWebElement(driver,menu,LK_CLASSIFICATION_PROGRESS);
         }
     }
 
-    /**
-     * this method open the classification phase
-     * @param driver the web driver
-     */
-    public void openAssignClassificatorPage(WebDriver driver){
 
-        driver.findElement(By.linkText(ScreeningUtils.LK_DASHBORD_LINK)).click();
-        driver.findElement(By.cssSelector(ClassificationUtils.CSS_ASSIGN_CLASSIFICATORS_PAGE))
-                .sendKeys(Keys.ENTER);
-
-    }
 
     /**
      * open the progress bar page of every classificator
@@ -486,14 +422,7 @@ public class ClassificationView {
      */
     public void showProgressBarForClassificators(WebDriver driver){
 
-        WebElement classification_menu = getSideBarMenuOptionsOf(driver,CLASSIFICATION_NAME);
-
-        try {
-            classification_menu.findElement(By.linkText(LK_CLASSIFICATION_PROGRESS)).click();
-        } catch (Exception e){
-            classification_menu.findElement(By.linkText(CLASSIFICATION_NAME)).click();
-            Views.clickLiWebElement(classification_menu,LK_CLASSIFICATION_PROGRESS);
-        }
+        Views.openSuBMenuFrom(driver,CLASSIFICATION_NAME,LK_CLASSIFICATION_PROGRESS);
     }
 
     /**
@@ -526,14 +455,18 @@ public class ClassificationView {
     }
 
     public void openValidatedPapersPage(WebDriver driver){
-        WebElement classification_menu = getSideBarMenuOptionsOf(driver,LK_VALIDATION_MENU);
-        System.out.println("Opening validation page");
+        WebElement classification_menu = Views.getSideBarMenuOptionsOf(driver,LK_VALIDATION_MENU);
         try {
             classification_menu.findElement(By.linkText(LK_VALIDATED_PAPERS)).click();
         } catch (Exception e){
-            System.out.println("ELEM : " + classification_menu.getText());
-            classification_menu.findElement(By.linkText(LK_VALIDATION_MENU)).sendKeys(Keys.ENTER);
-            Views.clickLiWebElement(classification_menu,LK_VALIDATED_PAPERS);
+            JavascriptExecutor je = (JavascriptExecutor) driver;
+            je.executeScript("arguments[0].scrollIntoView(true);",
+                    classification_menu.findElement(By.linkText(LK_VALIDATION_MENU)));
+            classification_menu.findElement(By.linkText(LK_VALIDATION_MENU)).click();
+
+            try {
+                Views.clickLiWebElement(driver,classification_menu,LK_VALIDATED_PAPERS);
+            } catch (Exception eu){};
         }
 
     }

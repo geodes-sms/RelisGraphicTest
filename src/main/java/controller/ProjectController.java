@@ -58,7 +58,7 @@ public class ProjectController {
     }
 
 
-    public void openProject(WebDriver driver, String projectName) {
+    public static void openProject(WebDriver driver, String projectName) {
         //TODO a completer !!!
         driver.findElement(By.cssSelector(ProjectUtils.CLASS_OPEN_PROJECT)).click();
         try {
@@ -523,7 +523,7 @@ public class ProjectController {
         if(!connectUser.getUser_usergroup().equals("1")) return null;
         // we go to the project phases
         driver.findElement(By.className(ProjectUtils.CLASS_HOME_PROJECT)).click();
-        return ScreeningView.assign_papers(driver);
+        return ScreeningView.assign_papers(driver,1);
 
     }
 

@@ -9,13 +9,16 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.*;
 
+import static utils.ScreeningUtils.*;
+import static utils.ScreeningUtils.LK_OPEN_SCREENING_MENU;
+
 public class ScreeningView {
 
 
     private static String open_current_screening_phase(WebDriver driver) {
         if(screening_options_menu_exist(driver)){
 
-          driver.findElement(By.linkText(ScreeningUtils.LK_DASHBORD_LINK)).click();
+          driver.findElement(By.linkText(LK_DASHBORD_LINK)).click();
           WebElement title = driver.findElement(By.cssSelector(".x_title h3"));
 
           return title.getText().substring(title.getText().indexOf("- ")+2);
@@ -28,25 +31,25 @@ public class ScreeningView {
           .filter(ph1 ->{
             List<WebElement> elementList = ph1.findElements(By.tagName("td"));
             return  !elementList.get(
-              ScreeningUtils.SCREENING_PHASE_PERCENT_COMPLETITION_INDEX
+              SCREENING_PHASE_PERCENT_COMPLETITION_INDEX
             ).getText().equals("100 %");
           }).findFirst().orElse(null);
 
           if(next_phase != null){
-            System.out.println("on a une phase ");
+
             RelisUser connectedUser = Utility.getCurrentConnectedUser(driver);
 
             List<WebElement> tds = next_phase.findElements(By.tagName("td"));
             String phaseName  = tds.get(0).getText();
               WebElement element = !(connectedUser.getUser_usergroup().equals("1"))?
-              Utility.chooseWebElement(tds, ScreeningUtils.LK_GO_TO_PHASE):
-              Utility.chooseWebElement(tds, ScreeningUtils.SCREENING_MANAGER_ELEMENT);
+              Utility.chooseWebElement(tds, LK_GO_TO_PHASE):
+              Utility.chooseWebElement(tds, SCREENING_MANAGER_ELEMENT);
             assert element != null;
 
             // open the screening phase
             ((JavascriptExecutor)driver).executeScript("arguments[0].click();",
-              element.findElement(By.className(ScreeningUtils.CLASS_GOTO_PHASE)));
-            driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
+              element.findElement(By.className(CLASS_GOTO_PHASE)));
+           // driver.findElement(By.linkText(LK_OPEN_SCREENING_MENU)).click();
             return phaseName;
       }
 
@@ -57,11 +60,11 @@ public class ScreeningView {
 
     private static boolean  screening_options_menu_exist(WebDriver driver) {
         try{
-            WebElement element =  driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU));
+            WebElement element =  driver.findElement(By.linkText(LK_OPEN_SCREENING_MENU));
 
             try{
                 WebElement exist = element.findElement(
-                        By.linkText(ScreeningUtils.LK_SCREENING_MY_ASSIGMENTS_PAGE)
+                        By.linkText(LK_SCREENING_MY_ASSIGMENTS_PAGE)
                 );
 
             } catch ( Exception o){
@@ -79,7 +82,7 @@ public class ScreeningView {
 
         driver.findElement(By.className(ProjectUtils.CLASS_HOME_PROJECT)).click();
         // select the table that contains the screening phaseas
-        WebElement table = driver.findElement(By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE));
+        WebElement table = driver.findElement(By.className(CLASS_SCREENING_PHASES_TABLE));
 
         // get all the systematic review phases
         List<WebElement> phases = table.findElements(By.tagName("tr"));
@@ -114,7 +117,7 @@ public class ScreeningView {
         List<WebElement> phaseElements= phase.findElements(By.tagName("td"));
 
         for (int j = 0; j < phaseElements.size(); j++)
-            if(phaseElements.get(0).getText().startsWith(ScreeningUtils.SCREEN_PHASE_START_WORD))
+            if(phaseElements.get(0).getText().startsWith(SCREEN_PHASE_START_WORD))
                 taken =  true;
 
         return taken;
@@ -123,12 +126,12 @@ public class ScreeningView {
     private static void openAssignPaperPage(WebDriver driver){
         open_current_screening_phase(driver);
 
-        WebElement button = driver.findElement(By.cssSelector(ScreeningUtils.CSS_ASSIGN_PAPER_BUTTON));
+        WebElement button = driver.findElement(By.cssSelector(CSS_ASSIGN_PAPER_BUTTON));
         // we choose assign paper options
         button.sendKeys(Keys.ENTER);
     }
 
-    public static ArrayList<RelisUser> assign_papers(WebDriver driver){
+    public static ArrayList<RelisUser> assign_papers(WebDriver driver, int number){
         openAssignPaperPage(driver);
         WebElement rest_papers = driver.findElement(By.cssSelector("#home b"));
         if(rest_papers.getText().equals("Number of papers to assign :0")){
@@ -136,9 +139,9 @@ public class ScreeningView {
         }
 
         // we select some random users
-        ArrayList<RelisUser> reviewers = Views.chooseUserforScreening(driver,4);
+        ArrayList<RelisUser> reviewers = Views.chooseUserforScreening(driver,number);
         // we submit the assaignment
-        driver.findElement(By.className(ScreeningUtils.CLASS_SUCCESS_BUTTON)).click();
+        driver.findElement(By.className(CLASS_SUCCESS_BUTTON)).click();
         return reviewers;
     }
 
@@ -164,10 +167,7 @@ public class ScreeningView {
      */
     private static void showProgressScreening(WebDriver driver) {
         open_current_screening_phase(driver);
-        //driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
-        new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
-                (By.linkText(ScreeningUtils.LK_SCREENING_PROGRESS_PAGE))
-        )).sendKeys(Keys.ENTER);
+        Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_SCREENING_PROGRESS_PAGE);
     }
 
     /**
@@ -177,11 +177,8 @@ public class ScreeningView {
     public static void showMyAssignment(WebDriver driver){
 
         open_current_screening_phase(driver);
-        //driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
-        new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
-                (By.linkText(ScreeningUtils.LK_SCREENING_MY_ASSIGMENTS_PAGE))
-        )).sendKeys(Keys.ENTER);
 
+        Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_SCREENING_MY_ASSIGMENTS_PAGE);
     }
 
     /**
@@ -190,9 +187,7 @@ public class ScreeningView {
      */
     public static void  showAllAssigmentsPage(WebDriver driver){
         open_current_screening_phase(driver);
-        new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
-                (By.linkText(ScreeningUtils.LK_ALL_ASSIGNMENTS))
-        )).sendKeys(Keys.ENTER);
+        Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_ALL_ASSIGNMENTS);
 
     }
 
@@ -203,10 +198,7 @@ public class ScreeningView {
     public static void showMyPendingAssignmentsPage(WebDriver driver){
 
         open_current_screening_phase(driver);
-        //driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
-        new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
-                (By.linkText(ScreeningUtils.LK_MY_PENDING_PAPERS))
-        )).sendKeys(Keys.ENTER);
+        Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_MY_PENDING_PAPERS);
 
     }
 
@@ -216,10 +208,7 @@ public class ScreeningView {
      */
     public static void showScreeningPhasePage(WebDriver driver){
         open_current_screening_phase(driver);
-        //driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
-        new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
-                (By.linkText(ScreeningUtils.LK_SCREEN_PAPERS))
-        )).sendKeys(Keys.ENTER);
+        Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_SCREEN_PAPERS);
     }
 
     /**
@@ -228,10 +217,7 @@ public class ScreeningView {
      */
     public static void showAllScreenedAssignmentsPage(WebDriver driver) {
         open_current_screening_phase(driver);
-       // driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
-        new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
-                (By.linkText(ScreeningUtils.LK_ALL_SCREENED_PAPERS))
-        )).sendKeys(Keys.ENTER);
+        Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_ALL_SCREENED_PAPERS);
     }
 
     /**
@@ -240,21 +226,17 @@ public class ScreeningView {
      */
     public static  void  showMyScreenedAssignmentsPage(WebDriver driver){
         open_current_screening_phase(driver);
-        driver.findElement(By.linkText(ScreeningUtils.LK_OPEN_SCREENING_MENU)).click();
-       // new RuntimeException(.addSuppressed(4));
-
-        new WebDriverWait(driver,2).until(ExpectedConditions.presenceOfElementLocated(
-                (By.linkText(ScreeningUtils.LK_MY_SCREENED_PAPERS))
-        )).sendKeys(Keys.ENTER);
+        Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_MY_SCREENED_PAPERS);
     }
 
 
 
 
-    public void openScreeningPage(WebDriver driver){
-        open_current_screening_phase(driver);
+    public String openScreeningPage(WebDriver driver){
+        String name = open_current_screening_phase(driver);
+        if(!name.equals(""))
         ScreeningView.showScreeningPhasePage(driver);
-
+        return name;
     }
 
   /**
@@ -274,13 +256,13 @@ public class ScreeningView {
         if(current_phase_name.equals( phaseName)){
           RelisUser connectedUser = Utility.getCurrentConnectedUser(driver);
           WebElement element = !(connectedUser.getUser_usergroup().equals("1"))?
-            Utility.chooseWebElement(tds, ScreeningUtils.LK_GO_TO_PHASE):
-            Utility.chooseWebElement(tds, ScreeningUtils.SCREENING_MANAGER_ELEMENT);
+            Utility.chooseWebElement(tds, LK_GO_TO_PHASE):
+            Utility.chooseWebElement(tds, SCREENING_MANAGER_ELEMENT);
           assert element != null;
 
           // open the screening phase
           ((JavascriptExecutor)driver).executeScript("arguments[0].click();",
-            element.findElement(By.className(ScreeningUtils.CLASS_GOTO_PHASE)));
+            element.findElement(By.className(CLASS_GOTO_PHASE)));
             break;
         }
 
@@ -296,15 +278,15 @@ public class ScreeningView {
 
     private static void getIncludePaperButton(WebDriver driver){
 
-        WebElement div = driver.findElement(By.className(ScreeningUtils.CLASS_SCREENING_DECISION));
+        WebElement div = driver.findElement(By.className(CLASS_SCREENING_DECISION));
         List<WebElement> buttons = div.findElements(By.tagName("button"));
-        Utility.chooseWebElementAndClick(buttons, ScreeningUtils.INCLUDE_PAPER_DECISION);
+        Utility.chooseWebElementAndClick(buttons, INCLUDE_PAPER_DECISION);
     }
 
     private static void getExcludePaperButton(WebDriver driver){
-        WebElement div = driver.findElement(By.className(ScreeningUtils.CLASS_SCREENING_DECISION));
+        WebElement div = driver.findElement(By.className(CLASS_SCREENING_DECISION));
         List<WebElement> buttons = div.findElements(By.tagName("button"));
-        Utility.chooseWebElementAndClick(buttons, ScreeningUtils.EXCLUDE_PAPER_DECISION);
+        Utility.chooseWebElementAndClick(buttons, EXCLUDE_PAPER_DECISION);
     }
 
     /**
@@ -314,7 +296,7 @@ public class ScreeningView {
      * @param driver
      */
     public static void  saveAndGetNextPaperForScreening(WebDriver driver){
-        driver.findElement(By.cssSelector(ScreeningUtils.CSS_BUTTON_SAVE_AND_NEXT_PAPER)).click();
+        driver.findElement(By.cssSelector(CSS_BUTTON_SAVE_AND_NEXT_PAPER)).click();
 
     }
 
@@ -326,7 +308,7 @@ public class ScreeningView {
      */
     private static void chooseCriteria(WebDriver driver, String criteria){
 
-        WebElement criteria_menu = driver.findElement(By.id(ScreeningUtils.ID_CRITERIA_OPTIONS));
+        WebElement criteria_menu = driver.findElement(By.id(ID_CRITERIA_OPTIONS));
         criteria_menu.click();
         List<WebElement> options = criteria_menu.findElements(By.tagName("option"));
         // we remove the first one which is the 'select...'
@@ -344,7 +326,7 @@ public class ScreeningView {
   public static void chooseConflictCriteria(WebDriver driver, String critere){
 
 
-    driver.findElement(By.className(ScreeningUtils.CLASS_CRITERIA_OPTIONS_RESOLVING_CONFLICT)).click();
+    driver.findElement(By.className(CLASS_CRITERIA_OPTIONS_RESOLVING_CONFLICT)).click();
       WebElement element = driver.findElement(By.cssSelector(".select2-results__options"));
       List<WebElement> options = element.findElements(By.tagName("li"));
       for (WebElement li : options){
@@ -407,11 +389,11 @@ public class ScreeningView {
 
 
      // driver.findElement(By.linkText(ScreeningUtils.LK_DASHBORD_LINK)).click();
-      driver.findElement(By.linkText(ScreeningUtils.LK_PAPERS_IN_THIS_PHASE)).click();
+      driver.findElement(By.linkText(LK_PAPERS_IN_THIS_PHASE)).click();
       ;
      // driver.findElement(By.linkText(ScreeningUtils.LK_IN_CONFLICTS_PAPERS)).click();
       new WebDriverWait(driver,2).until(
-        ExpectedConditions.presenceOfElementLocated(By.linkText(ScreeningUtils.LK_IN_CONFLICTS_PAPERS))
+        ExpectedConditions.presenceOfElementLocated(By.linkText(LK_IN_CONFLICTS_PAPERS))
       ).click();
       WebElement table = driver.findElement(By.id(ProjectUtils.ID_PROJECT_TABLE_USERS));
       List<WebElement> inputs = table.findElements(By.tagName("tr"));
@@ -424,7 +406,7 @@ public class ScreeningView {
     }
     private static void resolveCOnflict(WebDriver driver,String key, ScreeningPhase phase){
 
-      List<WebElement> table= driver.findElements(By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE));
+      List<WebElement> table= driver.findElements(By.className(CLASS_SCREENING_PHASES_TABLE));
       List<WebElement> inputs = table.get(1).findElements(By.tagName("tr"));
       inputs.remove(0);
       inputs.remove(0);
@@ -449,7 +431,7 @@ public class ScreeningView {
           // we change the user decision in order to resolve the conflict
           if (!(tds.get(3).getText().equals(paper.getDecision().toString()))
             || (paper.getDecision() != PaperDecision.INCLUDED && !tds.get(4).getText().equals(paper.getCriteria().getName()))) {
-            tds.get(tds.size()-1).findElement(By.cssSelector(ScreeningUtils.CSS_UPDATE_DECISION)).click();
+            tds.get(tds.size()-1).findElement(By.cssSelector(CSS_UPDATE_DECISION)).click();
 
             if(paper.getDecision() == PaperDecision.INCLUDED)
               includePaper(driver);
@@ -540,7 +522,7 @@ public class ScreeningView {
      */
   public static String extractScreeningResult(WebDriver driver){
 
-      driver.findElement(By.linkText(ScreeningUtils.LK_STATISTICS_BUTTON)).click();
+      driver.findElement(By.linkText(LK_STATISTICS_BUTTON)).click();
       List<WebElement> elements = driver.findElements(By.cssSelector(".row"));
       List<WebElement> result_data = elements.get(1).findElements(By.className("col-md-6"));
 

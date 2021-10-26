@@ -27,7 +27,11 @@ public class Screening {
 
   public  void setScreeningPhaseName(ArrayList<String> names){
 
-    names.forEach(name -> phases.add(new ScreeningPhase(name)));
+   for (String name : names){
+
+     ScreeningPhase phase = new ScreeningPhase(name);
+     phases.add(phase);
+   }
   }
   public  ScreeningPhase getphaseByName(String phase_name){
 

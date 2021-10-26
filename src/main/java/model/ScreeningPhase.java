@@ -24,12 +24,13 @@ public class ScreeningPhase {
 
     private ScreeningDecisionMaker decisionMaker = new ScreeningDecisionMaker();
     private String name;
-    private static ArrayList<PhaseWork> participants = new ArrayList<>();
+    private  ArrayList<PhaseWork> participants = new ArrayList<>();
 
     private int excludedPapeCount;
     private int includedPaperCout;
     private int paperInConflictCount;
 
+    private int numberOfUsers = 4;
     private ArrayList<Paper> papers = new ArrayList<>();
 
   public ScreeningPhase(String name) {
@@ -42,22 +43,18 @@ public class ScreeningPhase {
       papers = ProjectController.getAllPapers(driver);
       //
       decisionMaker.setUpperBoundPaperLength(papers.size());
-      decisionMaker.makeDecision();
+      decisionMaker.makeDecision(numberOfUsers);
       papers = decisionMaker.applyDecisionForPapers(papers);
       includedPaperCout = decisionMaker.getINCLUDED();
       excludedPapeCount = decisionMaker.getEXCLUDED();
       paperInConflictCount = decisionMaker.getIN_CONFLICT();
+        System.out.println("Finished set up of the screening phase !!!");
     } catch (Exception e ){
 
       e.printStackTrace();
     }
 
   }
-  public static void setParticipants(ArrayList<PhaseWork> assigned_reviewers) {
-    participants = assigned_reviewers;
-  }
-
-
 
 
     private Paper getPaper(Paper p){
@@ -114,7 +111,7 @@ public class ScreeningPhase {
 
 
 
-    public static int getCriteriaStatitics(Criteria c1){
+    public  int getCriteriaStatitics(Criteria c1){
 
       return participants.stream()
         .mapToInt(user-> user.getCriteriaCount(c1)).sum();
@@ -137,12 +134,16 @@ public class ScreeningPhase {
       String papers_str = "";
       for (Paper p : papers)
         papers_str += p+", \n";
+      String users ="";
+      for(PhaseWork p : participants)
+          users += p +"\n";
 
       return "[ PhaseName :=> "+ name+" ,\n" +
               "paper => [ " + papers_str+ " ],\n"+
             "Included Paper => " + includedPaperCout+" ,\n"
         + "Excluded Paper => " + excludedPapeCount +" ,\n"+
-        "In concflict paper => " + paperInConflictCount+"\n]";
+        "In concflict paper => " + paperInConflictCount+"\n" +
+              "Participants => " + users +"\n]";
     }
 
 
@@ -162,18 +163,24 @@ public class ScreeningPhase {
 
   public void startThisPhaseScreening(){
 
-    participants.parallelStream().forEach( user->{
+      Stream<PhaseWork> stream = (numberOfUsers == 1)?
+              participants.stream(): participants.parallelStream();
+
+        stream.forEach( user->{
         user.setUp();
         user.finishScreeningPhase();
-
 
     });
 
 
 
-    papers.forEach(Paper::notifyChange);
-    participants.forEach(PhaseWork::printInfo);
-    participants.forEach(PhaseWork::closeDriver);
+    if(numberOfUsers > 1){
+
+        papers.forEach(Paper::notifyChange);
+        participants.forEach(PhaseWork::printInfo);
+        participants.forEach(PhaseWork::closeDriver);
+    }
+
   }
 
 
@@ -202,6 +209,7 @@ public class ScreeningPhase {
 
   }
   public boolean correctResultOfScreeningPhase(String result){
+    // 12,12,32,0,0,98
 
     boolean correct = true;
     String[] data = result.split("\n");
@@ -210,7 +218,7 @@ public class ScreeningPhase {
     if(!globalResult.equals(getDataByFormat()))
       return false;
     for (int i = 1; i < data.length; i++) {
-
+        // john, 12,23,20
       String[] resultCounters = data[i].split(",");
       PhaseWork user_state = getPhaseWorkByUserFullName(resultCounters[0]);
 
@@ -244,4 +252,12 @@ public class ScreeningPhase {
               PhaseWork::updateChanges
       );
   }
+
+  public int getParticipantNumbers(){
+      return participants.size();
+  }
+
+    public void quitWebBrowser() {
+      participants.forEach(p-> p.getParticipant().getDriver().quit());
+    }
 }

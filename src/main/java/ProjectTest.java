@@ -11,11 +11,12 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import utils.*;
 import view.ScreeningView;
+import view.Views;
 
 import java.util.ArrayList;
 
 import static org.testng.Assert.*;
-
+import static utils.ScreeningUtils.*;
 
 
 public class ProjectTest {
@@ -26,7 +27,7 @@ public class ProjectTest {
     private static final ProjectController projectManager = new ProjectController();
     private static final  ConnexionController connexion = new ConnexionController();
     private static final ClassificationController classControler = new ClassificationController();
-    //private static final ScreeningPhaseController screening_controller= new ScreeningPhaseController();
+    private static final QualityAssementController qa_controller= new QualityAssementController();
     private static final ScreeningController sc = new ScreeningController();
 
 
@@ -40,6 +41,7 @@ public class ProjectTest {
         project.setProject_name("Model Transformation");
         Screening screening = new Screening();
         Classification classification = new Classification();
+
         project.setClassification(classification);
 
         project.setScreening(screening);
@@ -50,7 +52,7 @@ public class ProjectTest {
   @Test(priority = 1)
     public void ConnexionTest(){
 
-        RelisUser user = Utility.getUserByUserName("youssouf1");
+        RelisUser user = Utility.getUserByUserName("admin");
         connexion.connect(driver, user);
         String user_name = driver.findElement(By.className(
                 ConnexionUtils.CLASS_CONNECTED_USER_PROFILE_NAME)).getText();
@@ -71,7 +73,7 @@ public class ProjectTest {
 
 
     }
-    //@Test(priority = 3)
+   // @Test(priority = 3)
     public void deleteAllPaper(){
 
         projectManager.deleteAllPapers(driver);
@@ -99,7 +101,7 @@ public class ProjectTest {
         assertFalse(is_deleted);
 
     }
-   // @Test(priority = 5)
+    //@Test(priority = 5)
     public void importBibTexTest(){
         projectManager.importBibTexPapers(driver,ProjectUtils.BIBTEX_FILE1);
 
@@ -210,7 +212,7 @@ public class ProjectTest {
         );
         assertTrue(true);
     }
-   //@Test(priority = 16)
+    //  @Test(priority = 16)
     public void assignReviewers(){
 
 
@@ -225,15 +227,16 @@ public class ProjectTest {
 
 
 
-   //@Test(priority = 17)
-    public void startScreening(){
+  @Test(priority = 17)
+    public void startScreeningTest(){
 
-        ScreeningPhase screeningPhase  = projectManager.startScreeningPhase(driver, project);
+        ScreeningPhase screeningPhase =  sc.getCurrentScreeningPhase(driver, project.getScreening());
 
-        while (screeningPhase != null){
+       while ( screeningPhase != null){
+
 
             // start the screening phase
-            screeningPhase.startThisPhaseScreening();
+            sc.startTheCurrentPhase(driver,project.getScreening());
             // now the screening phase is finish
             // get the screening result of the website
             String result = ScreeningView.extractScreeningResult(driver);
@@ -241,21 +244,27 @@ public class ProjectTest {
             boolean correct = screeningPhase.correctResultOfScreeningPhase(result);
 
             assertTrue(correct);
+            if(screeningPhase.getParticipantNumbers() > 1){
+                sc.resolveConflict(driver, screeningPhase);
+                result = ScreeningView.extractScreeningResult(driver);
+                correct = screeningPhase.correctResultOfScreeningPhase(result);
+                assertTrue(correct);
 
-            sc.resolveConflict(driver, screeningPhase);
-            result = ScreeningView.extractScreeningResult(driver);
-            correct = screeningPhase.correctResultOfScreeningPhase(result);
-            assertTrue(correct);
+            }
+            screeningPhase.quitWebBrowser();
             projectManager.openProjectListPage(driver);
             projectManager.openProject(driver,project.getProject_name());
-            screeningPhase  = projectManager.startScreeningPhase(driver, project);
-        };
+           screeningPhase  = sc.getCurrentScreeningPhase(driver, project.getScreening());
 
 
-
+        }
 
     }
 
+    @Test(priority = 21)
+    public void classifyPapersTest(){
+       classControler.finishClassificationPhase(driver,project.getClassification());
+    }
 
 //    @AfterTest
 //    public void deleteAllUserRole(){
@@ -273,17 +282,22 @@ public class ProjectTest {
 //      screening_controller.resolveConflict(driver);
 //        assertTrue(true);
     }
-
-    @Test(priority = 20)
+   // @Test(priority = 20)
     public void test(){
 
-        classControler.openClassificationPhase(driver);
-        classControler.setUpAClassification(driver,project.getClassification());
+        QualityAssementController.openQA_page(driver);
+        QualityAssement assement = new QualityAssement();
+        assement.setNumberOfParticipants(3);
+        qa_controller.setUpQualityAssements(driver,assement);
+        assement.startParticipantsQA_session();
 
-        classControler.finishValidationPhase(driver,project.getClassification());
-       //driver.quit();
+        Utility.sleep(7);
+        assement.closeAllWebDriver();
+
 
     }
+
+
 
 
 }

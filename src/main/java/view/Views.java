@@ -3,14 +3,15 @@ package view;
 import controller.ProjectController;
 import model.Paper;
 import model.RelisUser;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.*;
 
 import java.util.*;
 import java.util.function.BiFunction;
+
+import static utils.ClassificationUtils.*;
 
 public class Views {
 
@@ -31,21 +32,23 @@ public class Views {
 
         // list of every users web element
         List<WebElement> users = driver.findElements(By.className("form-group"));
-        // we remove the first two elements which is not important
         users.remove( users.size()-1);
-        users.remove(users.size()-1);
         // we don't have enough user to choose ?
         if(users.size() <= number){ // if so we choose all the users
+
             users.forEach( elem ->
                     {
+                        elem.findElement(By.tagName("span")).click();
                         RelisUser user  = Utility.getUserByFullName(elem.getText());
                         reviewers.add(user);
-                        elem.findElement(By.tagName("span")).click();
+
                     }
             );
         // otherwise we choose n users
         } else{
+            // we remove the first two elements which is not important
 
+            users.remove(users.size()-1);
             do{
                 // choose a random user
                 int size = users.size();
@@ -84,12 +87,20 @@ public class Views {
     }
 
 
-    public static void clickLiWebElement(WebElement ul, String name){
-        Utility.sleep(1);
+    public static void clickLiWebElement(WebDriver driver,WebElement ul, String name){
+        WebDriverWait webDriverWait = new WebDriverWait(driver,2);
         for (WebElement li : ul.findElements(By.tagName("li"))){
-            if(li.getText().equals(name)){
-                li.findElement(By.tagName("a")).sendKeys(Keys.ENTER);
+            try{
+                if(li.getText().equals(name)){
+                    li.findElement(By.tagName("a")).click();
+                }
             }
+            catch (Exception e){
+                System.out.println("***********************************************88\n\n\n");
+                e.printStackTrace();
+                System.out.println("**********************************************8\n\n");
+            };
+
 
         }
     }
@@ -133,5 +144,106 @@ public class Views {
     }
 
 
+    /**
+     * return the web element of a 'menu' of the left side bar
+     * like an example the 'classification menu'
+     * @param driver the web driver
+     * @param name the menu name
+     * @return a web element for the menu with name=name
+     */
+    public static WebElement getSideBarMenuOptionsOf(WebDriver driver, String name){
+
+        WebElement ul = driver.findElement(By.className(CLASS_SIDE_BAR_MENU));
+        List<WebElement> li = ul.findElements(By.tagName("li"));
+        li.forEach(p ->System.out.println("Li =>{" + p.getText() +"}"));
+        return li.stream()
+                .filter(p-> p.getText().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
+
+    /**
+     * open the progress bar page of every classificator
+     * @param driver the webdriver
+     */
+    public static void openSuBMenuFrom(WebDriver driver, String menu_name, String subOptions){
+
+        WebDriverWait webDriverWait  = new WebDriverWait(driver,5);
+
+        try {
+            driver.findElement(By.linkText(subOptions)).click();
+
+        } catch (Exception m){
+
+            driver.findElement(By.linkText(menu_name)).click();
+            webDriverWait.until(ExpectedConditions.presenceOfElementLocated(
+                    By.linkText(subOptions)
+            )).sendKeys(Keys.ENTER);
+        }
+    }
+
+    /**
+     * open the classification phase
+     * @param driver the web driver
+     * @param phaseName the word classification
+     */
+    public static void openProjectPhase(WebDriver driver, String phaseName, String link){
+
+        // select the table that contains the screening phaseas
+        WebElement table = driver.findElement(By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE));
+
+        // get all the systematic review phases
+        List<WebElement> trs = table.findElements(By.tagName("tr"));
+        trs.remove(0);
+        // we remove the first web element which is the table header
+
+        for(WebElement element : trs){
+
+            List<WebElement> tds = element.findElements(By.tagName("td"));
+
+            WebElement phase = tds.get(0);
+            if((phase !=null) && phase.getText().equals(phaseName)){
+                WebElement gotoPhae;
+
+                try{
+                    gotoPhae = tds.get(4).
+                            findElement(By.cssSelector(link));
+                    gotoPhae.sendKeys(Keys.ENTER);
+                } catch (Exception e){
+                    element.findElement(By.cssSelector(ClassificationUtils.CSS_UNLOCK_CLASSIFICATION))
+                            .sendKeys(Keys.ENTER);
+                    openProjectPhase(driver, phaseName,link);
+                }
+
+                return;
+            }
+        }
+    }
+
+    public static void openUserAssignmentPage(WebDriver driver, String link){
+
+        try {
+            driver.findElement(By.linkText(ProjectUtils.LK_CURRENT_PROJECT)).click();
+        } catch (Exception e){
+            driver.findElement(By.linkText(ScreeningUtils.LK_DASHBORD_LINK)).click();
+        }
+
+        driver.findElement(By.cssSelector(link))
+                .sendKeys(Keys.ENTER);
+
+    }
+
+
+    public static void scrollToElement(WebDriver driver, By element){
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        // Scrolling down the page till the element is found
+        js.executeScript("arguments[0].scrollIntoView();",driver.findElement(element));
+    }
+
+
+    public static boolean isWhiteBg(String bg){
+        return bg.equals("rgba(255, 255, 255, 1)");
+    }
 
 }

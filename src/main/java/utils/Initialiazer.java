@@ -19,7 +19,7 @@ public class Initialiazer {
 
          webDriver = new ChromeDriver();
         // go to the website
-        webDriver.get(RELIS_URL);
+        webDriver.get(LOCAL_URL);
 
 
 

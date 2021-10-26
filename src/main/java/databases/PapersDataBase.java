@@ -32,7 +32,11 @@ public class PapersDataBase  {
      */
     public static PapersDataBase getInstance() {
         if(db_instance == null)
+        {
             db_instance = new PapersDataBase();
+            db_instance.setMockCriteria();
+
+        }
         return  db_instance;
     }
 
@@ -66,7 +70,7 @@ public class PapersDataBase  {
 
         papers_db.addAll(papers);
         decisionMaker.setUpperBoundPaperLength(papers.size());
-        decisionMaker.makeDecision();
+        decisionMaker.makeDecision(1);
         papers_db = decisionMaker.applyDecisionForPapers(papers_db);
         papers_db.forEach(p -> System.out.println("Data : " + p));
       //v  papers_db.addAll(Utility.work_through_table(driver));
@@ -135,13 +139,13 @@ public class PapersDataBase  {
     }
 
     public void showCriteriaPercentage(){
-
-        criteria.forEach(cr ->{
-          int count = ScreeningPhase.getCriteriaStatitics(cr);
-          cr.setCount(count);
-          });
-        criteria.forEach(System.out::println);
-    }
+//
+//        criteria.forEach(cr ->{
+//          int count = ScreeningPhase.getCriteriaStatitics(cr);
+//          cr.setCount(count);
+//          });
+//        criteria.forEach(System.out::println);
+   }
 
 
 
