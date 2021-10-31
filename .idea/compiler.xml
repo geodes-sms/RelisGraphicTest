@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="RelisProjectAutoTest" />
         <module name="RelisTest" />
+        <module name="RelisGraphicTest" />
       </profile>
     </annotationProcessing>
   </component>

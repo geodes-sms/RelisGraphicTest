@@ -60,13 +60,13 @@ public class ProjectController {
 
     public static void openProject(WebDriver driver, String projectName) {
         //TODO a completer !!!
-        driver.findElement(By.cssSelector(ProjectUtils.CLASS_OPEN_PROJECT)).click();
-        try {
+        List<WebElement> projectElements = driver.findElements(By.className("thumbnail"));
+        projectElements.forEach(p -> System.out.println("project " + p.getText()));
+        projectElements.stream()
+                .filter(projet -> projet.findElement(By.className("caption")).getText().equals(projectName))
+                .findFirst()
+                .ifPresent(projectElement -> projectElement.findElement(By.tagName("a")).sendKeys(Keys.ENTER));
 
-          driver.findElement(By.className(PaperUtils.LINK_TEXT_ALL_PAPER));
-        } catch (Exception e){
-          driver.findElement(By.className(ProjectUtils.CLASS_HOME_PROJECT)).click();
-        }
 
     }
 

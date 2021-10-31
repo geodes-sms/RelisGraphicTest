@@ -92,7 +92,7 @@ public class Views {
         for (WebElement li : ul.findElements(By.tagName("li"))){
             try{
                 if(li.getText().equals(name)){
-                    li.findElement(By.tagName("a")).click();
+                    Views.performClickWithJsExec(driver,li.findElement(By.tagName("a")));
                 }
             }
             catch (Exception e){
@@ -155,7 +155,7 @@ public class Views {
 
         WebElement ul = driver.findElement(By.className(CLASS_SIDE_BAR_MENU));
         List<WebElement> li = ul.findElements(By.tagName("li"));
-        li.forEach(p ->System.out.println("Li =>{" + p.getText() +"}"));
+
         return li.stream()
                 .filter(p-> p.getText().equals(name))
                 .findFirst()
@@ -241,6 +241,13 @@ public class Views {
         js.executeScript("arguments[0].scrollIntoView();",driver.findElement(element));
     }
 
+    public static void performClickWithJsExec(WebDriver driver, WebElement element){
+        JavascriptExecutor js=(JavascriptExecutor) driver;
+
+//        js.executeScript("arguments[0].click()", element);
+        element.click();
+
+    }
 
     public static boolean isWhiteBg(String bg){
         return bg.equals("rgba(255, 255, 255, 1)");

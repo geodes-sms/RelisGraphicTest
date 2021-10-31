@@ -41,7 +41,7 @@ at controller.ClassificationController.makeReadyForClassification(Classification
 at controller.ClassificationController.finishClassificationPhase(ClassificationController.java:97)
 at ProjectTest.classifyPapersTest(ProjectTest.java:265)
 at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ... Removed 29 stack frames]]>
     </failure>
   </testcase> <!-- classifyPapersTest -->

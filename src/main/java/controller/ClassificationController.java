@@ -4,10 +4,12 @@ import model.Classification;
 import model.Paper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import utils.Initialiazer;
 import utils.ProjectUtils;
 import utils.ScreeningUtils;
 import utils.Utility;
 import view.ClassificationView;
+import view.Views;
 
 import java.util.ArrayList;
 
@@ -42,7 +44,6 @@ public class ClassificationController {
 
         classification.setPapersToClassify(toClassify);
         classification.classifyAllPapers();
-
     }
 
 
@@ -75,7 +76,7 @@ public class ClassificationController {
         views.classifyPaper(driver,classification);
     }
 
-    private void makeReadyForClassification(WebDriver driver, Classification classification){
+    public void makeReadyForClassification(WebDriver driver, Classification classification){
 
         openClassificationPhase(driver);
         if(classification.getClassifierLength() == 0){
@@ -95,16 +96,18 @@ public class ClassificationController {
     public void finishClassificationPhase(WebDriver driver, Classification classification){
 
         makeReadyForClassification(driver,classification);
-        while (true){
-            try {
 
-                views.classifyPaper(driver,classification);
-            } catch (Exception e){
-                e.printStackTrace();
-                break;
-            }
+            classification.getClassificators().parallelStream()
+                    .forEach(relisUser -> {
+                        Initialiazer initialiazer = new Initialiazer();
+                        initialiazer.init();
+                        WebDriver drive = initialiazer.getWebDriver();
+                        ConnexionController.connect(drive,relisUser);
+                        ProjectController.openProject(drive,"Project 2");
+                        ClassificationView.openClassification(drive);
+                        views.classifyPaperSection(drive,classification);
+                    });
 
-        }
     }
 
     public void finishValidationPhase(WebDriver driver, Classification classification){

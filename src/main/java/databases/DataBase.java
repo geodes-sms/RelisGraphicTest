@@ -6,11 +6,13 @@ import utils.FileUtils;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 public class DataBase {
 
+    private static final String MOCK_FULL_NAMES_FILE ="src/main/resources/users/mock_full_name.txt" ;
     private static DataBase db = null;
 
     private static final ArrayList<RelisUser> reviewers = new ArrayList<>();
@@ -20,8 +22,30 @@ public class DataBase {
 
     Random random = new Random();
     private static  ArrayListMultimap<String,String> dataClassification;
+    private static ArrayList<String> mockFullNames = new ArrayList<>();
 
 
+    public void extractMockFullNames(){
+        if(mockFullNames.size() == 0){
+            String lines = FileUtils.getLinesFrom(MOCK_FULL_NAMES_FILE);
+            String [] data= lines.split("\n");
+            mockFullNames.addAll(Arrays.asList(data));
+
+        }
+    }
+
+    public String getMockFullName(){
+
+        extractMockFullNames();
+        int x = random.nextInt(0, mockFullNames.size());
+        return mockFullNames.get(x);
+    }
+
+
+    public void showMockFullNames(){
+        extractMockFullNames();
+        mockFullNames.forEach(System.out::println);
+    }
     public static void setClassificationData(){
 
         dataClassification = ArrayListMultimap.create();

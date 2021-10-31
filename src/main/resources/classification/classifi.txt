@@ -1,0 +1,23 @@
+Simple string_100 "String100" * :string(100)
+Simple int_4 "Int4" * :int(4)
+Simple bool_1 "Boolean" * :bool
+Simple real_1 "Real" * :real
+Simple date_1 "Date" * :date
+Simple pattern "pattern" :string(50) style("[A-Z]+[0-9]*")
+
+DynamicList dynListOne "DynamicListOne"  [1] "listOneDynamic" =["DynamicListData1","DynamicListData2","DynamicListData3","DynamicListData4","DynamicListData5"]
+DynamicList dynList3 "DynamicListThreeValues"  [2] "DynamicListThreeValues"
+DynamicList dynListMulti "DynamicListMulti"  [0] "DynamicListThreeValues" =["MultiVal1","MultiVal2","MultiVal3","MultiVal4"]
+
+List listOne "ListOne" * [1] = ["value 1", "value 2"]
+List listThree "List Three Values" [3] = ["ListThreeVal1","ListThreeVal2","ListThreeVal3","ListThreeVal4","ListThreeVal5"]
+List listMulti "List Multi Values" [0] = ["ListThreeVal1","ListThreeVal2","ListThreeVal3","ListThreeVal4","ListThreeVal5"]
+
+DynamicList superCategory  "SuperCategory"  [3]  "SuperCategory" = ["Super1", "Super2", "Super3", "Super4"]{
+	Simple subSimple "subCategoryOne" *  :string(100)
+	Simple subInt "subCategoryInt"  [1] :int
+}
+
+DynamicList dependentList "dependentList"  [2] depends_on superCategory
+
+Simple note "Note" [1] :text(500)

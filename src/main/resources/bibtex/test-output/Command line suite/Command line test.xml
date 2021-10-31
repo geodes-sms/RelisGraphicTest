@@ -9,7 +9,7 @@ at utils.Utility.getRelisUsers(Utility.java:236)
 at utils.Utility.getUserByUserName(Utility.java:191)
 at ProjectTest.ConnexionTest(ProjectTest.java:54)
 at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ... Removed 24 stack frames]]>
     </failure>
   </testcase> <!-- ConnexionTest -->
@@ -45,7 +45,7 @@ at org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:3
 at controller.ProjectController.openProject(ProjectController.java:63)
 at ProjectTest.openProjectTest(ProjectTest.java:66)
 at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ... Removed 29 stack frames]]>
     </failure>
   </testcase> <!-- openProjectTest -->
@@ -82,7 +82,7 @@ at controller.ProjectController.openAllPaper(ProjectController.java:113)
 at controller.ProjectController.deleteAllPapers(ProjectController.java:79)
 at ProjectTest.deleteAllPaper(ProjectTest.java:78)
 at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ... Removed 29 stack frames]]>
     </failure>
   </testcase> <!-- deleteAllPaper -->
@@ -118,7 +118,7 @@ at org.openqa.selenium.remote.RemoteWebDriver.findElement(RemoteWebDriver.java:3
 at controller.ProjectController.importBibTexPapers(ProjectController.java:130)
 at ProjectTest.importBibTexTest(ProjectTest.java:105)
 at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ... Removed 29 stack frames]]>
     </failure>
   </testcase> <!-- importBibTexTest -->
@@ -158,7 +158,7 @@ at controller.ScreeningPhaseController.getCurrentScreeningPhase(ScreeningPhaseCo
 at controller.ScreeningController.getCurrentScreeningPhase(ScreeningController.java:64)
 at ProjectTest.startScreeningTest(ProjectTest.java:232)
 at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ... Removed 29 stack frames]]>
     </failure>
   </testcase> <!-- startScreeningTest -->
@@ -195,7 +195,7 @@ at view.Views.openProjectPhase(Views.java:194)
 at controller.QualityAssementController.openQA_page(QualityAssementController.java:20)
 at ProjectTest.test(ProjectTest.java:287)
 at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ... Removed 29 stack frames]]>
     </failure>
   </testcase> <!-- test -->

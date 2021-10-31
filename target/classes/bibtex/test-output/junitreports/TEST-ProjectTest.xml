@@ -33,7 +33,7 @@ at org.testng.TestNG.runSuitesSequentially(TestNG.java:1212)
 at org.testng.TestNG.runSuitesLocally(TestNG.java:1134)
 at org.testng.TestNG.runSuites(TestNG.java:1063)
 at org.testng.TestNG.run(TestNG.java:1031)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ]]>
     </error>
   </testcase> <!-- ConnexionTest -->
@@ -99,7 +99,7 @@ at org.testng.TestNG.runSuitesSequentially(TestNG.java:1212)
 at org.testng.TestNG.runSuitesLocally(TestNG.java:1134)
 at org.testng.TestNG.runSuites(TestNG.java:1063)
 at org.testng.TestNG.run(TestNG.java:1031)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ]]>
     </error>
   </testcase> <!-- openProjectTest -->
@@ -166,7 +166,7 @@ at org.testng.TestNG.runSuitesSequentially(TestNG.java:1212)
 at org.testng.TestNG.runSuitesLocally(TestNG.java:1134)
 at org.testng.TestNG.runSuites(TestNG.java:1063)
 at org.testng.TestNG.run(TestNG.java:1031)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ]]>
     </error>
   </testcase> <!-- deleteAllPaper -->
@@ -232,7 +232,7 @@ at org.testng.TestNG.runSuitesSequentially(TestNG.java:1212)
 at org.testng.TestNG.runSuitesLocally(TestNG.java:1134)
 at org.testng.TestNG.runSuites(TestNG.java:1063)
 at org.testng.TestNG.run(TestNG.java:1031)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ]]>
     </error>
   </testcase> <!-- importBibTexTest -->
@@ -302,7 +302,7 @@ at org.testng.TestNG.runSuitesSequentially(TestNG.java:1212)
 at org.testng.TestNG.runSuitesLocally(TestNG.java:1134)
 at org.testng.TestNG.runSuites(TestNG.java:1063)
 at org.testng.TestNG.run(TestNG.java:1031)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ]]>
     </error>
   </testcase> <!-- startScreeningTest -->
@@ -369,7 +369,7 @@ at org.testng.TestNG.runSuitesSequentially(TestNG.java:1212)
 at org.testng.TestNG.runSuitesLocally(TestNG.java:1134)
 at org.testng.TestNG.runSuites(TestNG.java:1063)
 at org.testng.TestNG.run(TestNG.java:1031)
-at MainTest.main(MainTest.java:11)
+at utils.MainTest.main(utils.MainTest.java:11)
 ]]>
     </error>
   </testcase> <!-- test -->

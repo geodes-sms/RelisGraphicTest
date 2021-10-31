@@ -24,6 +24,8 @@ public class ProjectTest {
     WebDriver driver;
     Project project;
 
+    private static final String Project2 = "Project 2";
+
     private static final ProjectController projectManager = new ProjectController();
     private static final  ConnexionController connexion = new ConnexionController();
     private static final ClassificationController classControler = new ClassificationController();
@@ -41,7 +43,8 @@ public class ProjectTest {
         project.setProject_name("Model Transformation");
         Screening screening = new Screening();
         Classification classification = new Classification();
-
+        MainTest.setCategories(classification);
+        classification.showCategories();
         project.setClassification(classification);
 
         project.setScreening(screening);
@@ -61,10 +64,10 @@ public class ProjectTest {
 
     }
 
-    @Test(priority = 2)
+   @Test(priority = 2)
     public void openProjectTest(){
 
-        projectManager.openProject(driver, ProjectUtils.model_transformation_project);
+        ProjectController.openProject(driver, Project2);
         String title  = driver.findElement(By.cssSelector(ProjectUtils
                 .CSS_OPENED_PROJECT_NAME)).getText();
 
@@ -73,7 +76,7 @@ public class ProjectTest {
 
 
     }
-   // @Test(priority = 3)
+  // @Test(priority = 3)
     public void deleteAllPaper(){
 
         projectManager.deleteAllPapers(driver);
@@ -101,7 +104,7 @@ public class ProjectTest {
         assertFalse(is_deleted);
 
     }
-    //@Test(priority = 5)
+ // @Test(priority = 5)
     public void importBibTexTest(){
         projectManager.importBibTexPapers(driver,ProjectUtils.BIBTEX_FILE1);
 
@@ -202,7 +205,7 @@ public class ProjectTest {
 //    }
 //
 
-  // @Test(priority = 15)
+   //@Test(priority = 15)
     private void addSomeReviewers(){
         int i = 0;
         ArrayList<RelisUser> relisUsers = new ArrayList<>();
@@ -253,7 +256,7 @@ public class ProjectTest {
             }
             screeningPhase.quitWebBrowser();
             projectManager.openProjectListPage(driver);
-            projectManager.openProject(driver,project.getProject_name());
+            ProjectController.openProject(driver,project.getProject_name());
            screeningPhase  = sc.getCurrentScreeningPhase(driver, project.getScreening());
 
 
@@ -261,9 +264,24 @@ public class ProjectTest {
 
     }
 
-    @Test(priority = 21)
+     //@Test(priority = 20)
+    public void testQA(){
+
+        QualityAssementController.openQA_page(driver);
+        QualityAssement assement = new QualityAssement();
+        assement.setNumberOfParticipants(3);
+        qa_controller.setUpQualityAssements(driver,assement);
+        assement.startParticipantsQA_session();
+
+        assement.closeAllWebDriver();
+
+
+    }
+   @Test(priority = 21)
     public void classifyPapersTest(){
-       classControler.finishClassificationPhase(driver,project.getClassification());
+        classControler.finishClassificationPhase(driver,project.getClassification());
+
+        //classControler.finishClassificationPhase(driver,project.getClassification());
     }
 
 //    @AfterTest
@@ -274,28 +292,17 @@ public class ProjectTest {
 //        connexion.connect(driver,connected);
 //        driver.quit();
 //    }
-  // @Test(priority = 18)
+   //@Test(priority = 22)
     public void Next(){
 //
 //      screening_controller.openCurrentScreeningPhase(driver);
 //      PapersDataBase.getInstance().resolveAllConflicts();
 //      screening_controller.resolveConflict(driver);
 //        assertTrue(true);
+
+        projectManager.assginReviewerForScreening(driver,Utility.getCurrentConnectedUser(driver));
     }
-   // @Test(priority = 20)
-    public void test(){
 
-        QualityAssementController.openQA_page(driver);
-        QualityAssement assement = new QualityAssement();
-        assement.setNumberOfParticipants(3);
-        qa_controller.setUpQualityAssements(driver,assement);
-        assement.startParticipantsQA_session();
-
-        Utility.sleep(7);
-        assement.closeAllWebDriver();
-
-
-    }
 
 
 

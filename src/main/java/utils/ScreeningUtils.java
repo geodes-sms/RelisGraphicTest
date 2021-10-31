@@ -12,6 +12,8 @@ public class ScreeningUtils {
     public static final String LK_CLOSE_PHASE = "Close";
     public static final String LK_GO_TO_PHASE = "Go to";
 
+    public static final String CSS_GO_TO_PHASE = "a[title='Go to the phase']";
+
     public static final String CSS_REVIEWER_CHECKBOX = "input[type='checkbox']";
     public static final String CSS_SCREEN_BUTTON = "a[title='Screen papers']";
 

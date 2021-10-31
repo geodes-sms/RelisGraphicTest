@@ -25,7 +25,7 @@ public class ConnexionController {
      * @param user the user that wanna connect!
      *
      */
-    public void connect(WebDriver driver, RelisUser user) {
+    public static void connect(WebDriver driver, RelisUser user) {
 
         // on navigue vers la page de login
         driver.findElement(By.className(ConnexionUtils.CONNECT_INIT_PATH)).click();

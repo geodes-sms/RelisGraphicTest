@@ -212,6 +212,100 @@ public class ClassificationView {
 
     }
 
+    public void fillSubCategory(WebDriver driver, Classification classification,String key,int btn_index){
+            List<WebElement> buttons = driver.findElements(By.cssSelector(".fa-plus"));
+            System.out.println("il ya " + buttons.size() +" sous categories");
+            buttons.get(btn_index).click();
+            driver.switchTo().activeElement();
+            Utility.sleep(1);
+            String labele = driver.findElement(By.className("modal-title")).getText();
+            System.out.println("THe big Lab=" + labele );
+            labele = labele.substring( labele.indexOf("Add  : ") + "Add  : ".length());
+            System.out.println("label=" + labele);
+            List<WebElement> sections = driver.findElements(By.cssSelector(CSS_RELIS_MODALS_FORM));
+
+
+            Category category = classification.getCategoryByDisplayName(key,labele);
+            System.out.println("category=" + category);
+            int index =0, max= category.getSubCategorys().size();
+            for(WebElement element : sections){
+                String labelCategory = element.findElement(By.tagName("label")).getText();
+                labelCategory = labelCategory.replace("*","").trim();
+                System.out.println("subCatLab=" + labelCategory);
+                if(index ==0 ){
+
+                    category.fillWebElementInput(driver,element);
+                    System.out.println(category.displayDataContent());
+                } else {
+                    Category subCategory = category.getSubCategoryByDisplayName(labelCategory);
+                    System.out.println("calling the sub cat " + subCategory.displayDataContent() );
+                    subCategory.fillWebElementInput(driver,element);
+                }
+
+                if(++index >= max) break;
+            }
+            driver.findElement(By.id("submit_but")).click();
+            Utility.sleep(1);
+
+
+
+
+    }
+
+    public void edit_classification(WebDriver driver, Classification classification){
+        Views.openSuBMenuFrom(driver,LK_CLASSIFY_MENU,LK_My_CLASSIFIED);
+        String key = getNextPaperForClassification(driver);
+        System.out.println("key=" + key);
+
+
+    }
+
+    public void classifyPaperSection(WebDriver driver, Classification classification){
+        openClassifyPaperPage(driver);
+        String key = getNextPaperForClassification(driver);
+        Paper paper = classification.getPaper(key);
+        System.out.println("paper to classify=" + paper);
+        assert paper != null;
+        ClassificatedPaper classificatedPaper = classification.getClassifiedPaperByKey(key);
+        int inde =0, maximum = classification.getAllCategories().size();
+        boolean hasSubCategory = false;
+        List<WebElement> inputs = driver.findElements(By.className(CLASS_FORM_GROUP));
+        for(WebElement input : inputs){
+            String labelCategory = input.findElement(By.tagName("label")).getText();
+            labelCategory = labelCategory.replace("*","").trim();
+            Category category = classification.getCategoryByDisplayName(key, labelCategory);
+            if(input.findElement(By.tagName("div")).getText().equals(NOT_READY_FIELD)){
+                hasSubCategory = true;
+
+            } else {
+                System.out.println("cat en cours de traitement=" + category.displayDataContent());
+                if(category instanceof  DependantDynamicCategory){
+                    if(!((DependantDynamicCategory) category).getDependent_on().hasSubCategory() ){
+                        category.fillWebElementInput(driver,input);
+                    }
+                } else
+                category.fillWebElementInput(driver,input);
+            }
+
+            if(++inde >= maximum) break;
+        }
+        driver.findElement(By.className(CLASS_BTN_SUCCES)).click();
+        if(hasSubCategory){
+            driver.findElement(By.cssSelector(CSS_EDIT_CLASSIFICATION_BTN)).click();
+
+            List<WebElement> buttons = driver.findElements(By.cssSelector(".fa-plus"));
+            for(int i =0; i< buttons.size();i++){
+                fillSubCategory(driver,classification,key,i);
+
+            }
+            driver.findElement(By.className(CLASS_BTN_SUCCES)).click();
+
+        }
+
+
+
+    }
+
     public void classifyPaper(WebDriver driver, Classification classification){
 
         openClassifyPaperPage(driver);
@@ -260,7 +354,7 @@ public class ClassificationView {
 
 
         elem.findElement(By.className(ScreeningUtils.CLASS_CRITERIA_OPTIONS_RESOLVING_CONFLICT))
-                .click();
+                .sendKeys(Keys.ENTER);
         WebElement element = driver.findElement(By.cssSelector(".select2-results__options"));
         List<WebElement> options = element.findElements(By.tagName("li"));
         for (WebElement li : options){
@@ -345,7 +439,7 @@ public class ClassificationView {
      *
      *
      *****************************************************************************************************/
-    public void openClassification(WebDriver driver){
+    public static void openClassification(WebDriver driver){
 
         Views.openProjectPhase(driver, ClassificationUtils.CLASSIFICATION_NAME,
                 CSS_GOTO_CLASSIFICATION);
@@ -443,6 +537,7 @@ public class ClassificationView {
         driver.findElement(By.linkText(ScreeningUtils.LK_DASHBORD_LINK)).click();
         driver.findElement(By.cssSelector(ClassificationUtils.CSS_CLASSIFY_PAPER_PAGE))
                 .sendKeys(Keys.ENTER);
+
 
     }
 

@@ -1,9 +1,7 @@
 package utils;
 
 import controller.ProjectController;
-import model.Paper;
-import model.QA_Paper;
-import model.RelisUser;
+import model.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -451,11 +449,9 @@ public class Utility {
                 // get web element for the next click link
                 try {
                     element = driver.findElement(By.linkText(">"));
-                    System.out.println("on a une autre page");
                     element.click();
-                    Utility.sleep(10);
+
                 } catch (Exception e) {
-                    System.out.println("on n'a pas d'autre page");
                     break;
                 };
 
@@ -568,5 +564,29 @@ public class Utility {
                 .filter(paper -> paper.getPaper_title().equals(title))
                 .findFirst()
                 .orElse(null);
+    }
+
+
+    public static TypeOf getTypeOfObject(String type, int maxChar){
+
+        if(type.equals("string") || type.equals("text")){
+            StringType type1=  new StringType();
+            type1.setMaxCharacter(maxChar);
+            return type1;
+        }
+
+        else if(type.equals("real"))
+            return new RealType();
+        else if(type.equals("bool"))
+            return new BooleanType();
+        else if(type.equals("date"))
+            return new DateType();
+        else if(type.equals("int")){
+            IntegerType intType = new IntegerType();
+            intType.setMaxCharacter(maxChar);
+            return intType;
+        }
+        return null;
+
     }
 }

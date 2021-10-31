@@ -4,15 +4,15 @@ SCREENING
 Reviews 2
 Conflict on Criteria resolved_by Unanimity
 Criteria =   ["Criteria 1","Criteria 2" ]
-Sources = ["Scopus",'IEEE']
-Strategies =["Snowballing","database search"]
+Sources = ["Source 1",'Source 2']
+Strategies =["Strategy 1","Strategy 2"]
 Validation 30%  Normal
 Phases "Phase 1" "Screen per title" Fields(Title) ,
 	    "Phase 2" "Screen per title and abstract 2" Fields(Title,Abstract,Link) 
 QA
 
 Questions =["Question 1","Question 2","Question 3","Question 4"]
- Response=["Yes":3,"Partially":1.5,"No":0]
+ Response=["Answer1":3,"Answer2":1.5,"Answer3":0]
  Min_score 3
 CLASSIFICATION
 no_overide

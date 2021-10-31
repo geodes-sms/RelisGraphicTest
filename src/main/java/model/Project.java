@@ -3,13 +3,16 @@ package model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import model.RelisUser;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Project {
 
 
@@ -20,9 +23,10 @@ public class Project {
     // the all reviewers for the current project
     private ArrayList<RelisUser> reviewer = new ArrayList<>();
 
-
+    private FileWriter output_file;
     private Screening screening;
 
+    private String projectId;
     private Classification classification;
 
 
@@ -36,6 +40,7 @@ public class Project {
         return relisUser != null && relisUser.equals(project_owner);
 
     }
+
 
 
 }
