@@ -1,20 +1,12 @@
 package controller;
 
-import databases.DataBase;
-import databases.PapersDataBase;
 import model.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
+import model.user_work.ScreeningPhaseWork;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import utils.ScreeningUtils;
 import utils.Utility;
 import view.ScreeningView;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 public class ScreeningPhaseController {
 
@@ -31,7 +23,7 @@ public class ScreeningPhaseController {
     public void getAllAssignmentsData(WebDriver driver){
         if(assignments.size() == 0){
             ScreeningView.showAllAssigmentsPage(driver);
-            Utility.work_through_table(driver);
+            //Utility.getAllPapers(driver);
         }
 
 
@@ -65,30 +57,40 @@ public class ScreeningPhaseController {
     public static ArrayList<String> getAllAssignmentsPapers(RelisUser user_screening){
 
         ScreeningView.showMyAssignment(user_screening.getDriver());
-        return Utility.work_through_table(user_screening.getDriver());
+        ArrayList<String> data = new ArrayList<>();
+         Utility.getPapersKeyFromDOMFromId(user_screening.getDriver(), data);
+         return data;
 
     }
 
     public static ArrayList<String> getUserPendingAssignments(RelisUser user){
         ScreeningView.showMyPendingAssignmentsPage(user.getDriver());
-        return Utility.work_through_table(user.getDriver());
+        ArrayList<String> data = new ArrayList<>();
+        Utility.getPapersKeyFromDOMFromId(user.getDriver(), data);
+        return data;
+
     }
 
     public static ArrayList<String> getUserScreenedAssignements(RelisUser user){
 
         ScreeningView.showAllScreenedAssignmentsPage(user.getDriver());
-        return Utility.work_through_table(user.getDriver());
+        ArrayList<String> data = new ArrayList<>();
+        Utility.getPapersKeyFromDOMFromId(user.getDriver(), data);
+        return data;
     }
 
     public static ArrayList<String> getAllScreenedAssignments(RelisUser user){
         ScreeningView.showAllScreenedAssignmentsPage(user.getDriver());
-        return Utility.work_through_table(user.getDriver());
+        ArrayList<String> data = new ArrayList<>();
+        Utility.getPapersKeyFromDOMFromId(user.getDriver(), data);
+        return data;
 
     }
-    public static ArrayList<Paper> getUserPapersAssignments(PhaseWork user){
+    public static ArrayList<Paper> getUserPapersAssignments(ScreeningPhaseWork user){
         ScreeningView.showMyAssignment(user.getParticipant().getDriver());
 
-        ArrayList<String> papersKeys=  Utility.work_through_table(user.getParticipant().getDriver());
+        ArrayList<String> papersKeys= new ArrayList<>();
+        Utility.getPapersKeyFromDOMFromId(user.getParticipant().getDriver(),papersKeys);
        // System.out.println("Phase \n" + user.getPhase());
         ArrayList<Paper> p = new ArrayList<>();
         papersKeys.forEach(
@@ -110,7 +112,7 @@ public class ScreeningPhaseController {
       ArrayList<RelisUser> users = ScreeningView.assign_papers(driver,phase.getNumberOfUsers());
       users.forEach(p -> {
 
-        PhaseWork phaseWork = new PhaseWork();
+        ScreeningPhaseWork phaseWork = new ScreeningPhaseWork();
         phaseWork.setParticipant(p);
         phaseWork.setPhase(phase);
         phase.addPhaseWorkingUser(phaseWork);

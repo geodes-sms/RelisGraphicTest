@@ -1,18 +1,21 @@
 package utils;
 
 import controller.ProjectController;
-import model.*;
+import model.Paper;
+import model.QA_Paper;
+import model.RelisUser;
+import model.relis_parser.StringParser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
 
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 public class Utility {
 
@@ -27,7 +30,7 @@ public class Utility {
      */
     public static String encriptWiht_MD5( String password ) {
         try {
-            MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+            MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] array = md.digest(password.getBytes( "UTF-8" ));
             StringBuffer sb = new StringBuffer();
             for (int i = 0; i < array.length; i++) {
@@ -304,129 +307,146 @@ public class Utility {
     }
 
 
-    public static   ArrayList<String> work_through_table(WebDriver driver){
 
 
-        try{
+    //Previous [1] [2] Next
+    private static boolean hasNextPage(WebDriver driver){
+      WebElement  element = driver.findElement(By.id(ProjectUtils.ID_NEXT_PAPERS_PAGE));
+        // there is no next table  ?
+        if(Utility.hasClass(element,"disabled")) return false;
+        element.findElement(By.linkText("Next")).click();
+        return true;
+    }
 
-            // select the table that contains the screening phaseas
-            WebElement table = driver.findElement(By.id(ProjectUtils.ID_PROJECT_TABLE_USERS));
+    public static boolean hasNextPageForClassification(WebDriver driver){
+        try {
+          WebElement  element = driver.findElement(By.linkText(">"));
+            element.click();
+            return true;
 
-            WebElement element;
-            ArrayList<String> assigments= new ArrayList<>();
-            while (true){
-                try{
-                    // get web element for the next click link
-                    element = driver.findElement(By.id(ProjectUtils.ID_NEXT_PAPERS_PAGE));
-                    // get all the papers present from the current table
-                    List<WebElement> papers = table.findElements(By.tagName("tr"));
-                    // we remove the first web element which is the table header
-                    papers.remove(0);
-                    papers.forEach(paper ->{
-                        String paper_key = takePaperKey(paper.getText());
-                        assigments.add(paper_key);
-
-                    });
-                    // there is no next table  ?
-                    if(Utility.hasClass(element,"disabled")) break;
-                    element.findElement(By.linkText("Next")).click();
-                } catch (Exception e){
-                    System.out.println("ERROR " + e.getMessage());
-
-                }
-            }
-            return assigments;
-        } catch ( Exception e){
-            e.printStackTrace();
-            return new ArrayList<>();
+        } catch (Exception e) {
+            return false;
         }
-
-
     }
 
 
-    public static   ArrayList<String> work_through_table_function(WebDriver driver, BiFunction
+    public static void work_through_table_function(WebDriver driver, BiFunction
                                                                   <List<WebElement>,Object,Integer> function
-                                                        ,Object sujet, By elem){
+                                                        , Object sujet, By elem, Predicate<WebDriver> predicate){
 
 
         try{
 
-            // select the table that contains the screening phaseas
-            WebElement table = driver.findElement(elem);
 
             WebElement element;
-            ArrayList<String> assigments= new ArrayList<>();
             while (true){
                 try{
-                    // get web element for the next click link
-                    element = driver.findElement(By.id(ProjectUtils.ID_NEXT_PAPERS_PAGE));
+                    // select the table that contains the screening phaseas
+                    WebElement table = driver.findElement(elem);
                     // get all the papers present from the current table
                     List<WebElement> papers = table.findElements(By.tagName("tr"));
-                    // we remove the first web element which is the table header
+//                    // we remove the first web element which is the table header
                     papers.remove(0);
 
                     function.apply(papers,sujet);
                     // there is no next table  ?
-                    if(Utility.hasClass(element,"disabled")) break;
-                    element.findElement(By.linkText("Next")).click();
+                    if(!predicate.test(driver))
+                         break;
                 } catch (Exception e){
                     System.out.println("ERROR " + e.getMessage());
+                    e.printStackTrace();
 
                 }
             }
-            return assigments;
+
         } catch ( Exception e){
             e.printStackTrace();
-            return new ArrayList<>();
+
         }
 
 
     }
 
-    public static ArrayList<String> work_through_table_id(WebDriver driver,BiFunction<List<WebElement>
-            ,Object,Integer> functions,Object obj){
+    /**
+     * this function performs some function above the 'table' of papers for the dom
+     * @param driver the webdriver
+     * @param functions an action function
+     * @param obj the subject like an array to retrive papers ...
+     */
+    public static void work_through_table_id(WebDriver driver, BiFunction<List<WebElement>
+            ,Object,Integer> functions, Object obj){
 
         By by = By.id(ProjectUtils.ID_PROJECT_TABLE_USERS);
-        return work_through_table_function(driver,functions,obj,by);
+        work_through_table_function(driver, functions, obj, by,Utility::hasNextPage);
 
     }
 
-    public static ArrayList<String> work_through_table_class(WebDriver driver,BiFunction<List<WebElement>
+    /**
+     * function to performs some action in the table represented by the class of papers of every project phases
+     * from the DOM
+     * @param driver the the current web driver
+     * @param functions a function that represents some action to perform like (adding paper to a list)
+     * @param obj the subject it can be an list of objects
+     */
+    public static void work_through_table_class(WebDriver driver,BiFunction<List<WebElement>
             ,Object,Integer> functions,Object obj){
 
         By by = By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE);
-        return work_through_table_function(driver,functions,obj,by);
+         work_through_table_function(driver,functions,obj,by,Utility::hasNextPage);
 
     }
 
-    public static ArrayList<Paper> getAllPapersFrom(WebDriver driver, WebElement table){
+
+    /**
+     * this a function that retrieves all the papers from the dom page
+     */
+    private  static final BiFunction<List<WebElement>,Object,Integer> getPaperFromDOM = (papers, array) ->{
+        ArrayList<Paper> assigments =(ArrayList<Paper>) array;
+        papers.forEach(paper ->{
+            Paper paper_key = getPaper(paper);
+            assigments.add(paper_key);
+            System.out.println("paper p->" + paper_key);
+
+        });
+        return -1;
+    };
+
+    /**
+     * this function retrieves all the key also the 'id' of every paper
+     */
+    private static final BiFunction<List<WebElement>, Object,Integer> getPapersKeyFromDOM = (papers, array) ->{
+
+        ArrayList<String> assigments =(ArrayList<String>) array;
+        papers.forEach(paper ->{
+            String paper_key = takePaperKey(paper.getText());
+            assigments.add(paper_key);
+        });
+        return -1;
+    };
+
+    public static final void getPapersKeyFromDOMFromId(WebDriver driver, Object object){
+        //ProjectController.openAllPapersPage(driver);
+        work_through_table_id(driver,getPapersKeyFromDOM,object);
+    }
 
 
-        WebElement element;
-        ArrayList<Paper> assigments= new ArrayList<>();
-        while (true){
-            try{
-                // get all the papers present from the current table
-                List<WebElement> papers = table.findElements(By.tagName("tr"));
-                // we remove the first web element which is the table header
-                papers.remove(0);
-                papers.forEach(paper ->{
-                    Paper paper_key = getPaper(paper);
-                    assigments.add(paper_key);
+    public static void getAllPaperFromTable_id(WebDriver driver, Object object){
+        ProjectController.openAllPapersPage(driver);
+        work_through_table_id(driver,getPaperFromDOM,object);
+    }
 
-                });
-                // get web element for the next click link
-                element = driver.findElement(By.id(ProjectUtils.ID_NEXT_PAPERS_PAGE));
-                // there is no next table  ?
-                if(Utility.hasClass(element,"disabled")) break;
-                element.findElement(By.linkText("Next")).click();
-            } catch (Exception e){
-                break;
+    public static void getAllPaperFromTable_class(WebDriver driver, Object object){
+        ProjectController.openAllPapersPage(driver);
+        work_through_table_class(driver,getPaperFromDOM,object);
+    }
 
-            }
-        }
-        return assigments;
+    public static void getPapersForClassification(WebDriver driver, Object object){
+
+        ProjectController.openAllPapersPage(driver);
+        // select the table that contains the screening phaseas
+        By table = By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE);
+        work_through_table_function(driver,getPaperFromDOM,object,table,Utility::hasNextPageForClassification);
+
     }
 
     public static ArrayList<Paper> getPapersForClassi(WebDriver driver, WebElement tables){
@@ -466,18 +486,7 @@ public class Utility {
         }
         return assigments;
     }
-    /**
-     *
-     * @param driver the web driver
-     * @return return all the papers for the project
-     */
-    public static   ArrayList<Paper> getAllPapers(WebDriver driver){
-        ProjectController.openAllPapersPage(driver);
-        // select the table that contains the screening phaseas
-        WebElement table = driver.findElement(By.id(ProjectUtils.ID_PROJECT_TABLE_USERS));
-        return getAllPapersFrom(driver,table);
 
-    }
 
     public static ArrayList<Paper> getAllPapersToCLassify(WebDriver driver){
         ProjectController.openAllPapersPage(driver);
@@ -567,26 +576,41 @@ public class Utility {
     }
 
 
-    public static TypeOf getTypeOfObject(String type, int maxChar){
 
-        if(type.equals("string") || type.equals("text")){
-            StringType type1=  new StringType();
-            type1.setMaxCharacter(maxChar);
-            return type1;
+
+    public static int indexOfNth(String data,String str, int rank){
+
+        assert  rank >=1;
+        int i=0,from=0;
+
+        while (rank-- >= 1 ){
+
+            i = data.indexOf(str,from);
+            from = i+1;
         }
+        return i;
+    }
 
-        else if(type.equals("real"))
-            return new RealType();
-        else if(type.equals("bool"))
-            return new BooleanType();
-        else if(type.equals("date"))
-            return new DateType();
-        else if(type.equals("int")){
-            IntegerType intType = new IntegerType();
-            intType.setMaxCharacter(maxChar);
-            return intType;
+
+    public static boolean isRelisPunctuation(char ch){
+
+        return ch == '{' || ch == '[' || ch == ']' || ch == '}' || ch == '*' || ch == '\"'
+                || ch == '\'' || ch == ':' || ch == '(' || ch == ')'|| ch == '=';
+    }
+
+    public static char getNextPunctuation(StringParser data){
+        String str = data.getData();
+        int i=0;
+        while (i < str.length())
+        if(str.charAt(i) == '!' || str.charAt(i) == ',' || str.charAt(i) == ';' || str.charAt(i) == '.' ||
+                str.charAt(i) == '?' || str.charAt(i) == '-' ||
+                str.charAt(i) == '\'' || str.charAt(i) == '\"' || str.charAt(i) == ':')
+        {
+            data.updateData(i);
+            return str.charAt(i);
         }
-        return null;
-
+        else if(str.charAt(i) == ' ' || str.charAt(i) == '\n') i++;
+        else return ' ';
+        return ' ';
     }
 }

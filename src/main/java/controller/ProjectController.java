@@ -14,6 +14,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.PaperUtils.*;
+import static utils.ProjectUtils.*;
+
 
 public class ProjectController {
 
@@ -33,6 +36,8 @@ public class ProjectController {
 
   private static final ScreeningController screening_controller = new ScreeningController();
   private static final ScreeningPhaseController screeningPhaseController = new ScreeningPhaseController();
+
+
 
     public static void openAllPapersPage(WebDriver driver) {
         openAllPaper(driver);
@@ -107,7 +112,7 @@ public class ProjectController {
     }
 
 
-    private static void openAllPaper(WebDriver driver) {
+    public static void openAllPaper(WebDriver driver) {
 
         // go to the paper
         driver.findElement(By.className(PaperUtils.CLASS_NAME_OPEN_PAPER)).click();
@@ -125,12 +130,46 @@ public class ProjectController {
      */
     public void importBibTexPapers(WebDriver driver, String fileName) {
 
+        importPapers(driver, LK_BIBTEX_IMPORT_MODE,fileName);
+     
+    }
+
+    public void addVenue(WebDriver driver, String venuename){
+
+        Views.openMenuFrom(driver,LK_VENUES);
+        driver.findElement(By.cssSelector(CSS_ADD_VENUE)).click();
+        driver.findElement(By.id(ID_VENUE_FULL_NAME)).sendKeys(venuename);
+        driver.findElement(By.id(ID_VENUE_YEAR_INPUT)).sendKeys("2021");
+
+        driver.findElement(By.className(CLASS_SUCCESS_BUTTON)).click();
+
+    }
+
+    /**
+     * import papers from csv file
+     * @param driver the web driver
+     * @param fileName the file name
+     */
+    public void importPapersFromCSV(WebDriver driver, String fileName){
+        importPapers(driver, LK_CV_IMPORT_MODE,fileName);
+    }
+
+    /**
+     * import papers from endnote file
+     * @param driver the web driver
+     * @param fileName the file name
+     */
+    public void importPapersFromEndNote(WebDriver driver, String fileName){
+        importPapers(driver, LK_END_NOTE_IMPORT_MODE, fileName);
+    }
+
+    private void importPapers(WebDriver driver, String mode, String fileName){
 
         // push the import menu
         driver.findElement(By.linkText(PaperUtils.LK_IMPORT_PAPER)).click();
         //choose using Bibtex option
         new WebDriverWait(driver, 5).until(ExpectedConditions.elementToBeClickable(
-                By.linkText(PaperUtils.LK_BIBTEX_IMPORT_MODE))).click();
+                By.linkText(LK_BIBTEX_IMPORT_MODE))).click();
         File bib_file = new File(fileName);
         // we gotta choose the file and import all the papers from it
         driver.findElement(By.name(PaperUtils.NAME_BIBTEX_FILE_CHOOSE_ELEM)).sendKeys(bib_file.getAbsolutePath());
@@ -142,7 +181,7 @@ public class ProjectController {
         //driver.findElement(By.className(utils.PaperUtils.CLASS_BACK_FROM_PAPERS_IMPORT_BUTTON)).click();
 
     }
-
+    
     /**
      * adding a reviewer to a project
      *
@@ -518,19 +557,16 @@ public class ProjectController {
 
 
 
-    public ArrayList<RelisUser> assginReviewerForScreening(WebDriver driver, RelisUser connectUser){
+    public void assginReviewerForScreening(WebDriver driver, RelisUser connectUser){
 
-        if(!connectUser.getUser_usergroup().equals("1")) return null;
+        if(!connectUser.getUser_usergroup().equals("1")) return;
         // we go to the project phases
         driver.findElement(By.className(ProjectUtils.CLASS_HOME_PROJECT)).click();
-        return ScreeningView.assign_papers(driver,1);
+        ScreeningView.assign_papers(driver, 1);
 
     }
 
-    public static ArrayList<Paper> getAllPapers(WebDriver driver){
-        openAllPaper(driver);
-        return Utility.getAllPapers(driver);
-    }
+
 
 
 

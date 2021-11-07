@@ -1,6 +1,7 @@
-package model;
+package model.relis_categories;
 
 import lombok.Data;
+import model.Paper;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -67,4 +68,6 @@ public abstract class Category implements Cloneable {
 
         return subCategorys.size() > 0;
     }
+
+    public abstract String getContentValue();
 }

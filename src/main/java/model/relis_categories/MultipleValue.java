@@ -1,7 +1,7 @@
-package model;
+package model.relis_categories;
 
 import lombok.Data;
-import org.openjdk.jol.vm.VM;
+import model.relis_categories.Category;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,7 +12,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Data
-public abstract class MultipleValue extends Category{
+public abstract class MultipleValue extends Category {
 
     protected ArrayList<String> values = new ArrayList<>();
     protected ArrayList<String> userChoices;
@@ -25,7 +25,7 @@ public abstract class MultipleValue extends Category{
         if(userChoices == null) userChoices = new ArrayList<>();
         if(values.size() == 0)
             return;
-        System.out.println("before adding choice=" +userChoices +" adress="  + VM.current().addressOf(userChoices));
+
         if(getNumberofValue() == 1 || getNumberofValue()  == 0) {
 
             String val = values.get(random.nextInt(0, values.size()));
@@ -50,7 +50,7 @@ public abstract class MultipleValue extends Category{
     @Override
     public String displayDataContent(){
         String sub= "";
-        for(Category d : getSubCategorys()) sub += d.displayDataContent()+"\n";
+        for(Category d : getSubCategorys())if(d != null) sub += d.displayDataContent()+"\n";
         if (!sub.equals("")) sub = "{\n"+sub+"\n}";
         return super.displayDataContent() +";=>" + getUserChoices() + sub;
     }
@@ -67,4 +67,26 @@ public abstract class MultipleValue extends Category{
     }
 
 
+    public String getContentValue(){
+
+        String val="";
+        int i=0;
+        ArrayList<String> data = (ArrayList<String>) userChoices.stream()
+                .sorted()
+                .collect(Collectors.toList());
+        if(data.size() == 2){
+            val = data.get(0) +" | " + data.get(1);
+        } else
+        for(String response : data){
+            if(i ==0 )
+                val += response;
+            else if((i == userChoices.size()-1))
+                val += "| " + response;
+           else val += " | "+response +" " ;
+           i++;
+        }
+
+        return val;
+
+    }
 }

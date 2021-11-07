@@ -1,93 +1,39 @@
 package model;
 
-import com.google.common.collect.ArrayListMultimap;
-import databases.DataBase;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import utils.ClassificationUtils;
+import model.relis_categories.Category;
+import model.relis_categories.DependantDynamicCategory;
 import utils.Utility;
-import view.ClassificationView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-
-import static utils.ClassificationUtils.*;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
 public class ClassificatedPaper {
 
 
-    private HashMap<String,String> fieldsCateogory;
-    private String transFormationName;
-    private boolean Industrial;
-    private boolean Bidirectional;
-    private int numberOfCitations;
+
     private Paper paper;
     private String year;
 
     private ArrayList<Category> categories;
 
+    private String validated_msg;
+    private String validation_note;
 
 
 
     public ClassificatedPaper(Paper paper_key){
         this.paper = paper_key;
-        fieldsCateogory =  new HashMap<>();
+
 
         year = Utility.extractYearFrom(paper.getKey());
         paper_key.setYear( year);
     }
 
 
-
-    public void classify(){
-
-        Random random = new Random();
-        String domains = DataBase.getInstance().getNextClassificationCategory(DOMAINS_FIELD);
-        String targetLanguage = DataBase.getInstance().getNextClassificationCategory(TARGET_LANG_FIELD);
-        String sourceLanguage = DataBase.getInstance().getNextClassificationCategory(SOURCE_LANG_FIELD);
-        String Scope = DataBase.getInstance().getNextClassificationCategory(SCOPE_FIELD);
-        year = Utility.extractYearFrom(paper.getKey());
-        Bidirectional =  random.nextBoolean();
-        Industrial  = random.nextBoolean();
-        numberOfCitations = random.nextInt(2,12);
-        transFormationName = paper.getTitle();
-        String transformationLanguage = DataBase.getInstance().getNextClassificationCategory(TRANSFORMATION_LANG);
-        fieldsCateogory.put(DOMAINS_FIELD, domains);
-        fieldsCateogory.put(TARGET_LANG_FIELD, targetLanguage);
-        fieldsCateogory.put(SOURCE_LANG_FIELD,sourceLanguage);
-        fieldsCateogory.put(SCOPE_FIELD,Scope);
-        fieldsCateogory.put(TRANSFORMATION_LANG,transformationLanguage);
-    }
-
-//
-//    public String toString(){
-//        String domains="",targetLanguage="",sourceLanguage="",Scope="";
-//        if(fieldsCateogory != null){
-//            try {
-//                domains = fieldsCateogory.get(DOMAINS_FIELD);
-//                targetLanguage = fieldsCateogory.get(TARGET_LANG_FIELD);
-//                sourceLanguage = fieldsCateogory.get(SOURCE_LANG_FIELD);
-//                Scope = fieldsCateogory.get(SCOPE_FIELD);
-//
-//            } catch (Exception exception){};
-//        }
-//        return "[ domains => "+ domains+" , transFormationName =>" + transFormationName+"\n"
-//                +"\t sourceLanguage  => "+sourceLanguage +", targetLanguage => " + targetLanguage +"\n"
-//                +"\t Scope => " +Scope +", Bidirectionnal =>" + Bidirectional +", Indistrual =>" +Industrial+"\n"
-//                +"\t numberOfCitation =>" + numberOfCitations +", year => " + year +"\n]";
-//    }
-
-
-    public String getCategoryValue(String category){
-
-
-        if( fieldsCateogory != null)
-            return fieldsCateogory.get(category);
-        return "";
-    }
 
 
     public void classifyData(){
@@ -118,5 +64,44 @@ public class ClassificatedPaper {
         categories.add(category);
     }
 
+
+    public boolean compareDisplayNameVal(String displayName, String dom_value){
+
+        Category category = getCategoryByDisplayName(displayName);
+        assert category != null;
+
+        String value = category.getContentValue();
+        String msg = dom_value+" VS " + value;
+        System.out.print(" VS choosedValue={" + value+"}");
+        // if the current category has sub categories so retur false
+        // cause as of now relis doesn't consider the sub categories
+        boolean result = value.equals(dom_value);
+        if(category.hasSubCategory())
+            return false;
+        return result;
+
+    }
+
+    /**
+     * this method return all dependedList
+     * that the independent list  that they depend on have a sub categories
+     *
+     * @return list of categories
+     */
+    public ArrayList<Category> getDependedAndHasDependsSubCategories() {
+
+      return (ArrayList<Category>) categories.stream()
+                .filter(category -> category instanceof DependantDynamicCategory)
+                .filter( category -> ((DependantDynamicCategory) category).getDependent_on() != null)
+                .filter(category -> ((DependantDynamicCategory) category).getDependent_on().hasSubCategory())
+                .collect(Collectors.toList());
+
+    }
+
+
+    public void addValidation(String correct, String not) {
+        validated_msg = correct;
+        validation_note = not;
+    }
 
 }

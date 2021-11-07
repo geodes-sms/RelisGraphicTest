@@ -33,6 +33,7 @@ public class Views {
         // list of every users web element
         List<WebElement> users = driver.findElements(By.className("form-group"));
         users.remove( users.size()-1);
+
         // we don't have enough user to choose ?
         if(users.size() <= number){ // if so we choose all the users
 
@@ -93,6 +94,7 @@ public class Views {
             try{
                 if(li.getText().equals(name)){
                     Views.performClickWithJsExec(driver,li.findElement(By.tagName("a")));
+                    return;
                 }
             }
             catch (Exception e){
@@ -175,11 +177,12 @@ public class Views {
             driver.findElement(By.linkText(subOptions)).click();
 
         } catch (Exception m){
-
+            scrollToElement(driver,By.linkText(menu_name));
             driver.findElement(By.linkText(menu_name)).click();
             webDriverWait.until(ExpectedConditions.presenceOfElementLocated(
                     By.linkText(subOptions)
             )).sendKeys(Keys.ENTER);
+
         }
     }
 
@@ -253,4 +256,9 @@ public class Views {
         return bg.equals("rgba(255, 255, 255, 1)");
     }
 
+    public static void openMenuFrom(WebDriver driver, String menu_name) {
+
+        scrollToElement(driver,By.linkText(menu_name));
+        driver.findElement(By.linkText(menu_name)).click();
+    }
 }

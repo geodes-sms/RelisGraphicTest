@@ -3,6 +3,7 @@ package model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import model.user_work.QualityAssementSessionWork;
 
 import java.util.ArrayList;
 
@@ -13,15 +14,15 @@ import java.util.ArrayList;
 public class QualityAssement {
 
 
-    private String name ="Classification";
+    private String name ="Quality Assement";
 
-    private float min_score = 3.5f;
+    private double min_score = 3.5f;
     private int score = 0;
 
 
 
     private QuestionAnswesPaper questionAnswesPaper = null;
-    private ArrayList<QualityAssementSessionWork> participants;
+    private ArrayList<QualityAssementSessionWork> participants= new ArrayList<>();
 
     private ArrayList<QA_Paper> qa_papers = new ArrayList<>();
 
@@ -111,5 +112,23 @@ public class QualityAssement {
 
     public void closeAllWebDriver(){
         participants.forEach( p -> p.getDriver().quit());
+    }
+
+
+    public void setQuestionsForOA(String[] questions){
+
+        if(questionAnswesPaper == null){
+            questionAnswesPaper = new QuestionAnswesPaper();
+
+        }
+        for (String question : questions) questionAnswesPaper.addQuestions(question);
+    }
+
+    public void addResponse(String answers, double score) {
+        if(questionAnswesPaper == null){
+            questionAnswesPaper = new QuestionAnswesPaper();
+
+        }
+        questionAnswesPaper.addAnswer(answers,score);
     }
 }

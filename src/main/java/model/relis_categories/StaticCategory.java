@@ -1,16 +1,14 @@
-package model;
+package model.relis_categories;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
+import model.Paper;
 
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 @Data
 @ToString
-public class StaticCategory extends MultipleValue{
+public class StaticCategory extends MultipleValue {
 
 
 

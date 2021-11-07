@@ -41,6 +41,15 @@ public class ProjectUtils {
     public static final String LK_CONFIRM_DELETE_ALL_PAPERS = "Continue to delete";
     public static final String ID_PAPERS_INFOS = "datatable-responsive_info";
     public static final String  ID_NEXT_PAPERS_PAGE ="datatable-responsive_next";
+
+    /***
+     * VENUES MANAGEMENT
+     */
+    public static final String LK_VENUES = "Venues";
+    public static final String CSS_ADD_VENUE = "a[title='Add a new venue']";
+    public static final String ID_VENUE_FULL_NAME = "venue_fullName";
+    public static final String ID_VENUE_YEAR_INPUT = "venue_year";
+
     /*****************************************************************************************
      *
      *

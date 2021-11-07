@@ -378,15 +378,12 @@ public class ScreeningView {
 
     public static void resolve(WebDriver driver, ScreeningPhase phase){
 
-        while (true){
-
-          try {
+        int n = phase.getPaperInConflictCount();
+        for (int i = 0; i < n; i++) {
             resolveConflict(driver, phase);
-          } catch (Exception e){
-           e.printStackTrace();
-            break;
-          }
         }
+
+
     }
 
     public static  void resolveConflict(WebDriver driver, ScreeningPhase phase){

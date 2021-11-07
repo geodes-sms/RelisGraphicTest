@@ -1,13 +1,9 @@
-package model;
+package model.relis_categories;
 
 import lombok.Data;
 import lombok.ToString;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import view.ClassificationView;
+import model.Paper;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 @Data

@@ -14,6 +14,9 @@ public class Criteria implements Cloneable{
     private int count = 0;
 
 
+    public Criteria(String name){
+        this.name = name;
+    }
 
     public boolean equals(Object o){
 

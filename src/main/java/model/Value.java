@@ -2,6 +2,7 @@ package model;
 
 
 import lombok.Data;
+import model.relis_type.TypeOf;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -13,7 +14,9 @@ public class Value  implements Cloneable{
     private String value;
 
     public void setMockValue(){
-       value =  type.getMockValue().toString();
+
+        if(value == null || value.equals("")) value = type.getMockValue().toString();
+        //System.out.println("value={" + value+"}");
     }
     public void sendValueToDOM(WebDriver driver,WebElement input){
         type.sendValueToDOM(driver,input,value);

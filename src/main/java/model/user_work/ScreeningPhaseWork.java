@@ -1,10 +1,11 @@
-package model;
+package model.user_work;
 
 import controller.ConnexionController;
 import controller.ProjectController;
 import controller.ScreeningPhaseController;
 import databases.PapersDataBase;
 import lombok.Data;
+import model.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import utils.Initialiazer;
@@ -16,13 +17,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 @Data
-public class PhaseWork  implements Observer {
+public class ScreeningPhaseWork implements Observer {
 
   private ArrayList<Paper> pendingAssignments = new ArrayList<>();
 
   private RelisUser participant;
 
   private ScreeningPhase phase;
+  private String projectName;
 
   private int included;
   private int excluded;
@@ -34,11 +36,8 @@ public class PhaseWork  implements Observer {
     Initialiazer initialiazer = new Initialiazer();
     initialiazer.init();
     participant.setDriver(initialiazer.getWebDriver());
-    ConnexionController connexion = new ConnexionController();
-    connexion.connect(participant.getDriver(), participant);
-    ProjectController projectManager = new ProjectController();
-
-    projectManager.openProject(participant.getDriver(), "");
+    ConnexionController.connect(participant.getDriver(), participant);
+    ProjectController.openProject(participant.getDriver(), phase.getProjectName());
     pendingAssignments = ScreeningPhaseController.getUserPapersAssignments(this);
 
 
@@ -95,7 +94,7 @@ public class PhaseWork  implements Observer {
 
       } else if (lastDecision == PaperDecision.EXCLUDED) {
 
-        PhaseWork userDecision = paper.getLast_decision_user();
+        ScreeningPhaseWork userDecision = paper.getLast_decision_user();
 
         Criteria c = PapersDataBase.getInstance().getNextCriteriaFrom(userDecision.
           getPaperByKey(paper.getKey()).getCriteria());

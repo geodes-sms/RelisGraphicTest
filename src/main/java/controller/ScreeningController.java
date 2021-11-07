@@ -4,6 +4,7 @@ import model.*;
 import org.openqa.selenium.WebDriver;
 import view.ScreeningView;
 
+import javax.script.ScriptEngine;
 import java.util.ArrayList;
 
 public class ScreeningController {
@@ -53,9 +54,11 @@ public class ScreeningController {
       phase.setUpPhase(driver);
     return phaseName;
   }
-  public void startTheCurrentPhase(WebDriver driver, Screening screening){
+  public void startTheCurrentPhase(WebDriver driver, Project project){
 
+    Screening screening = project.getScreening();
     ScreeningPhase phase = phaseController.getCurrentScreeningPhase(driver,screening);
+    phase.setProjectName(project.getProject_name());
     phaseController.makeReadyForScreeningpPhase(driver, phase);
     phase.startThisPhaseScreening();
   }

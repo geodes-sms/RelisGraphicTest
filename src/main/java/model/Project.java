@@ -28,6 +28,7 @@ public class Project {
 
     private String projectId;
     private Classification classification;
+    private QualityAssement qa;
 
 
     /**
@@ -42,5 +43,7 @@ public class Project {
     }
 
 
-
+    public void setQA(QualityAssement qa) {
+        this.qa  = qa;
+    }
 }

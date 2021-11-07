@@ -34,13 +34,10 @@ public class ScreeningDecisionMaker {
         }
         int rest = UpperBoundPaperLength;
 
-        INCLUDED  = random.nextInt(random.nextInt(
-                Math.min(30, (int) Math.floor(rest/4)),(int) Math.floor(rest/3)
-        ), (int) rest/2);
-        rest -= INCLUDED;
-        EXCLUDED = random.nextInt(Math.min((int)Math.floor(rest/3), (int) Math.floor(rest/4)),
-                (int) Math.floor(rest/3) +1);
-        IN_CONFLICT = UpperBoundPaperLength - EXCLUDED - INCLUDED;
+        EXCLUDED = 5;
+
+        IN_CONFLICT = 3;
+        INCLUDED = rest -8;
         System.out.println("INCLUDE = " + INCLUDED);
         System.out.println("EXCLUDED " + EXCLUDED);
         System.out.println("IN_CONFLICT = " + IN_CONFLICT);

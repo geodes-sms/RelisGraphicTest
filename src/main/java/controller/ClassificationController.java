@@ -4,6 +4,7 @@ import model.Classification;
 import model.Paper;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import utils.Initialiazer;
 import utils.ProjectUtils;
 import utils.ScreeningUtils;
@@ -12,6 +13,7 @@ import view.ClassificationView;
 import view.Views;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ClassificationController {
 
@@ -40,8 +42,8 @@ public class ClassificationController {
     public void setUpAClassification(WebDriver driver, Classification classification){
 
         if(classification == null ) return;
-        ArrayList<Paper> toClassify = Utility.getAllPapersToCLassify(driver);
-
+        ArrayList<Paper> toClassify = new ArrayList<>();
+        Utility.getPapersForClassification(driver,toClassify);
         classification.setPapersToClassify(toClassify);
         classification.classifyAllPapers();
     }
@@ -68,14 +70,20 @@ public class ClassificationController {
 
     public void assign_validators(WebDriver driver, Classification classification){
         views.assign_validator(driver,classification);
-        System.out.println(classification);
-    }
-    public void classifNextPaper(WebDriver driver,Classification classification){
-
-
-        views.classifyPaper(driver,classification);
+        //System.out.println(classification);
     }
 
+    public void makeReadyForValidationPhase(WebDriver driver, Classification classification){
+
+        try {
+            openClassificationPhase(driver);
+        } catch (Exception e){};
+        if(classification.getValidators().size() == 0){
+            assign_validators(driver,classification);
+        }
+
+
+    }
     public void makeReadyForClassification(WebDriver driver, Classification classification){
 
         openClassificationPhase(driver);
@@ -105,21 +113,31 @@ public class ClassificationController {
                         ConnexionController.connect(drive,relisUser);
                         ProjectController.openProject(drive,"Project 2");
                         ClassificationView.openClassification(drive);
-                        views.classifyPaperSection(drive,classification);
+                        views.classifyAndTest(drive,classification);
                     });
+            extractDOM_classificationValues(driver,classification);
 
     }
 
     public void finishValidationPhase(WebDriver driver, Classification classification){
 
-
-        while (true){
-            try {
-
-                views.validateNextPaper(driver,classification);
-            }catch (Exception e){
-                e.printStackTrace();
-                break;}
+        //views.openValidatePaperPage(driver);
+        makeReadyForValidationPhase(driver,classification);
+        int i=0, max =classification.getPapersToClassifyLength();
+        while (++i < max){
+            views.validateNextPaper(driver,classification);
         }
+
+        views.extracDOM_validation(driver,classification);
+
     }
+
+
+    public void extractDOM_classificationValues(WebDriver driver,Classification classification){
+
+        views.extracDOM_classification_values(driver,classification);
+    }
+
+
+
 }

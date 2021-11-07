@@ -1,4 +1,4 @@
-package model;
+package model.relis_type;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

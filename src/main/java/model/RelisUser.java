@@ -3,6 +3,7 @@ package model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import model.user_work.ScreeningPhaseWork;
 import org.openqa.selenium.WebDriver;
 import utils.Utility;
 import java.util.ArrayList;
@@ -25,8 +26,8 @@ public class RelisUser implements Comparable<RelisUser> {
     private String user_active;
 
     private WebDriver driver= null;
-    private ArrayList<PhaseWork> my_screening= new ArrayList<>();
-    private PhaseWork current_work ;
+    private ArrayList<ScreeningPhaseWork> my_screening= new ArrayList<>();
+    private ScreeningPhaseWork current_work ;
 
 
     /**
@@ -83,14 +84,6 @@ public class RelisUser implements Comparable<RelisUser> {
         return 0;
     }
 
-    public void addScreening( PhaseWork screening){
-
-        this.my_screening.add(screening);
-    }
-
-    public void removeScreeningPhase(PhaseWork screening){
-        this.my_screening.remove(screening);
-    }
 
 
 
@@ -100,19 +93,6 @@ public class RelisUser implements Comparable<RelisUser> {
 
 
 
-    public Paper getPaper(String key) {
 
-        return current_work.getPaperByKey(key);
-    }
-
-    public void showStatistic(){
-
-        current_work.printStatistics();
-    }
-
-    public int CountByExcludedCriteria(Criteria c1, ScreeningPhase phase) {
-
-        return current_work.getCriteriaCount(c1);
-    }
 }
 

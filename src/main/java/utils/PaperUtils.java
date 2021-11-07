@@ -19,7 +19,7 @@ public class PaperUtils {
     public static final String LK_IMPORT_PAPER = "Import Papers";
 
     public static final String CLASS_CLOSE_PAPER_BUTTON  ="fa-close";
-    public static final String LK_BIBTEX_IMPORT_MODE ="Import BibTeX";
+
     public static final String NAME_BIBTEX_FILE_CHOOSE_ELEM = "paper_file";
 
     public static final String CLASS_UPLOAD_IMPORTED_PAPERS_BUTTON = "btn-success";
@@ -29,4 +29,8 @@ public class PaperUtils {
     public static final String EDIT_PAPER_MODE = "EDIT";
     public static final String SEARCH_MODE = "SEARCH";
     public static final String COUNT_PAPER_MODE = "COUNT PAPER";
+
+    public static final String LK_CV_IMPORT_MODE = "Import CSV";
+    public static final String LK_BIBTEX_IMPORT_MODE ="Import BibTeX";
+    public static final String LK_END_NOTE_IMPORT_MODE = "Import EndNote";
 }

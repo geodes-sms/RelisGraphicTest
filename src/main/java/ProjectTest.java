@@ -4,6 +4,7 @@ import databases.DataBase;
 import databases.PapersDataBase;
 import model.*;
 
+import model.relis_parser.RelisParser;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
@@ -25,6 +26,7 @@ public class ProjectTest {
     Project project;
 
     private static final String Project2 = "Project 2";
+    private static final String project_demo = "Mocel transformation";
 
     private static final ProjectController projectManager = new ProjectController();
     private static final  ConnexionController connexion = new ConnexionController();
@@ -39,15 +41,8 @@ public class ProjectTest {
         Initialiazer init = new Initialiazer();
         init.init();
         driver = init.getWebDriver();
-        project = new Project();
-        project.setProject_name("Model Transformation");
-        Screening screening = new Screening();
-        Classification classification = new Classification();
-        MainTest.setCategories(classification);
-        classification.showCategories();
-        project.setClassification(classification);
-
-        project.setScreening(screening);
+        project = RelisParser.getProjectFromFiles();
+        //project.setProject_name(project_demo);
 
     }
 
@@ -55,8 +50,8 @@ public class ProjectTest {
   @Test(priority = 1)
     public void ConnexionTest(){
 
-        RelisUser user = Utility.getUserByUserName("admin");
-        connexion.connect(driver, user);
+        RelisUser user = Utility.getUserByUserName("youssouf1");
+        ConnexionController.connect(driver, user);
         String user_name = driver.findElement(By.className(
                 ConnexionUtils.CLASS_CONNECTED_USER_PROFILE_NAME)).getText();
 
@@ -67,21 +62,25 @@ public class ProjectTest {
    @Test(priority = 2)
     public void openProjectTest(){
 
-        ProjectController.openProject(driver, Project2);
+        ProjectController.openProject(driver, project.getProject_name());
         String title  = driver.findElement(By.cssSelector(ProjectUtils
                 .CSS_OPENED_PROJECT_NAME)).getText();
 
-        sc.getScreeningPhaseData(driver,project.getScreening());
-        assertEquals(title, "Project : " +ProjectUtils.model_transformation_project);
-
+        assertEquals(title, "Project : " +project.getProject_name());
 
     }
-  // @Test(priority = 3)
+   //@Test(priority = 3)
     public void deleteAllPaper(){
 
         projectManager.deleteAllPapers(driver);
         int papersLength = projectManager.getProjectPapersLength(driver);
         assertEquals(papersLength,0);
+    }
+
+   // @Test(priority = 3)
+    public void addVenueTest(){
+        projectManager.addVenue(driver,"The world after covid19");
+        assertTrue(true);
     }
     //@Test(priority = 3)
     public void deleteAllUserRole(){
@@ -112,16 +111,7 @@ public class ProjectTest {
         assertEquals(imported_papers_length,98);
 
     }
-    //@Test(priority = 6)
-    public void setDaya() throws CloneNotSupportedException {
 
-        ArrayList<Paper> p = ProjectController.getAllPapers(driver);
-        PapersDataBase.getInstance().setMockCriteria(); // TODO criteria extraction
-
-        //PapersDataBase.getInstance().setData(p);
-        assertTrue(true);
-
-    }
 //
 //    @Test(priority = 7)
 //    public void addReviewerTest(){
@@ -223,9 +213,6 @@ public class ProjectTest {
       phase.printInfo();
       assertTrue(true);
 
-
-
-
     }
 
 
@@ -239,7 +226,7 @@ public class ProjectTest {
 
 
             // start the screening phase
-            sc.startTheCurrentPhase(driver,project.getScreening());
+            sc.startTheCurrentPhase(driver,project);
             // now the screening phase is finish
             // get the screening result of the website
             String result = ScreeningView.extractScreeningResult(driver);
@@ -264,7 +251,7 @@ public class ProjectTest {
 
     }
 
-     //@Test(priority = 20)
+     @Test(priority = 20)
     public void testQA(){
 
         QualityAssementController.openQA_page(driver);
@@ -277,11 +264,18 @@ public class ProjectTest {
 
 
     }
-   @Test(priority = 21)
+     @Test(priority = 21)
     public void classifyPapersTest(){
-        classControler.finishClassificationPhase(driver,project.getClassification());
-
+       // classControler.finishClassificationPhase(driver,project.getClassification());
+        //classControler.extractDOM_classificationValues(driver,project.getClassification());
         //classControler.finishClassificationPhase(driver,project.getClassification());
+    }
+
+  //  @Test(priority = 22)
+    public void validateClassificationTest(){
+
+        classControler.finishValidationPhase(driver,project.getClassification());
+
     }
 
 //    @AfterTest
@@ -302,6 +296,18 @@ public class ProjectTest {
 
         projectManager.assginReviewerForScreening(driver,Utility.getCurrentConnectedUser(driver));
     }
+
+
+    @Test(priority = 24)
+    public void tester(){
+
+//        ArrayList<Paper> papers = new ArrayList<>();
+//        ProjectController.openAllPaper(driver);
+//        Utility.getAllPaperFromTable_id(driver,papers);
+//        System.out.println("papers size=" + papers.size());
+
+    }
+
 
 
 

@@ -1,22 +1,18 @@
-package model;
+package model.relis_categories;
 
-import databases.DataBase;
 import lombok.Data;
 import lombok.ToString;
 
+import model.Paper;
+import model.Value;
+import model.relis_categories.Category;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import view.ClassificationView;
-
-import java.util.Random;
-
-import static utils.ClassificationUtils.CLASS_SWITCH_CKECKBOX;
-import static utils.ClassificationUtils.CSS_INPUT_TEXT;
 
 @Data
 @ToString
-public class FreeCategory  extends Category{
+public class FreeCategory  extends Category {
 
     private Value value;
 
@@ -47,5 +43,10 @@ public class FreeCategory  extends Category{
         System.out.println("comparaision(" + labelCategory +" , VS , " + text+")");
         assert  labelCategory.equals(text);
         value.sendValueToDOM(driver,input);
+    }
+
+    @Override
+    public String getContentValue() {
+        return value.getValue();
     }
 }

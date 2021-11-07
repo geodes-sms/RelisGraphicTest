@@ -1,16 +1,14 @@
-package model;
+package model.relis_categories;
 
 import lombok.Data;
-import lombok.ToString;
+import model.Paper;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Objects;
-import java.util.Random;
 
 @Data
 
-public class IndependantDynamicCategory extends MultipleValue{
+public class IndependantDynamicCategory extends MultipleValue {
 
     private String reference_id;
     private String reference_to;
@@ -53,13 +51,13 @@ public class IndependantDynamicCategory extends MultipleValue{
 
         IndependantDynamicCategory c = (IndependantDynamicCategory) super.clone();
         final  ArrayList<String> copiedUserChoices= new ArrayList<>();
-        ArrayList<String> copiedValues = new ArrayList<>();
-       // copiedUserChoices = new ArrayList<>();
-        copiedValues.addAll(getValues());
+        // copiedUserChoices = new ArrayList<>();
+        ArrayList<String> copiedValues = new ArrayList<>(getValues());
         c.setValues(copiedValues);
         //c.setUserChoices(copiedUserChoices);
         ArrayList<Category> sub = new ArrayList<>();
-        getSubCategorys().forEach( category1 -> sub.add((Category) category1.clone()));
+        getSubCategorys().stream().filter(Objects::nonNull)
+                .forEach( category1 -> sub.add((Category) category1.clone()));
         c.setSubCategorys(sub);
         return c;
     }

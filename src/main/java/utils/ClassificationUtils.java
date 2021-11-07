@@ -51,5 +51,8 @@ public class ClassificationUtils {
     public static final String CSS_EDIT_CLASSIFICATION_BTN = "a[title='Edit the classification']";
     public static final String CSS_RELIS_MODALS_FORM = "#relisformModal .form-group";
     public static final String ID_LABEL_CLASSIFICATION = "myModalLabel";
+    public static final String LK_RESULTS_CLASSIFICATION = "Result";
     public static String LK_My_CLASSIFIED = "My Classified";
+
+    public static final String LK_TABLE_RESULT_OF_CLASSIFICATION = "Table";
 }

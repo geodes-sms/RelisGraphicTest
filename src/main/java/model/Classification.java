@@ -2,11 +2,15 @@ package model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import model.relis_categories.Category;
+import model.relis_categories.DependantDynamicCategory;
+import model.relis_categories.IndependantDynamicCategory;
+import model.relis_categories.MultipleValue;
+import model.relis_parser.RelisParser;
 import utils.MainTest;
 import utils.Utility;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,8 +28,13 @@ public class Classification {
 
     private  ArrayList<Category> allCategories = new ArrayList<>();
 
+
+    private ArrayList<String> categories_displayed_names;
+
     private ArrayList<ClassificatedPaper> classificatedPapers;
 
+
+    private String test_message = "";
 
     public String toString(){
 
@@ -42,7 +51,7 @@ public class Classification {
             for(Paper p : papersToClassify)
                 papers.append("\t").append(p).append(" ,\n");
         else papers = new StringBuilder(" ");
-         allCategories.forEach( cat-> System.out.println( cat.displayDataContent()));
+         allCategories.stream().filter(Objects::nonNull).forEach(cat-> System.out.println( cat.displayDataContent()));
         return "[Papers =>[" + papers +"\n], \n" + " classificators => \n["+ users + "]\n]"
                 +"\n Validators => \t [" + validator_user +"\n \t ]\n ]";
     }
@@ -67,48 +76,17 @@ public class Classification {
                 .orElse(null);
     }
 
-    private void setLinKObject(ArrayList<Category> categories){
-        categories.stream()
-                .filter( cat-> (cat instanceof DependantDynamicCategory))
-                .forEach( category -> {
-                    MultipleValue c =  (MultipleValue) categories.stream().
-                            filter( category1 -> {
-                                String dependent_on_id= ((DependantDynamicCategory)category).
-                                        getDependent_on().getIdentifier();
 
-                              return dependent_on_id.equals(category1.getIdentifier());
-                            })
-                            .findFirst().orElse(null);
-                    ( (DependantDynamicCategory) category).setDependent_on(c);
-
-
-                });
-        categories.forEach(cat->{
-            cat.getSubCategorys().stream()
-                    .filter( sub-> (sub instanceof DependantDynamicCategory))
-                    .forEach(subCat->{
-                        MultipleValue c =  (MultipleValue) categories.stream().
-                                filter( category1 ->{
-                                    String dependent_on_id= ((DependantDynamicCategory)subCat).
-                                            getDependent_on().getIdentifier();
-
-                                   return dependent_on_id.equals(category1.getIdentifier()) ;
-                                } )
-                                .findFirst().orElse(null);
-                        ( (DependantDynamicCategory) subCat).setDependent_on(c);
-                    });
-
-        });
-        MainTest.setReferences(categories);
-    }
     public void classifyAllPapers(){
 
             papersToClassify.forEach(paper->{
             ClassificatedPaper classificatedPaper = new ClassificatedPaper(paper);
 
-            allCategories.forEach(cat-> classificatedPaper.addCategory((Category) cat.clone()));
+            allCategories.stream()
+                    .filter(Objects::nonNull)
+                    .forEach(cat-> classificatedPaper.addCategory((Category) cat.clone()));
 
-            setLinKObject(classificatedPaper.getCategories());
+            RelisParser.setLinKObject(classificatedPaper.getCategories());
             classificatedPaper.classifyData();
 
 
@@ -119,11 +97,8 @@ public class Classification {
 
             classificatedPapers.add(classificatedPaper);
         });
-        classificatedPapers.forEach(cl->{
-            cl.classifyData();
-            System.out.println("classified \n\n");
-        });
-        test();
+
+
 
     }
 
@@ -191,5 +166,24 @@ public class Classification {
 
                                i.getAndIncrement();
                });
+    }
+
+
+    public void addPapers(Paper p){
+
+        if(papersToClassify == null)
+            papersToClassify = new ArrayList<>();
+        papersToClassify.add(p);
+    }
+
+    public void addCategoryDisplayedName(String name) {
+        if(categories_displayed_names == null)
+            categories_displayed_names = new ArrayList<>();
+        categories_displayed_names.add(name);
+    }
+
+
+    public void append_test_message(String s) {
+        test_message += s;
     }
 }

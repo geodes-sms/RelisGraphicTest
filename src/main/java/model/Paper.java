@@ -3,6 +3,7 @@ package model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import model.user_work.ScreeningPhaseWork;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,8 +23,8 @@ public  class Paper implements Observable ,Cloneable{
     private Criteria criteria;
     private PaperDecision decision;
 
-    ArrayList<PhaseWork> reviewers = new ArrayList<>();
-    private PhaseWork last_decision_user;
+    ArrayList<ScreeningPhaseWork> reviewers = new ArrayList<>();
+    private ScreeningPhaseWork last_decision_user;
     private PaperDecision lastDecision = PaperDecision.NO_DECISION_YET;
 
     private int include_count;
@@ -36,7 +37,7 @@ public  class Paper implements Observable ,Cloneable{
 
 
         for (int i = 0; i < reviewers.size(); i++) {
-            PhaseWork phaseWork = reviewers.get(i);
+            ScreeningPhaseWork phaseWork = reviewers.get(i);
             Paper p1 = phaseWork.getPaperByKey(key);
             for (int j = 0; j < reviewers.size(); j++) {
                 Paper p2 = reviewers.get(j).getPaperByKey(key);
@@ -49,7 +50,7 @@ public  class Paper implements Observable ,Cloneable{
 
     public void propageConflictResolutionChange(){
 
-        for(PhaseWork user : reviewers){
+        for(ScreeningPhaseWork user : reviewers){
 
             Paper paper = user.getPaperByKey(key);
             if(paper.getLastDecision() != decision){
@@ -95,7 +96,7 @@ public  class Paper implements Observable ,Cloneable{
     public void incrementExcludeCount(int c ){ exclude_count +=c;}
     public void incrementConflictCount(int c){ conflict_count += c;}
 
-    public void addReviewers(PhaseWork user){
+    public void addReviewers(ScreeningPhaseWork user){
         reviewers.add(user);
     }
 
@@ -120,15 +121,15 @@ public  class Paper implements Observable ,Cloneable{
     @Override
     public void addObserver(Object o) {
 
-        PhaseWork reviewer = (PhaseWork) o;
+        ScreeningPhaseWork reviewer = (ScreeningPhaseWork) o;
         addReviewers(reviewer);
 
     }
 
     @Override
     public boolean removeObserver(Object o) {
-        PhaseWork relisUser = (PhaseWork) o;
-        PhaseWork exist = reviewers.stream()
+        ScreeningPhaseWork relisUser = (ScreeningPhaseWork) o;
+        ScreeningPhaseWork exist = reviewers.stream()
                 .filter(relisUser::equals)
                 .findFirst()
                 .orElse(null);

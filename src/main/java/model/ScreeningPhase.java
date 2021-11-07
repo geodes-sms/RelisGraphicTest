@@ -1,19 +1,14 @@
 package model;
 
-import controller.ConnexionController;
 import controller.ProjectController;
-import controller.ScreeningPhaseController;
-import databases.PapersDataBase;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import model.user_work.ScreeningPhaseWork;
 import org.openqa.selenium.WebDriver;
 import utils.*;
 
-import java.nio.file.Watchable;
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Stream;
 
 @AllArgsConstructor
@@ -24,7 +19,11 @@ public class ScreeningPhase {
 
     private ScreeningDecisionMaker decisionMaker = new ScreeningDecisionMaker();
     private String name;
-    private  ArrayList<PhaseWork> participants = new ArrayList<>();
+    private String description;
+    private String fields;
+
+    private String projectName;
+    private  ArrayList<ScreeningPhaseWork> participants = new ArrayList<>();
 
     private int excludedPapeCount;
     private int includedPaperCout;
@@ -40,7 +39,8 @@ public class ScreeningPhase {
   public void setUpPhase(WebDriver driver){
 
     try{
-      papers = ProjectController.getAllPapers(driver);
+      papers =  new ArrayList<>();
+      Utility.getAllPaperFromTable_id(driver,papers);
       //
       decisionMaker.setUpperBoundPaperLength(papers.size());
       decisionMaker.makeDecision(numberOfUsers);
@@ -119,13 +119,13 @@ public class ScreeningPhase {
     }
 
 
-    public void addPhaseWorkingUser(PhaseWork work){
+    public void addPhaseWorkingUser(ScreeningPhaseWork work){
 
       participants.add(work);
     }
     public void startScreeningPhaseForUsers(){
 
-    participants.forEach(PhaseWork::finishScreeningPhase);
+    participants.forEach(ScreeningPhaseWork::finishScreeningPhase);
     }
 
 
@@ -135,11 +135,13 @@ public class ScreeningPhase {
       for (Paper p : papers)
         papers_str += p+", \n";
       String users ="";
-      for(PhaseWork p : participants)
+      for(ScreeningPhaseWork p : participants)
           users += p +"\n";
 
       return "[ PhaseName :=> "+ name+" ,\n" +
-              "paper => [ " + papers_str+ " ],\n"+
+              "description=>" + description+
+              "\n fiedls=>" + fields+
+              "\npaper => [ " + papers_str+ " ],\n"+
             "Included Paper => " + includedPaperCout+" ,\n"
         + "Excluded Paper => " + excludedPapeCount +" ,\n"+
         "In concflict paper => " + paperInConflictCount+"\n" +
@@ -163,7 +165,7 @@ public class ScreeningPhase {
 
   public void startThisPhaseScreening(){
 
-      Stream<PhaseWork> stream = (numberOfUsers == 1)?
+      Stream<ScreeningPhaseWork> stream = (numberOfUsers == 1)?
               participants.stream(): participants.parallelStream();
 
         stream.forEach( user->{
@@ -177,14 +179,14 @@ public class ScreeningPhase {
     if(numberOfUsers > 1){
 
         papers.forEach(Paper::notifyChange);
-        participants.forEach(PhaseWork::printInfo);
-        participants.forEach(PhaseWork::closeDriver);
+        participants.forEach(ScreeningPhaseWork::printInfo);
+        participants.forEach(ScreeningPhaseWork::closeDriver);
     }
 
   }
 
 
-  public PhaseWork getPhaseWorkByUserFullName(String userFullName) {
+  public ScreeningPhaseWork getPhaseWorkByUserFullName(String userFullName) {
 
       return participants.stream()
       .filter(user -> user.getParticipant().getFull_name().equals(userFullName))
@@ -220,7 +222,7 @@ public class ScreeningPhase {
     for (int i = 1; i < data.length; i++) {
         // john, 12,23,20
       String[] resultCounters = data[i].split(",");
-      PhaseWork user_state = getPhaseWorkByUserFullName(resultCounters[0]);
+      ScreeningPhaseWork user_state = getPhaseWorkByUserFullName(resultCounters[0]);
 
       assert user_state != null;
       System.out.println("phase work exist");
@@ -249,7 +251,7 @@ public class ScreeningPhase {
   private void propageChanges(){
 
       participants.forEach(
-              PhaseWork::updateChanges
+              ScreeningPhaseWork::updateChanges
       );
   }
 
@@ -260,4 +262,6 @@ public class ScreeningPhase {
     public void quitWebBrowser() {
       participants.forEach(p-> p.getParticipant().getDriver().quit());
     }
+
+
 }

@@ -1,47 +1,47 @@
-PROJECT mt "Model transformation"
+PROJECT test "Project 2"
 
 SCREENING
 Reviews 2
 Conflict on Criteria resolved_by Unanimity
-Criteria =   ["Criteria 1","Criteria 2" ]
-Sources = ["Source 1",'Source 2']
+Criteria =   ["Criteria 1","Criteria 2"]
+Sources = ["Source 1","Source 2"]
 Strategies =["Strategy 1","Strategy 2"]
 Validation 30%  Normal
 Phases "Phase 1" "Screen per title" Fields(Title) ,
-	    "Phase 2" "Screen per title and abstract 2" Fields(Title,Abstract,Link) 
+	    "Phase 2" "Screen per title and abstract 2" Fields(Title,Abstract,Link)
+
 QA
-
 Questions =["Question 1","Question 2","Question 3","Question 4"]
- Response=["Answer1":3,"Answer2":1.5,"Answer3":0]
- Min_score 3
-CLASSIFICATION
-no_overide
-Simple transformation_name "Transformation name" * [1] :string(100)
-DynamicList domain "Domain"  [1] "Domain" =["Artificial Intelligence","Collaborative system","Compilation","E-commerce","HOT"]
-DynamicList trans_language "Transformation Language"  [10] "Transformation Language " =["ATL","Henshin","MoTiF","QVT"]
-DynamicList source_language "Source language"  [1] "Language" =["DSL","Java","SySML","UML"]
-DynamicList target_language "Target language"  [1] "Language"
-DynamicList scope "Scope"  [10] "Scope" =["Exogenous","Inplace","Outplace"]
+Response=["Answer1":3,"Answer2":1.5,"Answer3":0]
+Min_score 3
 
-DynamicList intent  "Intent" * [10]  "Intents" = ["Translation", "Simulation", "Migration", "Composition"]{
-	Simple name_used "Name used by the author" *  :string(100)
-	Simple line_code "Lines of code generated"  [1] :int
-	DynamicList op_result "Operation result"  [1] "Operation result" =["Success","Failed","Not set"]
-	Simple note "Note" :text(500)  
-}  
-  
-DynamicList intent_relation "Intent relation" * [1] "Relation" = ["Relation 1", "Relation2","Relation 3"]{
-	DynamicList intent_1 "Intent 1" * depends_on intent
-	DynamicList intent_2 "Intent 2" * depends_on intent
-	Simple note "Note" :text(500)   
-}   
-Simple industrial "Industrial" [1] :bool 
-Simple bidirectional "Bidirectional" [1] :bool 
-Simple number_citation "Number of citations"  [1] :int
-Simple year "Targeted year"  [1] :int(4)
-Simple note "Note"   :text(500) 
+CLASSIFICATION
+no_override
+Simple string_100 "String100" * :string(100)
+Simple int_4 "Int4" * :int(4)
+Simple bool_1 "Boolean" * :bool
+Simple real_1 "Real" * :real
+Simple date_1 "Date" * :date
+Simple pattern "pattern" :string(50) style("[A-Z]+[0-9]*") = ["AB9"]
+
+DynamicList dynListOne "DynamicListOne"  [1] "listOneDynamic" =["DynamicListData1","DynamicListData2","DynamicListData3","DynamicListData4","DynamicListData5"]
+DynamicList dynList3 "DynamicListThreeValues"  [2] "DynamicListThreeValues"
+DynamicList dynListMulti "DynamicListMulti"  [0] "DynamicListThreeValues" =["MultiVal1","MultiVal2","MultiVal3","MultiVal4"]
+
+List listOne "ListOne" * [1] = ["value 1", "value 2"]
+List listThree "List Three Values" [3] = ["ListThreeVal1","ListThreeVal2","ListThreeVal3","ListThreeVal4","ListThreeVal5"]
+List listMulti "List Multi Values" [0] = ["ListThreeVal1","ListThreeVal2","ListThreeVal3","ListThreeVal4","ListThreeVal5"]
+
+DynamicList superCategory  "SuperCategory"  [3]  "SuperCategory" = ["Super1", "Super2", "Super3", "Super4"]{
+	Simple subSimple "subCategoryOne" *  :string(100)
+	Simple subInt "subCategoryInt"  [1] :int
+}
+
+DynamicList dependentList "dependentList"  [2] depends_on superCategory
+
+Simple note "Note" [1] :text(500)
 
 
 REPORT
-Simple domain "Domain" on domain charts( pie,bar)
-Compare year_domain "Domain per year" on domain with year charts( line,bar)
+Simple listOne "Domain" on listOne charts( pie,bar)
+Compare list_dyn "DynamicListOne per ListOne" on dynListOne with listOne charts( line,bar)

@@ -1,10 +1,8 @@
-package model;
-
-import org.openqa.selenium.WebElement;
+package model.relis_type;
 
 import java.util.Random;
 
-public class RealType extends TypeOf{
+public class RealType extends TypeOf {
 
 
     public Object getMockValue(){
