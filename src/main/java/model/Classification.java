@@ -18,14 +18,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @AllArgsConstructor
 public class Classification {
-
+    // all the papers for the classification phase
     private ArrayList<Paper> papersToClassify = new ArrayList<>();
-
+    // the classificators for the classification phase
     private ArrayList<RelisUser> classificators = new ArrayList<>();
     private ArrayList<RelisUser> validators = new ArrayList<>();
-    private int number_of_classifier = 1;
-    private int number_of_validator = 1;
-
+    private int number_of_classifier = 1; // number of classificator
+    private int number_of_validator = 1; // number of validator
+    // all the categories for the classification phase
     private  ArrayList<Category> allCategories = new ArrayList<>();
 
 
@@ -77,31 +77,38 @@ public class Classification {
     }
 
 
+    /**
+     * this method classify all the papers so we can make it
+     * ready for filling at the classification phase
+     */
     public void classifyAllPapers(){
 
+        // iterate through all the paper to classify
             papersToClassify.forEach(paper->{
             ClassificatedPaper classificatedPaper = new ClassificatedPaper(paper);
-
+        // get a ccopy for all the categories
             allCategories.stream()
                     .filter(Objects::nonNull)
                     .forEach(cat-> classificatedPaper.addCategory((Category) cat.clone()));
-
+            // set the relation between the cloned categories
             RelisParser.setLinKObject(classificatedPaper.getCategories());
+            // classify all the cateogties by choosing a value
             classificatedPaper.classifyData();
-
-
 
             if(classificatedPapers == null){
                 classificatedPapers = new ArrayList<>();
             }
-
+            // add to the list of classificated papers
             classificatedPapers.add(classificatedPaper);
         });
 
 
 
     }
-
+    /**
+     * 
+     * @return the lenght of papers to classify
+     */
     public int getClassifierLength() {
         return classificators.size();
     }
@@ -136,6 +143,12 @@ public class Classification {
         allCategories.forEach( p -> System.out.println("*************************************\n"+p));
     }
 
+    /**
+     * this method return a category  that has a reference name like the paran ref_name
+     * @param allCategories all the categories
+     * @param ref_name the reference name
+     * @return a category if exists otherwise null
+     */
     public static Category getCategoryByReference(ArrayList<Category> allCategories,String ref_name) {
         return
         allCategories.stream()
@@ -148,25 +161,6 @@ public class Classification {
     }
 
 
-    public void test(){
-       AtomicInteger i= new AtomicInteger();
-       AtomicInteger j = new AtomicInteger();
-
-       allCategories.stream().filter( p -> (p instanceof MultipleValue))
-               .forEach(cat1->{
-                   allCategories.stream().filter( p -> (p instanceof MultipleValue)).forEach( cat2->{
-                       if(!i.equals(j)){
-                          if( ((MultipleValue) cat1).getUserChoices() == ((MultipleValue) cat2).getUserChoices())
-                              System.out.println("MEME CATEGORIES  &&**()");
-                       }
-
-                       j.getAndIncrement();
-                   });
-
-
-                               i.getAndIncrement();
-               });
-    }
 
 
     public void addPapers(Paper p){

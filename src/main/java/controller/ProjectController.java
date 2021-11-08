@@ -38,11 +38,21 @@ public class ProjectController {
   private static final ScreeningPhaseController screeningPhaseController = new ScreeningPhaseController();
 
 
-
+    
+     /**
+      * this function open all the papers papge 
+      * @param driver the web driver
+      */
     public static void openAllPapersPage(WebDriver driver) {
         openAllPaper(driver);
     }
 
+    /**
+     * this function suppose to create a new project by
+     * uploading the ".php" configuration
+     * @param driver
+     * @param fileName
+     */
     public void createProject(WebDriver driver, String fileName) {
 
         // open the file and check if exist
@@ -62,17 +72,20 @@ public class ProjectController {
 
     }
 
-
+    /**
+     * this function take a project name and it will open the correspondant project
+     * @param driver the web driver
+     * @param projectName the project name
+     */
     public static void openProject(WebDriver driver, String projectName) {
-        //TODO a completer !!!
+       // get all the project in a list
         List<WebElement> projectElements = driver.findElements(By.className("thumbnail"));
-        projectElements.forEach(p -> System.out.println("project " + p.getText()));
+       // find the project that has a project name like the parameter project name
         projectElements.stream()
                 .filter(projet -> projet.findElement(By.className("caption")).getText().equals(projectName))
                 .findFirst()
-                .ifPresent(projectElement -> projectElement.findElement(By.tagName("a")).sendKeys(Keys.ENTER));
-
-
+                .ifPresent(projectElement -> // if we found the project then we click to open
+                projectElement.findElement(By.tagName("a")).sendKeys(Keys.ENTER));
     }
 
     /**
@@ -112,6 +125,10 @@ public class ProjectController {
     }
 
 
+/**
+ * this method open all the paper page for the project
+ * @param driver
+ */
     public static void openAllPaper(WebDriver driver) {
 
         // go to the paper

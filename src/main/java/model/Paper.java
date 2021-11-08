@@ -12,26 +12,34 @@ import java.util.Random;
 @NoArgsConstructor
 @Data
 public  class Paper implements Observable ,Cloneable{
-
+    // papers attributes
     protected String key;
 
     protected String title;
     protected String year;
 
 
-
+    // criteria of exclusion
     private Criteria criteria;
+    // paper decision (included? excluded? in conflict?)
     private PaperDecision decision;
 
+    // all the users those we gave a decision to this paper
     ArrayList<ScreeningPhaseWork> reviewers = new ArrayList<>();
+    // last users decision
     private ScreeningPhaseWork last_decision_user;
+    // default decision
     private PaperDecision lastDecision = PaperDecision.NO_DECISION_YET;
-
+    // count of differents papers 
     private int include_count;
     private int exclude_count;
     private int conflict_count;
 
-
+/**
+ * this method will be call after the end of a screening phase so we
+ * can merge all the decision for this paper
+ * and check if theres's a  conflict
+ */
     @Override
     public void notifyChange() {
 

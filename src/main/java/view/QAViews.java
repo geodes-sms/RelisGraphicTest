@@ -171,7 +171,12 @@ public class QAViews {
     }
 
 
-
+    /***
+     * this method proceed the qa phase by filling all the papers questions answers
+     * 
+     * @param driver the web drivrr
+     * @param sessionWork a user connected to do the qa 
+     */
     public static void doPaperQA(WebDriver driver, QualityAssementSessionWork sessionWork){
 
         WebElement nextQuestion = getNextQuestion(driver);

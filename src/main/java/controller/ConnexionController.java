@@ -7,7 +7,7 @@ import org.openqa.selenium.WebDriver;
 import utils.ConnexionUtils;
 import utils.Utility;
 
-import java.security.Key;
+
 
 public class ConnexionController {
 
@@ -20,9 +20,9 @@ public class ConnexionController {
 
     /**
      *
-     *
+     * this method connect a user to relis app
      * @param driver the current tabs
-     * @param user the user that wanna connect!
+     * @param user the user that we wanna connect!
      *
      */
     public static void connect(WebDriver driver, RelisUser user) {
@@ -63,7 +63,11 @@ public class ConnexionController {
     }
 
 
-
+    /**
+     * this method disconnect a connect user to relis app
+     * @param driver the web driver
+     * @param connectedUser the connected user
+     */
     public void disConnect(WebDriver driver, RelisUser connectedUser){
 
 

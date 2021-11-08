@@ -34,8 +34,11 @@ public class ClassificatedPaper {
     }
 
 
-
-
+    /**
+     * this method classifies all the paper
+     * like choosing the input value 
+     * for every category
+     */
     public void classifyData(){
 
         categories.stream()
@@ -65,14 +68,20 @@ public class ClassificatedPaper {
     }
 
 
+    /**
+     * this method take a category displayed name and the his DOM value
+     * and compare it with the choosed value
+     * 
+     * @param displayName the category displayed name
+     * @param dom_value the DOM value
+     * @return true if equals otherwise falsse
+     */
     public boolean compareDisplayNameVal(String displayName, String dom_value){
 
         Category category = getCategoryByDisplayName(displayName);
         assert category != null;
 
         String value = category.getContentValue();
-        String msg = dom_value+" VS " + value;
-        System.out.print(" VS choosedValue={" + value+"}");
         // if the current category has sub categories so retur false
         // cause as of now relis doesn't consider the sub categories
         boolean result = value.equals(dom_value);
@@ -99,6 +108,12 @@ public class ClassificatedPaper {
     }
 
 
+    /**
+     * this method add a validation note and 
+     * the validation decision wheter is correct or incorrect
+     * @param correct the validation decision
+     * @param not the validation note
+     */
     public void addValidation(String correct, String not) {
         validated_msg = correct;
         validation_note = not;

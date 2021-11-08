@@ -4,7 +4,6 @@ import model.*;
 import org.openqa.selenium.WebDriver;
 import view.ScreeningView;
 
-import javax.script.ScriptEngine;
 import java.util.ArrayList;
 
 public class ScreeningController {
@@ -25,12 +24,23 @@ public class ScreeningController {
 
   }
 
-
+  /**
+   * this method open a screening phase by his name
+   * 
+   * @param driver the web driver
+   * @param name the screening phase name
+   */
   public void openScreeningPhaseByName(WebDriver driver, String name){
 
     views.openScreeningPhaseByName(driver,name);
   }
 
+  /**
+   * this method open the next screening phase
+   * and return his name as a string
+   * @param driver
+   * @return next screening phase title as string 
+   */
   public String openNextPhase(WebDriver driver){
 
     return views.openNextScreeningPhase(driver);
@@ -39,6 +49,12 @@ public class ScreeningController {
   }
 
 
+  /**
+   * this method assign the reviewers for the next screening phase
+   * @param driver the web driver
+   * @param project the project object
+   * @return an object of a ScreeningPhase which is the next phase
+   */
   public ScreeningPhase assignReviewers(WebDriver driver,Project project){
     String current_phase_name = openNextPhase(driver);
     ScreeningPhase phase = project.getScreening().getScreeningphaseByName(current_phase_name);
@@ -54,6 +70,12 @@ public class ScreeningController {
       phase.setUpPhase(driver);
     return phaseName;
   }
+
+  /**
+   * this method start the next screening phase 
+   * @param driver the web driver
+   * @param project the current project
+   */
   public void startTheCurrentPhase(WebDriver driver, Project project){
 
     Screening screening = project.getScreening();
@@ -68,6 +90,12 @@ public class ScreeningController {
   }
 
 
+  /**
+   * this method resolve all the conflict for the passed screening phase 
+   * 
+   * @param driver the web driver
+   * @param phase the screening phase
+   */
   public void resolveConflict(WebDriver driver,ScreeningPhase phase){
 
     phaseController.resolveConflict(driver,phase);
