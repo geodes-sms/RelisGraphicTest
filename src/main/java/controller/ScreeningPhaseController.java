@@ -153,6 +153,13 @@ public class ScreeningPhaseController {
 
   }
 
+  /**
+   * this function make ready for the screening phase 
+   * like assigning reviewers, retrieve all the papers that 
+   * considered in a screening phase
+   * @param driver the web driver
+   * @param phase a screening phase object
+   */
   public void makeReadyForScreeningpPhase(WebDriver driver, ScreeningPhase phase){
 
 

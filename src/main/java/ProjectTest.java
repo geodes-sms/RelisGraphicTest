@@ -1,23 +1,27 @@
-import controller.*;
-import controller.ScreeningPhaseController;
-import databases.DataBase;
-import databases.PapersDataBase;
-import model.*;
-
-import model.relis_parser.RelisParser;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
-import utils.*;
-import view.ScreeningView;
-import view.Views;
-
 import java.util.ArrayList;
 
-import static org.testng.Assert.*;
-import static utils.ScreeningUtils.*;
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Scalar.String;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+import controller.ClassificationController;
+import controller.ConnexionController;
+import controller.ProjectController;
+import controller.QualityAssementController;
+import controller.ScreeningController;
+import model.Project;
+import model.QualityAssement;
+import model.RelisUser;
+import model.ScreeningPhase;
+import model.relis_parser.RelisParser;
+import utils.ConnexionUtils;
+import utils.Initialiazer;
+import utils.ProjectUtils;
+import utils.Utility;
+import view.ScreeningView;
 
 
 public class ProjectTest {

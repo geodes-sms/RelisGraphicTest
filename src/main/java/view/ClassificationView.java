@@ -19,6 +19,11 @@ import static utils.ClassificationUtils.*;
 public class ClassificationView {
 
 
+    /**
+     * @param driver the web driver
+     * @return all the papers of the current connected user 
+     * to classify
+     */
     public ArrayList<Paper> getUserPapersToCLassify(WebDriver driver){
 
 
@@ -28,6 +33,11 @@ public class ClassificationView {
         return papers;
     }
 
+    /**
+     * assign the classificators for the classification phase
+     * @param driver the web driver
+     * @param classification classification object
+     */
     public void assign_classificator(WebDriver driver, Classification classification){
 
         Views.openUserAssignmentPage(driver, CSS_ASSIGN_CLASSIFICATORS_PAGE);
@@ -46,8 +56,13 @@ public class ClassificationView {
 
     }
 
+    /**
+     * assign the validators to validate the classification phasr
+     * @param driver the web driver 
+     * @param classification classification phase
+     */
     public void assign_validator(WebDriver driver,Classification classification){
-        openAssignValidatorsPage(driver);
+        openAssignValidatorsPage(driver); 
 
         WebElement rest_papers = driver.findElement(By.cssSelector("#home b"));
         if(rest_papers.getText().equals("Number of papers to assign :0")){
@@ -78,7 +93,12 @@ public class ClassificationView {
     }
 
 
-
+    /***
+     * this method retrieve the validators whom are assigned for
+     * the validation phase
+     * @param driver the web driver
+     * @param classification classification object
+     */
     private void getValidators(WebDriver driver, Classification classification){
 
         showProgressBarForValidationPhase(driver);
@@ -177,26 +197,31 @@ public class ClassificationView {
 
 
     }
-
+    /**
+     * this method fill dom input for a  category that has sub-categories
+     * @param driver  the current web driver
+     * @param classification classification object
+     * @param key the paper key
+     * @param btn_index the nth category that has subcategories
+     */
     public void fillSubCategory(WebDriver driver, Classification classification,String key,int btn_index){
             List<WebElement> buttons = driver.findElements(By.cssSelector(".fa-plus"));
             buttons.get(btn_index).click();
             driver.switchTo().activeElement();
             Utility.sleep(1);
             String labele = driver.findElement(By.className("modal-title")).getText();
-            System.out.println("THe big Lab=" + labele );
+          
             labele = labele.substring( labele.indexOf("Add  : ") + "Add  : ".length());
-            System.out.println("label=" + labele);
+            
             List<WebElement> sections = driver.findElements(By.cssSelector(CSS_RELIS_MODALS_FORM));
 
 
             Category category = classification.getCategoryByDisplayName(key,labele);
-            System.out.println("category=" + category);
+            
             int index =0, max= category.getSubCategorys().size();
             for(WebElement element : sections){
                 String labelCategory = element.findElement(By.tagName("label")).getText();
                 labelCategory = labelCategory.replace("*","").trim();
-                System.out.println("subCatLab=" + labelCategory);
                 if(index ==0 ){
 
                     category.fillWebElementInput(driver,element);
@@ -385,6 +410,13 @@ public class ClassificationView {
         }
         return 1;
     }
+
+    /**
+     * thid method will be call after the end of the classification phase
+     * and will check if all the entries are correct as we entered 
+     * @param driver the web driver
+     * @param classification classification object
+     */
     public void extracDOM_classification_values(WebDriver driver, Classification classification){
         getTableHeaderData(driver,classification);
         Views.openSuBMenuFrom(driver,LK_RESULTS_CLASSIFICATION,LK_TABLE_RESULT_OF_CLASSIFICATION);
@@ -393,7 +425,12 @@ public class ClassificationView {
 
 
     }
-
+    /**
+     * this mey
+     * @param values
+     * @param o
+     * @return
+     */
     private static int checkValidationResult(List<WebElement> values, Object o){
 
         Classification classification = (Classification) o;

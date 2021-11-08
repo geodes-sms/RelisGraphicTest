@@ -71,12 +71,18 @@ public class QualityAssement {
     }
 
 
-
+    /**
+     * set up the qa 
+     */
     public void makeReadyQASession(){
 
         participants.forEach( p -> p.setQualityAssement(this));
     }
 
+    /**
+     * this method take all decisions for the qa
+     * like choosing random papers to eliminante
+     */
     public void takeDecision(){
 
         // choose a percentange between 1 and 30% of papers to eliminate
@@ -95,6 +101,11 @@ public class QualityAssement {
     }
 
 
+    /**
+     * this method will choose a combination of answer of every questions
+     * such as the eliminate paper will have a score less than the min_scor
+     * and the included paper will have score greather or equal to the min_score
+     */
     public void applyDecision(){
 
         qa_papers.stream()
@@ -105,11 +116,19 @@ public class QualityAssement {
                 .forEach( qa_paper -> questionAnswesPaper.acceptPapers(qa_paper));
     }
 
+    /**
+     * this function will start the qa session of every implicated user
+     * like opening a new browser connecting ...
+     */
     public void startParticipantsQA_session(){
         makeReadyQASession();
         participants.parallelStream().forEach(QualityAssementSessionWork::setUp);
     }
 
+    /**
+     * this function will close all thwe browser for
+     * every user implicated at the qa phase
+     */
     public void closeAllWebDriver(){
         participants.forEach( p -> p.getDriver().quit());
     }
