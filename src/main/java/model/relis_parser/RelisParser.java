@@ -320,7 +320,7 @@ public class RelisParser {
 
         int i=0;
         String answers, score_str="";
-        double score = 0;
+        double score ;
         while( (i < res.length()) && res.charAt(i) != ']'){
             answers = StringUtils.substringBetween(res,"\"","\"");
             score_str ="";

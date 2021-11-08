@@ -4,7 +4,9 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional;
+import java.util.Random;
+import java.util.function.Predicate;
+
 
 @Data
 public class QuestionAnswesPaper {
@@ -13,8 +15,12 @@ public class QuestionAnswesPaper {
     private ArrayList<String> questions = new ArrayList<>();
     // array of answers
     private HashMap<String,Double> answers = new HashMap<>();
+    private double min_score;
 
-
+    // predicate for papers to eliminate for qa phase
+    private Predicate<Double> is_eliminate = current_score -> current_score < min_score;
+    // predicate for papers to include
+    private Predicate<Double> is_included = score ->   score >= min_score || min_score > score;
 
     public void addQuestions(String question){
         questions.add(question);
@@ -40,36 +46,61 @@ public class QuestionAnswesPaper {
      * sum of the score is less than the minimum score
      * @param paper paper
      */
-    public void setRejectedAnswer(QA_Paper paper){
-
-        System.out.println("trying the best thing in Canada so i can be more valuable");
-        questions.forEach( question ->{
-
-            paper.addQuestionAnswer(question,"No");
-        });
+    public void setRejectedAnswer(QA_Paper paper, double min_score){
+        this.min_score = min_score;
+        double score = getRandomAnswer(is_eliminate, paper);
+        //System.out.println("score =>" + score);
 
     }
 
 
 
-//    private String getRandomAnswer(){
-//
-//        double x =0;
-//        String response  = "";
-////.
+    private double getRandomAnswer(Predicate<Double> predicate, QA_Paper qa_paper){
 
-////        do{
-////            response =
-////
-////        } while (x <= 3.5);
-//    }
-    public void acceptPapers(QA_Paper qa_paper) {
+        double x =0;
+        String response  = "";
+        // get all the answers
+        ArrayList<String> options = new ArrayList<>(answers.keySet());
+        Random random = new Random();
+        int d =0;
+        // choose a response for a question
+        for (String question : questions){
 
-        String answer = "";
+//            System.out.println("Question :=>" + question);
 
-        questions.forEach( question ->{
+            // choose a answer
+            do{
+                int i = random.nextInt(0, options.size());
+//                System.out.println("i = " + i );
+//                System.out.println("response=" + options.get(i));
+//                System.out.println("x=" + x +", new socre=" + answers.get(options.get(i)));
+                double score = answers.get( options.get(i));
+                if(predicate.test(x+score)){
+                    x += score;
+                    response = options.get(i);
+                    break;
+                }
 
-            qa_paper.addQuestionAnswer(question,answer);
-        });
+
+            } while (true);
+            // we have a answer
+//            System.out.println("q : " + question +" => a: " + response);
+            qa_paper.addQuestionAnswer(question, response);
+        }
+        return  x;
+
+    }
+    public void acceptPapers(QA_Paper qa_paper, double min_score) {
+
+        this.min_score = min_score;
+        double score = 0;
+
+        do {
+            score =  getRandomAnswer(is_included, qa_paper);
+
+        } while ( score < min_score);
+
+
+
     }
 }

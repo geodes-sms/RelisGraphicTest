@@ -52,6 +52,7 @@ public class QualityAssementController {
             getQuestions(driver,qa);
             getAnswer(driver,qa);
             assement.setQuestionAnswesPaper(qa);
+            assement.setMin_score( 3.5);
             assement.makeReadyQASession();
             assement.applyDecision();
         }

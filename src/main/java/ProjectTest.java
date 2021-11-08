@@ -50,7 +50,7 @@ public class ProjectTest {
   @Test(priority = 1)
     public void ConnexionTest(){
 
-        RelisUser user = Utility.getUserByUserName("youssouf1");
+        RelisUser user = Utility.getUserByUserName("admin");
         ConnexionController.connect(driver, user);
         String user_name = driver.findElement(By.className(
                 ConnexionUtils.CLASS_CONNECTED_USER_PROFILE_NAME)).getText();
@@ -264,7 +264,7 @@ public class ProjectTest {
 
 
     }
-     @Test(priority = 21)
+    // @Test(priority = 21)
     public void classifyPapersTest(){
        // classControler.finishClassificationPhase(driver,project.getClassification());
         //classControler.extractDOM_classificationValues(driver,project.getClassification());
@@ -298,7 +298,7 @@ public class ProjectTest {
     }
 
 
-    @Test(priority = 24)
+    //@Test(priority = 24)
     public void tester(){
 
 //        ArrayList<Paper> papers = new ArrayList<>();

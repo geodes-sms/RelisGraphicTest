@@ -16,7 +16,7 @@ public class QualityAssement {
 
     private String name ="Quality Assement";
 
-    private double min_score = 3.5f;
+    private double min_score;
     private int score = 0;
 
 
@@ -99,10 +99,10 @@ public class QualityAssement {
 
         qa_papers.stream()
                 .filter(QA_Paper::isEliminated)
-                .forEach(paper -> questionAnswesPaper.setRejectedAnswer(paper));
+                .forEach(paper -> questionAnswesPaper.setRejectedAnswer(paper, min_score));
         qa_papers.stream()
                 .filter(p -> !p.isEliminated())
-                .forEach( qa_paper -> questionAnswesPaper.acceptPapers(qa_paper));
+                .forEach( qa_paper -> questionAnswesPaper.acceptPapers(qa_paper, min_score));
     }
 
     public void startParticipantsQA_session(){

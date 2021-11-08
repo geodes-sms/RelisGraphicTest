@@ -183,8 +183,14 @@ public class ScreeningView {
     public static void showMyAssignment(WebDriver driver){
 
         open_current_screening_phase(driver);
+        try{
 
-        Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_SCREENING_MY_ASSIGMENTS_PAGE);
+            Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_SCREENING_MY_ASSIGMENTS_PAGE);
+
+        } catch ( Exception e ){
+            Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_SCREENING_ONLINE_MY_ASSIGNMENTS_PAGE);
+        }
+
     }
 
     /**
