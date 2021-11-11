@@ -1,9 +1,9 @@
 package model;
-;
 import databases.PapersDataBase;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import utils.Utility;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -47,7 +47,7 @@ public class ScreeningDecisionMaker {
     public void makeSingLeUserDecision(){
 
         int rest = UpperBoundPaperLength;
-        INCLUDED  = random.nextInt(UpperBoundPaperLength/2, rest);
+        INCLUDED  = Utility.nextInt(UpperBoundPaperLength/2, rest);
         EXCLUDED = rest - INCLUDED;
         System.out.println("INCLUDE = " + INCLUDED);
         System.out.println("EXCLUDED " + EXCLUDED);
@@ -58,14 +58,14 @@ public class ScreeningDecisionMaker {
         ArrayList<Paper> result = new ArrayList<>();
         for (int i = 0; i < INCLUDED; i++) {
 
-            Paper p = papers.remove(random.nextInt(0, papers.size()-1));
+            Paper p = papers.remove(Utility.nextInt(0, papers.size()-1));
             p.setDecision(PaperDecision.INCLUDED);
             p.setInclude_count(1);
             result.add(p);
 
         }
         for (int i = 0; i < EXCLUDED; i++) {
-            Paper p = papers.remove(random.nextInt(0, papers.size()));
+            Paper p = papers.remove(Utility.nextInt(0, papers.size()));
             p.setDecision(PaperDecision.EXCLUDED);
             p.setCriteria((Criteria) PapersDataBase.getInstance().nextCriteriaValue().clone());
             p.setExclude_count(1);
@@ -74,7 +74,7 @@ public class ScreeningDecisionMaker {
         }
 
         for (int i = 0; i < IN_CONFLICT; i++) {
-            Paper p = papers.remove(random.nextInt(0, papers.size()));
+            Paper p = papers.remove(Utility.nextInt(0, papers.size()));
             p.setDecision(PaperDecision.IN_CONFLICT);
             p.setConflict_count(1);
             result.add(p);

@@ -1,0 +1,56 @@
+<tests>
+    <test name="Screening">
+        <case name="assignment" />
+        <case name="screen" />
+        <case name="validation" />
+        <!--<case name="report" />-->
+    </test>
+
+    <test name="classification">
+        <case name="assignment"/>
+        <case name="classify"/>
+        <case name="validation"/>
+        <case name="report"/>
+    </test>
+
+    <test name="qa">
+        <case name="assignment"/>
+        <case name="assess"/>
+        <case name="validation"/>
+        <case name="report"/>
+    </test>
+
+
+
+    <test name="management">
+        <!--  La section d'importations de tests -->
+        <case name="import csv"   code="importBibTexTest"/>
+<!--        <case name="import endnote"/>-->
+<!--        <case name="import bibtex"/>-->
+
+        <!-- la section d'ajoutes des users pour un projet -->
+        <case name="add reviewer" code="addReviewerTest"/>
+        <case name="add project manager" code="addProjectManagerTest"/>
+        <case name="add validator" code="addValidatorTest"/>
+        <case name="add guest" code="addGuestRoleTest"/>
+
+        <!-- la section de suppression des users pour un projet -->
+        <case name="remove reviewer" code="removeReviewer"/>
+        <case name="remove project manager" code="removeProjectManager"/>
+        <case name="remove validator" code="removeValidator"/>
+        <case name="remove guest" code="removeGuestUserRole"/>
+
+
+        <case name="delete papers" code="deleteAllPaper"/>
+
+        <case name="delete specific paper" code="deleteProjectPaperByKey"/>
+
+        <case name="add some random reviewer" code="addSomeReviewers"/>
+
+    </test>
+
+
+</tests>
+
+
+

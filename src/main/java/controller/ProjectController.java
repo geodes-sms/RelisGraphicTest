@@ -599,7 +599,7 @@ public class ProjectController {
 
 
 
-    public void openProjectListPage(WebDriver driver){
+    public static void openProjectListPage(WebDriver driver){
 
         WebElement menu = driver.findElement(By.className(ProjectUtils.CLASS_SIDEBAR_FOOTER_MENU));
         List<WebElement> links = menu.findElements(By.tagName("a"));

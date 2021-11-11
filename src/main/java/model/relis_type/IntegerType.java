@@ -1,6 +1,7 @@
 package model.relis_type;
 
 import lombok.Data;
+import utils.Utility;
 
 import java.util.Random;
 
@@ -11,6 +12,6 @@ public class IntegerType extends TypeOf {
 
     public  Object getMockValue(){
 
-        return new Random().nextInt(2,13);
+        return Utility.nextInt(2,13);
     }
 }

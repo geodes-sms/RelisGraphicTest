@@ -1,6 +1,7 @@
 package databases;
 import model.*;
 import org.openqa.selenium.WebDriver;
+import utils.Utility;
 import view.ScreeningView;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,11 +106,11 @@ public class PapersDataBase  {
 
     public String nextCriteria() {
 
-        return criteria.get(new Random().nextInt(0,criteria.size())).getName();
+        return criteria.get( Utility.nextInt(0,criteria.size())).getName();
     }
 
     public Criteria nextCriteriaValue(){
-        return criteria.get(new Random().nextInt(0,criteria.size()));
+        return criteria.get(Utility.nextInt(0,criteria.size()));
     }
     public Criteria getNextCriteriaWithout(Criteria c){
 

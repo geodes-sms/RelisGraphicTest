@@ -17,7 +17,7 @@ import static utils.ScreeningUtils.*;
 public class QAViews {
 
 
-
+    private static final String LK_SETTING = "Settings";
 
     public void assign_qa_papers(WebDriver driver, QualityAssement qa){
         Views.openUserAssignmentPage(driver, CSS_ASSIGN_USERS_TASK);
@@ -111,6 +111,7 @@ public class QAViews {
      */
     private static int extractQuestion(List<WebElement> list, Object obj){
        QuestionAnswesPaper questions = (QuestionAnswesPaper) obj;
+       list.remove(0); // remove the header
        for(WebElement elem : list){
 
            List<WebElement> tds = elem.findElements(By.tagName("td"));
@@ -130,6 +131,7 @@ public class QAViews {
      */
     private static int extractAnswer(List<WebElement> list, Object obj){
         QuestionAnswesPaper questions = (QuestionAnswesPaper) obj;
+        list.remove(0); // remove the header
         for(WebElement elem : list){
 
             List<WebElement> tds = elem.findElements(By.tagName("td"));
@@ -192,6 +194,7 @@ public class QAViews {
         question = question.substring(0,question.indexOf("\n"));
         WebElement droite_elem  = tds_elem.get(0).findElement(By.cssSelector(".droite"));
         String answer = sessionWork.getAnswerFor(question,title);
+        System.out.println("Answer={" + answer+"} , title=" + title);
         String css_selector = "a[title='"+ answer+"']";
 
         droite_elem.findElement(By.cssSelector(css_selector)).sendKeys(Keys.ENTER);
@@ -208,6 +211,11 @@ public class QAViews {
         return false;
     }
 
+
+    public static  void enable_validation(WebDriver driver){
+
+        Views.openSuBMenuFrom(driver,LK_PLANNING,LK_SETTING);
+    }
 
 
 

@@ -35,7 +35,8 @@ public class RelisParser {
             System.out.println("dans screening");
             Screening screening = new Screening();
             System.out.println("calling screening phase");
-            extractScreening(screening,dataParse);
+            project.setScreening(screening);
+            extractScreening(project,dataParse);
             //   System.out.println("nextWordsss={" + dataParse.getData()+"}" );
             project.setScreening(screening);
 
@@ -91,8 +92,9 @@ public class RelisParser {
     }
 
 
-    private static void extractScreening(Screening screening, StringParser dataParser){
+    private static void extractScreening(Project project, StringParser dataParser){
 
+        Screening screening = project.getScreening();
         String nextWord = dataParser.getNextWord();
         if(nextWord.equals(""))
             return;
@@ -153,6 +155,7 @@ public class RelisParser {
                 nextWord= dataParser.getNextWordSeparedBySpace();
                 phase.setFields(nextWord);
                 screening.addPhase(phase);
+                phase.setProjectName( project.getProject_name());
                 //System.out.println(phase);
 
                 punctuation= Utility.getNextPunctuation(dataParser);
@@ -161,7 +164,7 @@ public class RelisParser {
             return;
         } else return;
 
-        extractScreening(screening,dataParser);
+        extractScreening(project,dataParser);
 
     }
 

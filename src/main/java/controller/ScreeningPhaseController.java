@@ -3,10 +3,13 @@ package controller;
 import model.*;
 import model.user_work.ScreeningPhaseWork;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import utils.Utility;
 import view.ScreeningView;
 
 import java.util.ArrayList;
+
+import static org.testng.Assert.assertTrue;
 
 public class ScreeningPhaseController {
 
@@ -87,7 +90,7 @@ public class ScreeningPhaseController {
 
     }
     public static ArrayList<Paper> getUserPapersAssignments(ScreeningPhaseWork user){
-        ScreeningView.showMyAssignment(user.getParticipant().getDriver());
+        ScreeningView.showMyPendingAssignmentsPage(user.getParticipant().getDriver());
 
         ArrayList<String> papersKeys= new ArrayList<>();
         Utility.getPapersKeyFromDOMFromId(user.getParticipant().getDriver(),papersKeys);
@@ -100,6 +103,7 @@ public class ScreeningPhaseController {
         );
         return p;
     }
+
 
 
     /**

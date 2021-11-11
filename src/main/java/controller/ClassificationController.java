@@ -34,7 +34,7 @@ public class ClassificationController {
             driver.findElement(By.linkText(ProjectUtils.LK_CURRENT_PROJECT)).click();
         }
         // call the view open in order to open the classification phase
-        views.openClassification(driver);
+        ClassificationView.openClassification(driver);
     }
 
 
@@ -110,9 +110,6 @@ public class ClassificationController {
      */
     public void makeReadyForValidationPhase(WebDriver driver, Classification classification){
 
-        try {
-            openClassificationPhase(driver);
-        } catch (Exception e){};
         // do we retrieve the validators from the dom?
         if(classification.getValidators().size() == 0){
             // if not, we assign or extract the validators from the DOM
@@ -129,7 +126,6 @@ public class ClassificationController {
      */
     public void makeReadyForClassification(WebDriver driver, Classification classification){
 
-        openClassificationPhase(driver);
         // get the validators or assign 
         if(classification.getClassifierLength() == 0){
             assignClassificators(driver,classification);

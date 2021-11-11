@@ -210,6 +210,14 @@ public class ScreeningPhase {
     return ""+x+","+y+","+ z +",0,0,"+ papers.size();
 
   }
+
+    /**
+     * this function will check if we have the
+     * good statistics for the screening phase
+     * like included paper, excluded paper, etc
+     * @param result the dom statistics in string format
+      * @return true if all the statistics are correct otherwise false
+     */
   public boolean correctResultOfScreeningPhase(String result){
     // 12,12,32,0,0,98
 
@@ -236,6 +244,10 @@ public class ScreeningPhase {
   }
 
 
+    /**
+     * this function is resolving all the conflict
+     * between papers
+     */
   public void resolvePapersConflicts(){
 
     papers.stream()
@@ -248,6 +260,13 @@ public class ScreeningPhase {
 
   }
 
+    /**
+     * this method will checks if we have a conflict between
+     * reviewers decision for a paper
+     * after the screening phase it'll send
+     * all the decision for a paper that
+     * have more than one reviewer
+     */
   private void propageChanges(){
 
       participants.forEach(
@@ -255,10 +274,17 @@ public class ScreeningPhase {
       );
   }
 
+    /**
+     * @return the number of the reviewers for this screening phase
+     */
   public int getParticipantNumbers(){
       return participants.size();
   }
 
+
+    /***
+     * close all the web browser for every reviewers
+     */
     public void quitWebBrowser() {
       participants.forEach(p-> p.getParticipant().getDriver().quit());
     }

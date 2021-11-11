@@ -3,6 +3,7 @@ package model.relis_categories;
 import lombok.Data;
 import lombok.ToString;
 import model.Paper;
+import utils.Utility;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -25,7 +26,7 @@ public class DependantDynamicCategory extends MultipleValue {
         if(dependent_on == null) return;
         ArrayList<String> values = dependent_on.getUserChoices();
         if(getNumberofValue() == 1 || getNumberofValue()  == 0) {
-            String val = values.get(random.nextInt(0, values.size()));
+            String val = values.get(Utility.nextInt(0, values.size()));
 
             getUserChoices().add(val);
             return;
@@ -35,11 +36,11 @@ public class DependantDynamicCategory extends MultipleValue {
         if(values.size() == 0) return;
         int numb = Math.min(getNumberofValue(), values.size());
 
-        if(numb != 1) numb = random.nextInt(1,numb);
+        if(numb != 1) numb = Utility.nextInt(1,numb);
         ArrayList<String> copiedValues = new ArrayList<>(values);
         for (int i = 0; i < numb; i++) {
 
-            getUserChoices().add(copiedValues.remove(random.nextInt(0,copiedValues.size())));
+            getUserChoices().add(copiedValues.remove(Utility.nextInt(0,copiedValues.size())));
         }
     }
 

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import model.user_work.ScreeningPhaseWork;
+import utils.Utility;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -172,7 +173,7 @@ public  class Paper implements Observable ,Cloneable{
                 }
         );
 
-        int index =  new Random().nextInt(0,decisions.size());
+        int index = Utility.nextInt(0,decisions.size());
         this.decision = decisions.get(index);
         if(decision == PaperDecision.EXCLUDED){
             criteria = reviewers.get(index).getPaperByKey(key).getCriteria();

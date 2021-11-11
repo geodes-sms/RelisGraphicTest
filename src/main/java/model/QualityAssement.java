@@ -77,6 +77,7 @@ public class QualityAssement {
     public void makeReadyQASession(){
 
         participants.forEach( p -> p.setQualityAssement(this));
+        takeDecision();
     }
 
     /**
@@ -107,7 +108,7 @@ public class QualityAssement {
      * and the included paper will have score greather or equal to the min_score
      */
     public void applyDecision(){
-
+        System.out.println("debut of 'apply decision'");
         qa_papers.stream()
                 .filter(QA_Paper::isEliminated)
                 .forEach(paper -> questionAnswesPaper.setRejectedAnswer(paper, min_score));

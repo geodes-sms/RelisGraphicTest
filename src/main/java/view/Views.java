@@ -27,7 +27,6 @@ public class Views {
      */
     public   static ArrayList<RelisUser> chooseUserforScreening(WebDriver driver, int number){
 
-        Random random = new Random();
         ArrayList<RelisUser> reviewers = new ArrayList<>();
 
         // list of every users web element
@@ -53,7 +52,7 @@ public class Views {
             do{
                 // choose a random user
                 int size = users.size();
-                int i = random.nextInt(0,size);
+                int i = Utility.nextInt(0,size);
                 WebElement userWebELment = users.remove(i);
                 RelisUser user  = Utility.getUserByFullName(userWebELment.getText());
                 reviewers.add(user);
@@ -256,9 +255,37 @@ public class Views {
         return bg.equals("rgba(255, 255, 255, 1)");
     }
 
+    /**
+     * this function will open  a menu item
+     * @param driver the webdriver
+     * @param menu_name the menu
+     */
     public static void openMenuFrom(WebDriver driver, String menu_name) {
 
         scrollToElement(driver,By.linkText(menu_name));
         driver.findElement(By.linkText(menu_name)).click();
+    }
+
+
+    /**
+     * this method will check wether we have pending papers for a phase
+     * @param driver the webdriver
+     * @return true if there's no pending papers otherwise false
+     */
+    public static boolean noPendingPapers(WebDriver driver){
+
+        driver.findElement(By.linkText(ScreeningUtils.LK_DASHBORD_LINK)).click();
+        List<WebElement> counts = driver.findElements(By.className("count"));
+
+        String count = counts.get(2).getText();
+
+        return count.equals("0");
+    }
+
+    public static void getSettingsWebElementFor(String mode, WebDriver driver){
+
+        List<WebElement> options = driver.findElement(By.className("x_content")).findElements(
+          By.tagName("div")
+        );
     }
 }

@@ -3,6 +3,7 @@ package databases;
 import com.google.common.collect.ArrayListMultimap;
 import model.RelisUser;
 import utils.FileUtils;
+import utils.Utility;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
@@ -20,9 +21,8 @@ public class DataBase {
     private static final ArrayList<RelisUser> validators = new ArrayList<>();
     private static final ArrayList<RelisUser> guests = new ArrayList<>();
 
-    Random random = new Random();
     private static  ArrayListMultimap<String,String> dataClassification;
-    private static ArrayList<String> mockFullNames = new ArrayList<>();
+    private static final ArrayList<String> mockFullNames = new ArrayList<>();
 
 
     public void extractMockFullNames(){
@@ -37,7 +37,7 @@ public class DataBase {
     public String getMockFullName(){
 
         extractMockFullNames();
-        int x = random.nextInt(0, mockFullNames.size());
+        int x = Utility.nextInt(0, mockFullNames.size());
         return mockFullNames.get(x);
     }
 
@@ -78,7 +78,7 @@ public class DataBase {
 
     public String getNextClassificationCategory(String category){
         List<String> fields = dataClassification.get(category);
-        int index = random.nextInt(0,fields.size());
+        int index = Utility.nextInt(0,fields.size());
         return fields.get(index);
     }
 
@@ -101,19 +101,19 @@ public class DataBase {
 
     public RelisUser GetAReviewer(){
 
-        return reviewers.get(new Random().nextInt(0, reviewers.size()));
+        return reviewers.get(Utility.nextInt(0, reviewers.size()));
     }
     public RelisUser getAValidator(){
 
-        return validators.get(new Random().nextInt(0, validators.size()));
+        return validators.get(Utility.nextInt(0, validators.size()));
     }
     public RelisUser getAProjectManager(){
 
-        return project_managers.get(new Random().nextInt(0, project_managers.size()));
+        return project_managers.get(Utility.nextInt(0, project_managers.size()));
     }
     public RelisUser getAGuestUser(){
 
-        return guests.get(new Random().nextInt(0, guests.size()));
+        return guests.get(Utility.nextInt(0, guests.size()));
     }
 
     public void addReviewer( RelisUser user){

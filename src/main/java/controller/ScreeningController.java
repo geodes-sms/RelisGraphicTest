@@ -6,6 +6,8 @@ import view.ScreeningView;
 
 import java.util.ArrayList;
 
+import static org.testng.Assert.assertTrue;
+
 public class ScreeningController {
 
   private final ScreeningPhaseController phaseController = new ScreeningPhaseController();
@@ -58,9 +60,24 @@ public class ScreeningController {
   public ScreeningPhase assignReviewers(WebDriver driver,Project project){
     String current_phase_name = openNextPhase(driver);
     ScreeningPhase phase = project.getScreening().getScreeningphaseByName(current_phase_name);
+    if(phase != null)
     phaseController.assignReviewers(driver,phase);
     return phase;
 
+  }
+
+
+  public void  doScreenPhase(WebDriver driver, ScreeningPhase phase){
+
+    phaseController.makeReadyForScreeningpPhase(driver, phase);
+    phase.startThisPhaseScreening();
+    // now the screening phase is finish
+    // get the screening result of the website
+    String result = ScreeningView.extractScreeningResult(driver);
+    // compare with the data that we have here
+    boolean correct = phase.correctResultOfScreeningPhase(result);
+
+    assertTrue(correct);
   }
   public String setUpCurrentPhase(WebDriver driver, Project project){
 
@@ -100,6 +117,30 @@ public class ScreeningController {
 
     phaseController.resolveConflict(driver,phase);
   }
+
+  /**
+   * this method will check all the papers are in connflicts
+   * and it will resolve the conflict
+   * @param driver the web driver
+   * @param phase the screening phase
+   * @return true if there's will be 0 conflicts after resolution
+   */
+  public boolean resolveIfConflicts(WebDriver driver, ScreeningPhase phase){
+    // do we have more than one reviewer per paper?
+    boolean resolved = true;
+    if(phase.getParticipantNumbers() > 1){
+      // if so we check out if we have conflicts
+      // we'll resolve them
+      resolveConflict(driver, phase);
+      String result = ScreeningView.extractScreeningResult(driver);
+      resolved = phase.correctResultOfScreeningPhase(result);
+
+    }
+    phase.quitWebBrowser();
+    return  resolved;
+
+  }
+
 
 
 

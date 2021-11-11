@@ -1,6 +1,7 @@
 package model;
 
 import lombok.Data;
+import utils.Utility;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +50,7 @@ public class QuestionAnswesPaper {
     public void setRejectedAnswer(QA_Paper paper, double min_score){
         this.min_score = min_score;
         double score = getRandomAnswer(is_eliminate, paper);
-        //System.out.println("score =>" + score);
+        System.out.println("score =>" + score);
 
     }
 
@@ -61,8 +62,7 @@ public class QuestionAnswesPaper {
         String response  = "";
         // get all the answers
         ArrayList<String> options = new ArrayList<>(answers.keySet());
-        Random random = new Random();
-        int d =0;
+        System.out.println("MIN SCORE = " + min_score);
         // choose a response for a question
         for (String question : questions){
 
@@ -70,7 +70,7 @@ public class QuestionAnswesPaper {
 
             // choose a answer
             do{
-                int i = random.nextInt(0, options.size());
+                int i = Utility.nextInt(0, options.size());
 //                System.out.println("i = " + i );
 //                System.out.println("response=" + options.get(i));
 //                System.out.println("x=" + x +", new socre=" + answers.get(options.get(i)));
@@ -84,7 +84,7 @@ public class QuestionAnswesPaper {
 
             } while (true);
             // we have a answer
-//            System.out.println("q : " + question +" => a: " + response);
+            System.out.println("q : " + question +" => a: " + response);
             qa_paper.addQuestionAnswer(question, response);
         }
         return  x;
@@ -93,10 +93,11 @@ public class QuestionAnswesPaper {
     public void acceptPapers(QA_Paper qa_paper, double min_score) {
 
         this.min_score = min_score;
-        double score = 0;
+        double score;
 
         do {
             score =  getRandomAnswer(is_included, qa_paper);
+            System.out.println("score = " + score);
 
         } while ( score < min_score);
 

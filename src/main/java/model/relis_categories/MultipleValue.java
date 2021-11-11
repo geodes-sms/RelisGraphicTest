@@ -5,6 +5,7 @@ import model.relis_categories.Category;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import utils.Utility;
 import view.ClassificationView;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public abstract class MultipleValue extends Category {
 
         if(getNumberofValue() == 1 || getNumberofValue()  == 0) {
 
-            String val = values.get(random.nextInt(0, values.size()));
+            String val = values.get(Utility.nextInt(0, values.size()));
 
             userChoices.add(val);
             return;
@@ -36,11 +37,11 @@ public abstract class MultipleValue extends Category {
         }
         int numb = Math.min(getNumberofValue(), values.size());
         ArrayList<String> copiedValues =new ArrayList<>(getValues());
-        if(numb != 1) numb = random.nextInt(1,numb+1);
+        if(numb != 1) numb = Utility.nextInt(1,numb+1);
 
         for (int i = 0; i < numb; i++) {
 
-            userChoices.add(copiedValues.remove(random.nextInt(0,copiedValues.size())));
+            userChoices.add(copiedValues.remove(Utility.nextInt(0,copiedValues.size())));
 
         }
 

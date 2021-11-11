@@ -164,8 +164,7 @@ public class Utility {
     public static RelisUser getRandomUser(){
 
         ArrayList<RelisUser> data = getRelisUsers();
-        Random r = new Random();
-        return data.get(r.nextInt(0,data.size()));
+        return data.get(nextInt(0,data.size()));
 
     }
 
@@ -337,8 +336,6 @@ public class Utility {
 
         try{
 
-
-            WebElement element;
             while (true){
                 try{
                     // select the table that contains the screening phaseas
@@ -346,8 +343,7 @@ public class Utility {
                     // get all the papers present from the current table
                     List<WebElement> papers = table.findElements(By.tagName("tr"));
 //                    // we remove the first web element which is the table header
-                    papers.remove(0);
-
+                   // papers.remove(0);
                     function.apply(papers,sujet);
                     // there is no next table  ?
                     if(!predicate.test(driver))
@@ -355,6 +351,7 @@ public class Utility {
                 } catch (Exception e){
                     System.out.println("ERROR " + e.getMessage());
                     e.printStackTrace();
+                    break;
 
                 }
             }
@@ -402,10 +399,11 @@ public class Utility {
      */
     private  static final BiFunction<List<WebElement>,Object,Integer> getPaperFromDOM = (papers, array) ->{
         ArrayList<Paper> assigments =(ArrayList<Paper>) array;
+        papers.remove(0);
         papers.forEach(paper ->{
             Paper paper_key = getPaper(paper);
             assigments.add(paper_key);
-            System.out.println("paper p->" + paper_key);
+            //System.out.println("paper p->" + paper_key);
 
         });
         return -1;
@@ -417,8 +415,28 @@ public class Utility {
     private static final BiFunction<List<WebElement>, Object,Integer> getPapersKeyFromDOM = (papers, array) ->{
 
         ArrayList<String> assigments =(ArrayList<String>) array;
+        int index =0;
+
+        List<WebElement> header = papers.get(0).findElements(By.tagName("th"));
+        System.out.println("We have " + header.size() +" TD");
+        for (WebElement t : header){
+            String name = t.getAttribute("aria-label");
+
+            name  = name.substring(0, name.indexOf(":"));
+            if(name.equals("Paper")) {
+                System.out.println("name=> " + name);
+                break;
+            }
+            index++;
+        }
+
+        System.out.println("INDEX = " + index);
+        papers.remove(0);
+        int finalIndex = index;
         papers.forEach(paper ->{
-            String paper_key = takePaperKey(paper.getText());
+            List<WebElement> tds = paper.findElements(By.tagName("td"));
+
+            String paper_key = takePaperKey( tds.get(finalIndex).getText());
             assigments.add(paper_key);
         });
         return -1;
@@ -613,4 +631,10 @@ public class Utility {
         else return ' ';
         return ' ';
     }
+
+
+    public static int nextInt(int min,int max) {
+        return min + (int)(Math.random() * ((max - min) ));
+    }
+    public static double nextDouble(double min, double max) { return min + (Math.random() * ((max - min) + 1));}
 }

@@ -47,15 +47,18 @@ public class QualityAssementController {
             assign_roles(driver,assement);
         }
         setQA_Papers(driver,assement);
-        if(assement.getQuestionAnswesPaper() == null){
-            QuestionAnswesPaper qa = new QuestionAnswesPaper();
+
+        QuestionAnswesPaper qa = new QuestionAnswesPaper();
             getQuestions(driver,qa);
             getAnswer(driver,qa);
+            System.out.println("fin de get answer ");
             assement.setQuestionAnswesPaper(qa);
-            assement.setMin_score( 3.5);
+
             assement.makeReadyQASession();
+            System.out.println("fin de make ready");
             assement.applyDecision();
-        }
+            System.out.println("fin de apply decisiom");
+        System.out.println("end of the set up for the qa phase");
     }
 
 
@@ -70,7 +73,7 @@ public class QualityAssementController {
 
     /**
      * this method extract all the papers for this phase
-     * if click the 'paper in this phase menu'
+     * it will click the 'paper in this phase menu'
      * then select 'all' and retrieve the papers
      * @param papers the web element of the table 'tr element'
      * @param object the QA object to assign the data
@@ -80,8 +83,8 @@ public class QualityAssementController {
 
         QualityAssement assement = (QualityAssement) object;
         ArrayList<Paper> qa_papers = new ArrayList<>();
+        papers.remove(0); // remove the header
         for (WebElement element : papers){
-
             List<WebElement> tds = element.findElements(By.tagName("td"));
 
             String phrases = element.getText();
@@ -110,14 +113,26 @@ public class QualityAssementController {
 
     }
 
+    /***
+     * this method wll extract all the answer and their score
+     * from the dom
+     *
+     * @param driver the webdriver
+     * @param qa the qa element
+     */
     public void getAnswer(WebDriver driver, QuestionAnswesPaper qa){
         views.getAnswers(driver,qa);
     }
 
 
+    /**
+     * this function will starts the qa phase
+     * @param driver the web driver
+     * @param sessionWork the user
+     */
     public static void startQA_phase(WebDriver driver, QualityAssementSessionWork sessionWork){
-        QAViews.showAssessQAPage(driver);
-        QAViews.doPaperQA(driver,sessionWork);
+        QAViews.showAssessQAPage(driver); // go to the qa assess page
+        QAViews.doPaperQA(driver,sessionWork); // asses the all the papers
         boolean done = views.is_empty_assess(driver);
         assert done;
 
