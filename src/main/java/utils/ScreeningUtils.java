@@ -61,5 +61,10 @@ public class ScreeningUtils {
   public static final int Screening_phase_management_index =4;
 
 
+  public static final String LABEL_SCREENING_ENABLE_VALIDATION = "Screening validation activated";
+
+  public static final String LABEL_SCREENING = "Screening";
+
+
 
 }

@@ -47,6 +47,12 @@ public class ProjectController {
         openAllPaper(driver);
     }
 
+    public static void re_open_main_project_menu(WebDriver driver, String project_name) {
+
+        ProjectController.openProjectListPage(driver);
+        ProjectController.openProject(driver,project_name);
+    }
+
     /**
      * this function suppose to create a new project by
      * uploading the ".php" configuration
@@ -343,8 +349,9 @@ public class ProjectController {
      * @param papers the list of the papers
      * @return  1 if the paper is deleted or not existing
      */
-    private static int deletePaper(WebDriver driver, List<WebElement> papers,String paper){
+    private static int deletePaper(WebDriver driver, List<WebElement> papers,Object papier){
 
+        String paper = (String) papier;
         // get the web element for the paper to delete
         WebElement user_manager = getUserWebElement(papers, paper);
         if (user_manager != null){ // do we found the paper?
@@ -383,8 +390,9 @@ public class ProjectController {
     }
 
 
-    private static int checkPaperPresence(WebDriver driver, List<WebElement> papers,String paper){
+    private static int checkPaperPresence(WebDriver driver, List<WebElement> papers,Object papier){
 
+        String paper = (String) papier;
         // get the web element for the paper to delete
         WebElement user_manager = getUserWebElement(papers, paper);
         return (user_manager == null) ? 0:1;
@@ -418,13 +426,14 @@ public class ProjectController {
     /***
      *
      * @param users the list of users
-     * @param user_name the username that we are looking for
-     * @param role the user role
+     * @param user_name_obj the username that we are looking for
+     * @param role_obj the user role
      * @return the user web element if exist otherwise null
      */
-    private static WebElement checkUserRoleWebElement( List<WebElement> users, String user_name, String role){
+    private static WebElement checkUserRoleWebElement( List<WebElement> users,
+                                                       Object user_name_obj, Object role_obj){
 
-
+        String user_name = (String) user_name_obj, role = (String) role_obj;
         for(int i=0; i< users.size(); i++){
 
             WebElement user = users.get(i);
@@ -445,7 +454,7 @@ public class ProjectController {
      * @param role the user role
      * @return true if the user exist and has the role(param role) otherwise false
      */
-    private static int HasARole( WebDriver driver,List<WebElement> users, String user,String role){
+    private static int HasARole( WebDriver driver,List<WebElement> users, Object user,Object role){
 
        return   (checkUserRoleWebElement(users,user,role) != null)? 1: 0;
 
@@ -567,9 +576,11 @@ public class ProjectController {
         } catch (Exception e){
             return  0;
         }
-
-
     }
+
+
+
+
 
 
 

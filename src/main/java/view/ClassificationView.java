@@ -19,6 +19,8 @@ import static utils.ClassificationUtils.*;
 public class ClassificationView {
 
 
+
+
     /**
      * @param driver the web driver
      * @return all the papers of the current connected user 
@@ -62,7 +64,7 @@ public class ClassificationView {
      * @param classification classification phase
      */
     public void assign_validator(WebDriver driver,Classification classification){
-        openAssignValidatorsPage(driver); 
+        Views.openAssignValidatorsPage(driver);
 
         WebElement rest_papers = driver.findElement(By.cssSelector("#home b"));
         if(rest_papers.getText().equals("Number of papers to assign :0")){
@@ -181,7 +183,7 @@ public class ClassificationView {
 
 
     public void validateNextPaper(WebDriver driver, Classification classification){
-        openValidatePaperPage(driver);
+        Views.openValidatePaperPage(driver);
         String paper_key = getNextPaperForValidation(driver);
         ClassificatedPaper classificatedPaper = classification.getClassifiedPaperByKey(paper_key);
         List<WebElement> panels = driver.findElements(By.className("x_panel"));
@@ -378,7 +380,12 @@ public class ClassificationView {
     }
 
 
-
+    /**
+     *
+     * @param elements
+     * @param o
+     * @return
+     */
     private static int nextClassifiedsPapers(List<WebElement> elements, Object o){
 
         Classification classification = (Classification) o;
@@ -614,17 +621,7 @@ public class ClassificationView {
         Views.openSuBMenuFrom(driver,CLASSIFICATION_NAME,LK_CLASSIFICATION_PROGRESS);
     }
 
-    /**
-     * this method open the assign validators page
-     * @param driver the web driver
-     */
-    public void openAssignValidatorsPage(WebDriver driver){
 
-        driver.findElement(By.linkText(ScreeningUtils.LK_DASHBORD_LINK)).click();
-        driver.findElement(By.cssSelector(CSS_ASSIGN_VALIDATORS_PAGE))
-                .sendKeys(Keys.ENTER);
-
-    }
     //
 
     public void openClassifyPaperPage(WebDriver driver){
@@ -636,29 +633,32 @@ public class ClassificationView {
 
     }
 
-    public void openValidatePaperPage(WebDriver driver){
-        //openClassification(driver);
-        driver.findElement(By.linkText(ScreeningUtils.LK_DASHBORD_LINK)).click();
-        driver.findElement(By.cssSelector(CSS_VALIDATE_BTN))
-                .sendKeys(Keys.ENTER);
+
+
+    public void openValidatedPapersPage(WebDriver driver){
+
+        Views.scrollToElement(driver,By.linkText(LK_VALIDATION_MENU));
+        Views.openSuBMenuFrom(driver,LK_VALIDATION_MENU,LK_VALIDATED_PAPERS);
+
 
     }
 
-    public void openValidatedPapersPage(WebDriver driver){
-        // open the classification phase
-        try {
-            openClassification(driver);
-        }catch (Exception e){};
 
-        try {
+    /**
+     * this function will enable the validation for the classification phase
+     * @param driver the web driver
+     */
+    public static void enable_validation(WebDriver driver){
+        Views.enable_validation(driver, LABEL_CLASSIFICATION, LABEL_ENABLE_VALIDATION);
+    }
 
-            Views.openSuBMenuFrom(driver,LK_VALIDATION_MENU,LK_VALIDATED_PAPERS);
-        } catch (Exception e){
+    /**
+     * this function will desable the validation for the classification phase
+     * @param driver the web driver
+     */
+    public static void desable_validation(WebDriver driver) {
 
-            Views.scrollToElement(driver,By.linkText(LK_VALIDATION_MENU));
-            Views.openSuBMenuFrom(driver,LK_VALIDATION_MENU,LK_VALIDATED_PAPERS);
-        }
-
+        Views.desable_validation(driver, LABEL_CLASSIFICATION, LABEL_ENABLE_VALIDATION);
     }
 
 }

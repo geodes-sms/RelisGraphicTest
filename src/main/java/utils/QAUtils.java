@@ -23,4 +23,23 @@ public class QAUtils {
 
     public static final String CSS_ASSIGN_VALIDATORS = "a[title='Assign papers for validation']";
     public static final String NOT_RECORD_FOR_QA = "No records found !";
+
+    public static final String LK_SETTING = "Settings";
+    public static final String LK_EDIT_BTN = "a[title='Edit']" ;
+
+    public static final String LABEL_ENABLE_VALIDATION  = "Validation enabled";
+
+
+    public static final String CSS_CHECK_BOX_INPUT = "input[type='checkbox']";
+    public static final String LABEL_QA = "Quality Assessment";
+
+    public static final String CSS_INCORRECT_BTN = "a[title='Not correct']";
+    public static final String CSS_CORRECT_BTN = "a[title='Correct']";
+
+    public static final String ID_VALIDATION_NOTE_TEXT_AREA = "validation_note";
+
+
+
+    public static final String INCORRECT ="Incorrect" ;
+    public static final String CORRECT  = "Correct";
 }

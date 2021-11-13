@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><suite name="test relis">
     <test verbose="2" preserve-order="true" name="data management test">
         <classes>
-            <class name="DataManagerTest">
+            <class name="ProjectTest">
                 <methods>
-                    <include name="importBibTexTest"/>
-                    <include name="addReviewerTest"/>
-                    <include name="addProjectManagerTest"/>
-                    <include name="addValidatorTest"/>
-                    <include name="addGuestRoleTest"/>
-                    <include name="removeReviewer"/>
-                    <include name="removeProjectManager"/>
-                    <include name="removeValidator"/>
-                    <include name="removeGuestUserRole"/>
-                    <include name="deleteAllPaper"/>
-                    <include name="deleteProjectPaperByKey"/>
-                    <include name="addSomeReviewers"/>
+                    <include name="assign_screening_reviewers"/>
+                    <include name="screen_test"/>
+                    <include name="asses_qa_test"/>
+                    <include name="validate_qa_test"/>
                 </methods>
             </class>
         </classes>

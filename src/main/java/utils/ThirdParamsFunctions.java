@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ThirdParamsFunctions extends Functions {
 
-    Integer apply(WebDriver driver, List<WebElement> l1, String subject);
+    Integer apply(WebDriver driver, List<WebElement> l1, Object subject);
 
 
 }

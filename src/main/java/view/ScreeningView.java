@@ -544,4 +544,22 @@ public class ScreeningView {
   }
 
 
+    /**
+     * this function will enable the validation for the screening phase
+     * @param driver the web driver
+     */
+  public static void enable_validation(WebDriver driver){
+
+      Views.enable_validation(driver, LABEL_SCREENING, LABEL_SCREENING_ENABLE_VALIDATION);
+  }
+
+    /**
+     * this function will desable the validation for the screening phase
+     * @param driver the web driver
+     */
+    public static void  desable_validation(WebDriver driver){
+
+        Views.desable_validation(driver, LABEL_SCREENING, LABEL_SCREENING_ENABLE_VALIDATION);
+    }
+
 }

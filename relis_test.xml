@@ -1,8 +1,8 @@
 <tests>
     <test name="Screening">
-        <case name="assignment" />
-        <case name="screen" />
-        <case name="validation" />
+        <case name="assignment" code="assign_screening_reviewers"/>
+        <case name="screen" code="screen_test"/>
+<!--        <case name="validation"  code="current_test"/>-->
         <!--<case name="report" />-->
     </test>
 
@@ -14,15 +14,15 @@
     </test>
 
     <test name="qa">
-        <case name="assignment"/>
-        <case name="assess"/>
-        <case name="validation"/>
-        <case name="report"/>
+<!--        <case name="assignment" code="assign_reviewer_qa_test"/>-->
+        <case name="assess" code="asses_qa_test"/>
+        <case name="validation" code="validate_qa_test"/>
+<!--        <case name="report"/>-->
     </test>
 
 
 
-    <test name="management">
+    <test name="management_">
         <!--  La section d'importations de tests -->
         <case name="import csv"   code="importBibTexTest"/>
 <!--        <case name="import endnote"/>-->

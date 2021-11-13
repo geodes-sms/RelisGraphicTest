@@ -21,7 +21,7 @@ public class Initialiazer {
          webDriver = new ChromeDriver();
         // go to the website
         webDriver.get(LOCAL_URL);
-        webDriver.manage().window().setSize(new Dimension( 1500, 700));
+        webDriver.manage().window().maximize();
 
 
     }

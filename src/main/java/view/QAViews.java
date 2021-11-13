@@ -1,11 +1,15 @@
 package view;
 
+import controller.ProjectController;
+import controller.QualityAssementController;
 import model.*;
 import model.user_work.QualityAssementSessionWork;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import utils.ClassificationUtils;
+import utils.FourthParamsFunctions;
 import utils.Utility;
 
 import java.util.ArrayList;
@@ -17,28 +21,46 @@ import static utils.ScreeningUtils.*;
 public class QAViews {
 
 
-    private static final String LK_SETTING = "Settings";
-
-    public void assign_qa_papers(WebDriver driver, QualityAssement qa){
+    public ArrayList<RelisUser> assign_qa_papers(WebDriver driver, int numberOfUser){
         Views.openUserAssignmentPage(driver, CSS_ASSIGN_USERS_TASK);
         WebElement rest_papers = driver.findElement(By.cssSelector("#home b"));
         if(rest_papers.getText().equals("Number of papers to assign :0")){
-            getUsersForTask(driver, qa);
-            return;
+            return getUsersForTask(driver);
         }
         // we select some random users
         ArrayList<RelisUser> reviewers = Views.chooseUserforScreening(
-                driver, qa.getNumberOfParticipants());
+                driver, numberOfUser);
         // we submit the assaignment
         driver.findElement(By.className(CLASS_SUCCESS_BUTTON)).click();
-        qa.setPhaseWorkSession(reviewers);
+        return reviewers;
     }
 
-    private void getUsersForTask(WebDriver driver, QualityAssement qa) {
+
+    /**
+     * this function will assign the validators for the qa phase
+     * @param driver the web driver
+     * @param numberOfUser the number of user
+     * @return an arraylist of the users
+     */
+    public ArrayList<RelisUser> assign_qa_validators(WebDriver driver, int numberOfUser){
+        Views.openAssignValidatorsPage(driver);
+        WebElement rest_papers = driver.findElement(By.cssSelector("#home b"));
+        if(rest_papers.getText().equals("Number of papers to assign :0")){
+            return getUsersForTask(driver);
+        }
+        // we select some random users
+        ArrayList<RelisUser> reviewers = Views.chooseUserforScreening(
+                driver, numberOfUser);
+        // we submit the assaignment
+        driver.findElement(By.className(CLASS_SUCCESS_BUTTON)).click();
+        return reviewers;
+    }
+
+
+    private ArrayList<RelisUser> getUsersForTask(WebDriver driver) {
 
         Views.openSuBMenuFrom(driver, LK_QA_MENU,LK_PROGRESS_QA);
-        ArrayList<RelisUser> participants = Views.extractUsers(driver);
-        qa.setPhaseWorkSession(participants);
+        return Views.extractUsers(driver);
 
     }
 
@@ -55,20 +77,20 @@ public class QAViews {
 
     public void showQuestionsPage(WebDriver driver){
         try{
-            Views.openSuBMenuFrom(driver,LK_PLANNING, LK_QUESTIONS);
+            Views.open_admin_menu_options(driver,LK_PLANNING, LK_QUESTIONS);
         } catch (Exception e){
             Views.scrollToElement(driver,By.linkText(LK_PLANNING));
-            Views.openSuBMenuFrom(driver,LK_PLANNING, LK_QUESTIONS);
+            Views.open_admin_menu_options(driver,LK_PLANNING, LK_QUESTIONS);
         }
 
     }
 
     public void ShowAnswersPage(WebDriver driver){
         try{
-            Views.openSuBMenuFrom(driver,LK_PLANNING, LK_ANSWERS);
+            Views.open_admin_menu_options(driver,LK_PLANNING, LK_ANSWERS);
         } catch (Exception e){
             Views.scrollToElement(driver,By.linkText(LK_PLANNING));
-            Views.openSuBMenuFrom(driver,LK_PLANNING, LK_ANSWERS);
+            Views.open_admin_menu_options(driver,LK_PLANNING, LK_ANSWERS);
         }
     }
 
@@ -116,6 +138,7 @@ public class QAViews {
 
            List<WebElement> tds = elem.findElements(By.tagName("td"));
            String question = tds.get(1).getText();
+           System.out.println("question $$$$$$$$$$$$$$$$$$$$$ =>" + question);
            questions.addQuestions(question);
 
        }
@@ -181,25 +204,30 @@ public class QAViews {
      */
     public static void doPaperQA(WebDriver driver, QualityAssementSessionWork sessionWork){
 
-        WebElement nextQuestion = getNextQuestion(driver);
-        if(nextQuestion == null) return;
+        for(int i =0; i < sessionWork.getQa_papers().size(); i++){
 
-        List<WebElement> elements= driver.findElements(By.className(CLASS_X_PANEL));
-        WebElement nextPaper = elements.get(1);
+            // get the next question for the current paper
+            WebElement nextQuestion = getNextQuestion(driver);
 
-        String title = nextPaper.findElement(By.cssSelector("."+CLASS_PAPERS_TITLE +" u")).getText();
+            if (nextQuestion == null) continue;
+            // get all the papers title
+            List<WebElement> elements= driver.findElements(By.className(CLASS_X_PANEL));
+            // get the first one to assess
+            WebElement nextPaper = elements.get(1);
+            // retrieve the title for the first paper
+            String title = nextPaper.findElement(By.cssSelector("."+CLASS_PAPERS_TITLE +" u")).getText();
 
-        List<WebElement> tds_elem = nextQuestion.findElements(By.tagName("td"));
-        String question = tds_elem.get(0).getText();
-        question = question.substring(0,question.indexOf("\n"));
-        WebElement droite_elem  = tds_elem.get(0).findElement(By.cssSelector(".droite"));
-        String answer = sessionWork.getAnswerFor(question,title);
-        System.out.println("Answer={" + answer+"} , title=" + title);
-        String css_selector = "a[title='"+ answer+"']";
+            List<WebElement> tds_elem = nextQuestion.findElements(By.tagName("td"));
+            String question = tds_elem.get(0).getText();
+            question = question.substring(0,question.indexOf("\n"));
+            WebElement droite_elem  = tds_elem.get(0).findElement(By.cssSelector(".droite"));
+            String answer = sessionWork.getAnswerFor(question,title);
+            System.out.println("Answer={" + answer+"} , title=" + title);
+            String css_selector = "a[title='"+ answer+"']";
 
-        droite_elem.findElement(By.cssSelector(css_selector)).sendKeys(Keys.ENTER);
+            droite_elem.findElement(By.cssSelector(css_selector)).sendKeys(Keys.ENTER);
+        }
 
-        doPaperQA(driver, sessionWork);
     }
 
 
@@ -211,13 +239,89 @@ public class QAViews {
         return false;
     }
 
-
+    /**
+     * this method will enable the validation for the Qa phase
+     * @param driver the web drivedr
+     */
     public static  void enable_validation(WebDriver driver){
 
-        Views.openSuBMenuFrom(driver,LK_PLANNING,LK_SETTING);
+
+        Views.enable_validation(driver,LABEL_QA, LABEL_ENABLE_VALIDATION);
+    }
+
+    /**
+     * this method will desable the validation for the Qa phase
+     * @param driver the web drivedr
+     */
+    public static  void desable_validation(WebDriver driver){
+
+
+        Views.desable_validation(driver,LABEL_QA, LABEL_ENABLE_VALIDATION);
     }
 
 
+    /**
+     *
+     * @param driver the web driver
+     * @param paper_element the paper web elemnent
+     * @param subject the qa object
+     * @param object the relis user / the validator
+     */
+    public static int validate_papers_process(WebDriver driver,List<WebElement>
+            paper_element, Object subject, Object object){
+
+        System.out.println("dans la bonne function");
+            RelisUser user = (RelisUser) object;
+            int val = 0;
+            QualityAssement assement = (QualityAssement) subject;
+            paper_element.remove(0);
+            for(WebElement element : paper_element){
+//                System.out.println("Element ->"  + element.getText());
+                List<WebElement> tds = element.findElements(By.tagName("td"));
+                String validation_response_dom = tds.get(3).getText();
+                // if the paper is validated continue
+                if(!validation_response_dom.equals("")) continue;
+                String user_full_name = tds.get(2).getText();
+                // validate the papers
+                if(user_full_name.equals(user.getFull_name())){
+
+                    String paper_ids = tds.get(1).findElement(By.tagName("a")).getAttribute("title");
+                    String selector = "a[title='"+ paper_ids+"']";
+                    String key = paper_ids.substring(0, paper_ids.indexOf(" "));
+                    QA_Paper paper = assement.getQa_papersByKey(key);
+                    tds.get(1).findElement(By.cssSelector(selector)).click();
+                    if(!paper.getValidation_response().equals(CORRECT)){
+                        driver.findElement(By.cssSelector(CSS_INCORRECT_BTN)).click();
+                        driver.findElement(By.cssSelector(CSS_INCORRECT_BTN)).click();
+                        Views.make_incorrect_decision(driver, paper.getValidation_response_note());
+                    }
+                    driver.findElement(By.cssSelector(CSS_CORRECT_BTN)).click();
+                    val = 1;
+                    break;
+                }
+            }
+            return val;
+        }
+
+
+
+        public static int validate_demo(WebDriver driver, QualityAssement qa , RelisUser user){
+
+            Views.open_validation_result_page(driver);
+            FourthParamsFunctions functions  = QAViews::validate_papers_process;
+           return Utility.find_element_table_id(driver,functions, user, qa);
+        }
+
+
+
+    public static void finish_validation_phase(WebDriver driver, Project project, RelisUser user){
+
+        int max = 0;
+
+           while (max != 1)  max = validate_demo(driver, project.getQa(), user);
+
+
+    }
 
 
 

@@ -4,15 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import model.user_work.QualityAssementSessionWork;
+import org.openqa.selenium.WebDriver;
+import utils.Utility;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static utils.QAUtils.CORRECT;
+import static utils.QAUtils.INCORRECT;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 
 public class QualityAssement {
-
 
     private String name ="Quality Assement";
 
@@ -26,8 +32,11 @@ public class QualityAssement {
 
     private ArrayList<QA_Paper> qa_papers = new ArrayList<>();
 
-    private int numberOfParticipants =1;
+    private int numberOfParticipants = 1;
 
+
+    private ArrayList<RelisUser> validators = new ArrayList<>();
+    private int numberOfValidators = 2;
 
     public void initQa_Papers(ArrayList<Paper> papers){
 
@@ -36,7 +45,6 @@ public class QualityAssement {
             paper_qa.setPaper_title(paper.getTitle());
             qa_papers.add(paper_qa);
         });
-        takeDecision();
     }
 
 
@@ -78,6 +86,7 @@ public class QualityAssement {
 
         participants.forEach( p -> p.setQualityAssement(this));
         takeDecision();
+        applyDecision();
     }
 
     /**
@@ -122,7 +131,7 @@ public class QualityAssement {
      * like opening a new browser connecting ...
      */
     public void startParticipantsQA_session(){
-        makeReadyQASession();
+        System.out.println("dans le start ");
         participants.parallelStream().forEach(QualityAssementSessionWork::setUp);
     }
 
@@ -150,5 +159,43 @@ public class QualityAssement {
 
         }
         questionAnswesPaper.addAnswer(answers,score);
+    }
+
+
+    /**
+     * this method will set validation decision
+     * for every paper
+     */
+    public void validate(){
+
+
+        // get random number
+        int random_incorrect = Utility.nextInt(0, qa_papers.size()/5);
+        // set the incorrect validation for random papers
+        for (int i =0; i < random_incorrect; i++){
+            // get the papers don't already have a validation decision
+            List<QA_Paper> papers = qa_papers.stream().filter(p -> p.getValidation_response() == null)
+                    .collect(Collectors.toList());
+            // get random index
+            int pos = Utility.nextInt(0, papers.size());
+            papers.get(pos).setValidation_response(INCORRECT);
+            papers.get(pos).setValidation_response_note("incorrect !!!");
+        }
+        // set others papers to correct
+        qa_papers.stream().filter(p -> p.getValidation_response().equals(INCORRECT))
+                .forEach( p -> p.setValidation_response(CORRECT));
+
+    }
+
+    public int papersLength() {
+
+        return qa_papers.size();
+    }
+
+    public QA_Paper getQa_papersByKey(String key) {
+
+        return qa_papers.stream()
+                .filter( p -> p.getPaper_key().equals(key))
+                .findFirst().orElse(null);
     }
 }

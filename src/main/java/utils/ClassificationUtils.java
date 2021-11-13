@@ -41,11 +41,6 @@ public class ClassificationUtils {
     public static final String CSS_INCORRECT_PAPER = "a[title='Not correct']";
     public static final String LK_VALIDATED_PAPERS = "Validated papers";
 
-    public static final String DOMAINS_FIELD = "Domain";
-    public static final String TRANSFORMATION_LANG = "Transformation Language";
-    public static final String SOURCE_LANG_FIELD = "Source language";
-    public static final String TARGET_LANG_FIELD ="Target language";
-    public static final String SCOPE_FIELD = "Scope";
 
     public static final String NOT_READY_FIELD = "This field will be enabled on update";
     public static final String CSS_EDIT_CLASSIFICATION_BTN = "a[title='Edit the classification']";
@@ -55,4 +50,7 @@ public class ClassificationUtils {
     public static String LK_My_CLASSIFIED = "My Classified";
 
     public static final String LK_TABLE_RESULT_OF_CLASSIFICATION = "Table";
+
+    public static final String LABEL_CLASSIFICATION = "Classification";
+    public static final String LABEL_ENABLE_VALIDATION = "Validation enabled";
 }

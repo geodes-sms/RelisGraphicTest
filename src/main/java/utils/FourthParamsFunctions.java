@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface FourthParamsFunctions extends Functions {
 
-    Integer apply(WebDriver driver, List<WebElement> l1, String user,String user_role);
+    Integer apply(WebDriver driver, List<WebElement> webElementList, Object user,Object obj);
 
 }

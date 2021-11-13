@@ -364,6 +364,48 @@ public class Utility {
 
     }
 
+
+
+
+    public static int work_through_table_find_element(WebDriver driver, Functions function
+            , Object sujet, Object object, By elem, Predicate<WebDriver> predicate){
+
+        int val = 0;
+        try{
+
+            while (true){
+                try{
+                    // select the table that contains the screening phaseas
+                    WebElement table = driver.findElement(elem);
+                    // get all the papers present from the current table
+                    List<WebElement> papers = table.findElements(By.tagName("tr"));
+//                    // we remove the first web element which is the table header
+                    // papers.remove(0);
+                    int result = ( (FourthParamsFunctions) function).apply(driver, papers, sujet, object);
+                    // there is no next table  ?
+                    boolean nextTable = predicate.test(driver);
+                    if(result == 1 || !nextTable ){
+                        if(!nextTable)
+                            val = 1;
+                        break;
+                    }
+
+                } catch (Exception e){
+                    System.out.println("ERROR " + e.getMessage());
+                    e.printStackTrace();
+                    break;
+
+                }
+            }
+
+        } catch ( Exception e){
+            e.printStackTrace();
+
+        }
+        return val;
+
+    }
+
     /**
      * this function performs some function above the 'table' of papers for the dom
      * @param driver the webdriver
@@ -375,6 +417,13 @@ public class Utility {
 
         By by = By.id(ProjectUtils.ID_PROJECT_TABLE_USERS);
         work_through_table_function(driver, functions, obj, by,Utility::hasNextPage);
+
+    }
+
+    public static int find_element_table_id(WebDriver driver, Functions functions, Object obj, Object subject){
+
+        By by = By.id(ProjectUtils.ID_PROJECT_TABLE_USERS);
+        return work_through_table_find_element(driver,functions,subject,obj,by,Utility::hasNextPage);
 
     }
 

@@ -28,10 +28,41 @@ public class QualityAssementController {
      * @param driver web driver
      * @param assement the QA object
      */
-    public void assign_roles(WebDriver driver, QualityAssement assement){
+    public static void assign_roles(WebDriver driver, QualityAssement assement){
 
-        views.assign_qa_papers(driver,assement);
+        ArrayList<RelisUser> users = views.assign_qa_papers(driver, assement.getNumberOfParticipants());
+        assement.setPhaseWorkSession(users);
     }
+
+
+
+    /**
+     * this method assign the reviewers for the QA phase
+     * @param driver web driver
+     * @param assement the QA object
+     */
+    private static void assign_validators(WebDriver driver, QualityAssement assement){
+
+        ArrayList<RelisUser> users = views.assign_qa_validators(driver, assement.getNumberOfValidators());
+        assement.setValidators(users);
+    }
+
+
+    /**
+     * this function will do the valiation phase for the qa
+     * @param driver the web driver
+     * @param project the project object
+     */
+    public static void validate_qa(WebDriver driver, Project project){
+
+        assign_roles(driver,project.getQa());
+        project.getQa().validate();
+        project.getQa().getValidators()
+                        .forEach( validator->
+                                QAViews.finish_validation_phase(driver,project, validator));
+
+    }
+
 
 
     /**
@@ -43,22 +74,21 @@ public class QualityAssementController {
     public void setUpQualityAssements(WebDriver driver, QualityAssement assement){
 
         if(assement == null) return;
+        System.out.println("***********************8 debut roles ******************");
         if(!assement.hasParticipant()){
             assign_roles(driver,assement);
         }
+        System.out.println("fin de getting user roles");
         setQA_Papers(driver,assement);
 
         QuestionAnswesPaper qa = new QuestionAnswesPaper();
-            getQuestions(driver,qa);
-            getAnswer(driver,qa);
-            System.out.println("fin de get answer ");
-            assement.setQuestionAnswesPaper(qa);
+        // get the question for the qa
+        getQuestions(driver,qa);
+        // get all the answers from the dom
+        getAnswer(driver,qa);
+        assement.setQuestionAnswesPaper(qa);
+        assement.makeReadyQASession();
 
-            assement.makeReadyQASession();
-            System.out.println("fin de make ready");
-            assement.applyDecision();
-            System.out.println("fin de apply decisiom");
-        System.out.println("end of the set up for the qa phase");
     }
 
 
@@ -68,6 +98,11 @@ public class QualityAssementController {
 
         ProjectController.openAllPapersPage(driver);
         Utility.work_through_table_id(driver,QualityAssementController::addPaperToQA,assement);
+
+    }
+
+    public void get_or_set_papers_to_validate(WebDriver driver, QualityAssement assement){
+
 
     }
 
@@ -139,11 +174,13 @@ public class QualityAssementController {
     }
 
 
+    public void do_qa_assess(WebDriver driver, QualityAssement assement) {
+
+        assement.setNumberOfParticipants(1);
+        setUpQualityAssements(driver,assement);
+        assement.startParticipantsQA_session();
+        assement.closeAllWebDriver();
 
 
-
-
-
-
-
+    }
 }
