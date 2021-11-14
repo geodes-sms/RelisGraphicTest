@@ -171,6 +171,7 @@ public class QualityAssement {
 
         // get random number
         int random_incorrect = Utility.nextInt(0, qa_papers.size()/5);
+        System.out.println("Dans la fonction validate INCORRECT RANDOM =>' " + random_incorrect);
         // set the incorrect validation for random papers
         for (int i =0; i < random_incorrect; i++){
             // get the papers don't already have a validation decision
@@ -182,7 +183,7 @@ public class QualityAssement {
             papers.get(pos).setValidation_response_note("incorrect !!!");
         }
         // set others papers to correct
-        qa_papers.stream().filter(p -> p.getValidation_response().equals(INCORRECT))
+        qa_papers.stream().filter(p -> p != null && p.getValidation_response().equals(INCORRECT))
                 .forEach( p -> p.setValidation_response(CORRECT));
 
     }

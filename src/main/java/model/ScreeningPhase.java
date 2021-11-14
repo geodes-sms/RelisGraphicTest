@@ -29,7 +29,7 @@ public class ScreeningPhase {
     private int includedPaperCout;
     private int paperInConflictCount;
 
-    private int numberOfUsers = 2;
+    private int numberOfUsers = 3;
     private ArrayList<Paper> papers = new ArrayList<>();
 
   public ScreeningPhase(String name) {

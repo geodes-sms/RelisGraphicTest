@@ -192,8 +192,6 @@ public class Views {
         );
 
         try {
-
-            Utility.sleep(10);
             WebElement option =
                     elements.stream().filter( li -> {
 
@@ -228,25 +226,6 @@ public class Views {
      * @param driver the webdriver
      */
     public static void openSuBMenuFrom(WebDriver driver, String menu_name, String subOptions){
-//
-//        WebDriverWait webDriverWait  = new WebDriverWait(driver,5);
-//
-//        try {
-//
-//            driver.findElement(By.linkText(menu_name)).click();
-//            webDriverWait.until(ExpectedConditions.presenceOfElementLocated(
-//                    By.linkText(subOptions)
-//            )).sendKeys(Keys.ENTER);
-//
-//        } catch (Exception e){
-//
-//            scrollToElement(driver,By.linkText(menu_name));
-//            driver.findElement(By.linkText(menu_name)).click();
-//            webDriverWait.until(ExpectedConditions.presenceOfElementLocated(
-//                    By.linkText(subOptions)
-//            )).sendKeys(Keys.ENTER);
-//
-//        }
 
         try {
             WebElement menu = getSideBarMenuOptionsOf(driver,menu_name);

@@ -15,8 +15,8 @@ public class QA_Paper  {
     private HashMap<String,String> questions_answer_db = new HashMap<>();
     private boolean eliminated= false;
 
-    private String validation_response;
-    private String validation_response_note;
+    private String validation_response ="";
+    private String validation_response_note = "";
 
     public QA_Paper(String paper_key){
         this.paper_key = paper_key;

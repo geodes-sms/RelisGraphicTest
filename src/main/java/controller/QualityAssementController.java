@@ -54,7 +54,7 @@ public class QualityAssementController {
      * @param project the project object
      */
     public static void validate_qa(WebDriver driver, Project project){
-
+        QAViews.enable_validation(driver);
         assign_roles(driver,project.getQa());
         project.getQa().validate();
         project.getQa().getValidators()
@@ -84,6 +84,7 @@ public class QualityAssementController {
         QuestionAnswesPaper qa = new QuestionAnswesPaper();
         // get the question for the qa
         getQuestions(driver,qa);
+
         // get all the answers from the dom
         getAnswer(driver,qa);
         assement.setQuestionAnswesPaper(qa);
@@ -166,7 +167,7 @@ public class QualityAssementController {
      * @param sessionWork the user
      */
     public static void startQA_phase(WebDriver driver, QualityAssementSessionWork sessionWork){
-        QAViews.showAssessQAPage(driver); // go to the qa assess page
+//        QAViews.showAssessQAPage(driver); // go to the qa assess page
         QAViews.doPaperQA(driver,sessionWork); // asses the all the papers
         boolean done = views.is_empty_assess(driver);
         assert done;
@@ -178,6 +179,7 @@ public class QualityAssementController {
 
         assement.setNumberOfParticipants(1);
         setUpQualityAssements(driver,assement);
+
         assement.startParticipantsQA_session();
         assement.closeAllWebDriver();
 

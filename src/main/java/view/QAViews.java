@@ -137,6 +137,7 @@ public class QAViews {
        for(WebElement elem : list){
 
            List<WebElement> tds = elem.findElements(By.tagName("td"));
+           tds.forEach( p -> System.out.print(" " + p));
            String question = tds.get(1).getText();
            System.out.println("question $$$$$$$$$$$$$$$$$$$$$ =>" + question);
            questions.addQuestions(question);
@@ -204,12 +205,16 @@ public class QAViews {
      */
     public static void doPaperQA(WebDriver driver, QualityAssementSessionWork sessionWork){
 
-        for(int i =0; i < sessionWork.getQa_papers().size(); i++){
+        int max = sessionWork.getQa_papers().size();
+        System.out.println("Nombre de doPapers => " + max +"         )))))))))))))))))))))))))))))))))))))))))))))))00");
+        for(int i =0; i < max*4; i++){
 
             // get the next question for the current paper
             WebElement nextQuestion = getNextQuestion(driver);
-
-            if (nextQuestion == null) continue;
+            if (nextQuestion == null){
+                System.out.println("QUestion NULL &&&&&&&&&&&&$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                continue;
+            }
             // get all the papers title
             List<WebElement> elements= driver.findElements(By.className(CLASS_X_PANEL));
             // get the first one to assess

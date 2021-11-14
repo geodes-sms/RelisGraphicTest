@@ -94,6 +94,7 @@ public class ScreeningPhaseController {
 
         ArrayList<String> papersKeys= new ArrayList<>();
         Utility.getPapersKeyFromDOMFromId(user.getParticipant().getDriver(),papersKeys);
+        //Utility.sleep(10);
        // System.out.println("Phase \n" + user.getPhase());
         ArrayList<Paper> p = new ArrayList<>();
         papersKeys.forEach(
