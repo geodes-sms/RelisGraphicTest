@@ -12,7 +12,7 @@
                                <xsl:for-each select="case">
                                 <include>
                                     <xsl:attribute name="name">
-                                        <xsl:value-of select="@code" />
+                                        <xsl:value-of select="@function" />
                                     </xsl:attribute>
                                 </include>
                                </xsl:for-each>
@@ -30,7 +30,7 @@
                                 <xsl:for-each select="case">
                                     <include>
                                         <xsl:attribute name="name">
-                                            <xsl:value-of select="@code" />
+                                            <xsl:value-of select="@function" />
                                         </xsl:attribute>
                                     </include>
                                 </xsl:for-each>
