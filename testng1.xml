@@ -12,9 +12,9 @@
                 <methods>
                     <include name="assign_screening_reviewers"/>
                     <include name="screen_test"/>
+                    <include name="classifyPapersTest"/>
                     <include name="assign_reviewer_qa_test"/>
                     <include name="asses_qa_test"/>
-                    <include name="validate_qa_test"/>
                 </methods>
             </class>
         </classes>

@@ -26,7 +26,7 @@
                         <methods>
                         <xsl:for-each select="test">
                         <!--  SCREENING TEST -->
-                        <xsl:if test="@name = 'Screening' or @name='qa'">
+                        <xsl:if test="@name = 'Screening' or @name='qa' or @name='classification'" >
                                 <xsl:for-each select="case">
                                     <include>
                                         <xsl:attribute name="name">
@@ -35,6 +35,8 @@
                                     </include>
                                 </xsl:for-each>
                         </xsl:if>
+
+
                         </xsl:for-each>
                         </methods>
                     </class>

@@ -347,7 +347,7 @@ public class Views {
      */
     public static WebElement getSettingsWebElementFor(String mode, WebDriver driver){
 
-        openSuBMenuFrom(driver, LK_PLANNING,LK_SETTINGS);
+        open_admin_menu_options(driver, LK_PLANNING,LK_SETTINGS);
         WebElement settings = driver.findElement(By.className("x_content"));
 
         List<WebElement> divs  = settings.findElements(By.cssSelector("div:first-child"));

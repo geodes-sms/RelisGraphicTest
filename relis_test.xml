@@ -7,16 +7,16 @@
     </test>
 
     <test name="classification">
-        <case name="assignment"/>
-        <case name="classify"/>
-        <case name="validation"/>
-        <case name="report"/>
+<!--        <case name="assignment"/>-->
+        <case name="classify" code="classifyPapersTest"/>
+<!--        <case name="validation"/>-->
+<!--        <case name="report"/>-->
     </test>
 
     <test name="qa">
         <case name="assignment" code="assign_reviewer_qa_test"/>
         <case name="assess" code="asses_qa_test"/>
-        <case name="validation" code="validate_qa_test"/>
+<!--        <case name="validation" code="validate_qa_test"/>-->
 <!--        <case name="report"/>-->
     </test>
 
