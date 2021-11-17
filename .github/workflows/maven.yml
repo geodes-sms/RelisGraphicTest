@@ -25,6 +25,6 @@ jobs:
          chmod +x ./scripts/chrome.sh
          ./scripts/chrome.sh
       shell: bash
-    - name: run the text
+    - name: Build and run the tests
       run : mvn clean test
     
