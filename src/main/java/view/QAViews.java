@@ -78,7 +78,9 @@ public class QAViews {
     public void showQuestionsPage(WebDriver driver){
         try{
             Views.open_admin_menu_options(driver,LK_PLANNING, LK_QUESTIONS);
+            Utility.sleep(10);
         } catch (Exception e){
+
             Views.scrollToElement(driver,By.linkText(LK_PLANNING));
             Views.open_admin_menu_options(driver,LK_PLANNING, LK_QUESTIONS);
         }
@@ -88,8 +90,10 @@ public class QAViews {
     public void ShowAnswersPage(WebDriver driver){
         try{
             Views.open_admin_menu_options(driver,LK_PLANNING, LK_ANSWERS);
+            Utility.sleep(10);
         } catch (Exception e){
             Views.scrollToElement(driver,By.linkText(LK_PLANNING));
+            Utility.sleep(10);
             Views.open_admin_menu_options(driver,LK_PLANNING, LK_ANSWERS);
         }
     }
@@ -160,6 +164,7 @@ public class QAViews {
 
             List<WebElement> tds = elem.findElements(By.tagName("td"));
             String answer = tds.get(1).getText();
+            System.out.println("answer ::::: " + answer);
             float score = Float.parseFloat(tds.get(2).getText());
             questions.addAnswer(answer,score);
 

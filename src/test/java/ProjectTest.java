@@ -184,6 +184,12 @@ public class ProjectTest {
 //
 //    }
 
+    public void delete_all_classified_papers(){
+
+        Views.openSuBMenuFrom(driver, "Papers  in this phase", "Classified");
+
+
+    }
 
      @Test(priority = 9)
     public void classifyPapersTest(){

@@ -392,6 +392,7 @@ public class ClassificationView {
 
         Classification classification = (Classification) o;
         ArrayList<String> headers = classification.getCategories_displayed_names();
+        elements.remove(0);
         for (WebElement element : elements){
 
             List<WebElement> tds = element.findElements(By.tagName("td"));
@@ -406,7 +407,7 @@ public class ClassificationView {
                }
                ClassificatedPaper value = classification.getClassifiedPaperByKey(key);
                String msg = "header={"+i+"} = "+headers.get(i)+", value={"+ elem.getText()+"}";
-               System.out.print(msg);
+               System.out.print(msg +" VS => ");
                boolean l = value.compareDisplayNameVal(headers.get(i), elem.getText());
                System.out.print("   ,response=" +l);
                msg += " COMPARAISON_VALUE= " +l;
@@ -428,8 +429,6 @@ public class ClassificationView {
      */
     public void extracDOM_classification_values(WebDriver driver, Classification classification){
         getTableHeaderData(driver,classification);
-        Views.openSuBMenuFrom(driver,LK_RESULTS_CLASSIFICATION,LK_TABLE_RESULT_OF_CLASSIFICATION);
-
         Utility.work_through_table_id(driver,ClassificationView::nextClassifiedsPapers,classification);
 
 
@@ -478,7 +477,7 @@ public class ClassificationView {
         List<WebElement> table_elements = element.findElements(By.tagName("th"));
         table_elements.remove(0); // remove the index #1, #2 ...
         table_elements.forEach( t-> {
-           // System.out.println("header= " +t.getText()+" =>" + t.getAttribute("aria-label"));
+           System.out.println("header= " +t.getText()+" =>" + t.getAttribute("aria-label"));
             String name = t.getAttribute("aria-label");
             name  = name.substring(0, name.indexOf(":"));
             classification.addCategoryDisplayedName(name);

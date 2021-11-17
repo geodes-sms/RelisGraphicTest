@@ -85,6 +85,8 @@ public class ClassificatedPaper {
         // if the current category has sub categories so retur false
         // cause as of now relis doesn't consider the sub categories
         boolean result = value.equals(dom_value);
+
+        System.out.print(value);
         if(category.hasSubCategory())
             return false;
         return result;

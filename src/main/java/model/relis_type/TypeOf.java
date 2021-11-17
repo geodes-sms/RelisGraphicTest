@@ -14,9 +14,9 @@ public abstract class TypeOf implements Cloneable {
 
     public  void sendValueToDOM(WebDriver driver,WebElement input, String value){
         try {
-            System.out.println("Calling since " + input.getText() +" => value=" +value);
+            input.findElement(By.cssSelector(CSS_INPUT_TEXT)).clear();
             input.findElement(By.cssSelector(CSS_INPUT_TEXT)).sendKeys(value);
-            Utility.sleep(7);
+
         } catch (Exception e){
             input.findElement(By.tagName("textarea")).sendKeys(value);
         }

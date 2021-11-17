@@ -47,7 +47,7 @@ public class Views {
                         reviewers.add(user);
 
                     }
-
+            Utility.sleep(10);
         // otherwise we choose n users
         } else{
             // we remove the first two elements which is not important
@@ -198,7 +198,7 @@ public class Views {
                     elements.stream().filter( li -> {
 
 
-                      System.out.println("(" +li.findElement(By.tagName("a")).getText() +", "+ subMenu +")");
+                      //System.out.println("(" +li.findElement(By.tagName("a")).getText() +", "+ subMenu +")");
                         return li.findElement(By.tagName("a")).getText().equals(subMenu);
                             } )
                             .findFirst().get();
@@ -207,7 +207,7 @@ public class Views {
 
         } catch (Exception e){
 
-           System.err.println("Element do not exist {{{{ li= " + menu.getText() +" @ " +  subMenu+"}}}}}}}}}}}}");
+          // System.err.println("Element do not exist {{{{ li= " + menu.getText() +" @ " +  subMenu+"}}}}}}}}}}}}");
             e.printStackTrace();
         }
 
@@ -217,7 +217,6 @@ public class Views {
     public static void open_admin_menu_options(WebDriver driver, String menu, String sub_name) {
 
         WebElement element = open_sub_menu_admin(driver, menu);
-        System.out.println(" GETTING THE QUESTIONS");
         if(element == null) return;
         if(!Utility.hasClass(element, "active")) element.click();
         choose_sub_menuFrom(element, sub_name);
@@ -236,7 +235,6 @@ public class Views {
         } catch (Exception e){
             WebElement menu = getSideBarMenuOptionsOf(driver,menu_name);
             scrollToElement2(driver,menu);
-            Utility.sleep(10);
             menu = getSideBarMenuOptionsOf(driver,menu_name);
             System.out.println("SCROLLING @@@@@@@@@@@@@@@@@@@@@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
             System.out.println("Menu trouver {" + menu.getText()+" }\n\n");

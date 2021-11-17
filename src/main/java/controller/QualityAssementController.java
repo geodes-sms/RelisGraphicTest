@@ -87,6 +87,7 @@ public class QualityAssementController {
 
         // get all the answers from the dom
         getAnswer(driver,qa);
+
         assement.setQuestionAnswesPaper(qa);
         assement.makeReadyQASession();
 
@@ -145,6 +146,7 @@ public class QualityAssementController {
 
 
     public void getQuestions(WebDriver driver, QuestionAnswesPaper qa){
+        Utility.sleep(10);
         views.getQuestion(driver,qa);
 
     }
