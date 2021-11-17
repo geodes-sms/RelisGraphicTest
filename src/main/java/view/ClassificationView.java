@@ -269,7 +269,7 @@ public class ClassificationView {
         List<WebElement> inputs = driver.findElements(By.className(CLASS_FORM_GROUP));
         inputs = inputs.stream().filter(Objects::nonNull).collect(Collectors.toList());
         AtomicInteger i= new AtomicInteger();
-        int max = classificatedPaper.getCategories().size();
+        int max = classificatedPaper.getCategories().size()-1;
         // we remove the first one which is the paper title and it can't be modified
         inputs.remove(0);
         // we loop through all the inputs
@@ -316,8 +316,10 @@ public class ClassificationView {
         int inde =0, maximum = classification.getAllCategories().size();
         boolean hasSubCategory = false, haveToFill=false;
         List<WebElement> inputs = driver.findElements(By.className(CLASS_FORM_GROUP));
+        System.out.println("on a " + inputs.size() +" category %%%%%%%%%%%%%%%%%%%%%%%");
         for(WebElement input : inputs){
             String labelCategory = input.findElement(By.tagName("label")).getText();
+            System.out.println(" label :> " + labelCategory);
             labelCategory = labelCategory.replace("*","").trim();
             Category category = classification.getCategoryByDisplayName(key, labelCategory);
             if(input.findElement(By.tagName("div")).getText().equals(NOT_READY_FIELD)){
@@ -333,7 +335,7 @@ public class ClassificationView {
                 category.fillWebElementInput(driver,input);
             }
 
-            if((++inde+1) >= maximum) break;
+            if((++inde+2) >= maximum) break;
 
         }
         driver.findElement(By.className(CLASS_BTN_SUCCES)).click();

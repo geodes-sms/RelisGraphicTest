@@ -159,7 +159,10 @@ public class ClassificationController {
                         ClassificationView.openClassification(drive);
                         // classify the papers
                         views.classifyAndTest(drive,classification);
+                        drive.close();
                     });
+
+        System.out.println("Debut de TESTING #######################################{}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}]");
                     // test the classification result
             extractDOM_classificationValues(driver,classification);
 

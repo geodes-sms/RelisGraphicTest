@@ -185,6 +185,8 @@ public class ProjectTest {
 
      @Test(priority = 9)
     public void classifyPapersTest(){
+        classControler.openClassificationPhase(driver);
+        Utility.sleep(10);
        classControler.finishClassificationPhase(driver,project.getClassification());
         //classControler.extractDOM_classificationValues(driver,project.getClassification());
         //classControler.finishClassificationPhase(driver,project.getClassification());
@@ -207,7 +209,7 @@ public class ProjectTest {
 
     public static void ConnexionTest(WebDriver driver){
 
-        RelisUser user = Utility.getUserByUserName("admin");
+        RelisUser user = Utility.getUserByUserName("youssouf1");
 
         ConnexionController.connect(driver, user);
         String user_name = driver.findElement(By.className(

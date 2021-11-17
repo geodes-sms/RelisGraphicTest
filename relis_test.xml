@@ -24,7 +24,7 @@
         <!--        <case name="report"/>-->
     </test>
 
-    <test name="qa">
+    <test name="qa1">
         <case name="assignment"
               function="assign_reviewer_qa_test"/>
         <case name="assess"
@@ -35,7 +35,7 @@
     </test>
 
 
-    <test name="management0">
+    <test name="management">
         <!--  La section d'importations de tests -->
         <case name="import csv"
               function="importBibTexTest"/>

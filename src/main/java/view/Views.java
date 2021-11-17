@@ -162,7 +162,7 @@ public class Views {
 
         return li.stream()
                 .filter(p-> {
-                    System.out.println("(" +p.findElement(By.tagName("a")).getText() +", "+ name +")");
+                    //System.out.println("(" +p.findElement(By.tagName("a")).getText() +", "+ name +")");
                     return p.findElement(By.tagName("a")).getText().equals(name);
                 })
                 .findFirst()
@@ -176,7 +176,7 @@ public class Views {
 
         return li.stream()
                 .filter(p-> {
-                    System.out.println("(" +p.findElement(By.tagName("a")).getText() +", "+ name +")");
+                   // System.out.println("(" +p.findElement(By.tagName("a")).getText() +", "+ name +")");
                     return p.findElement(By.tagName("a")).getText().equals(name);
                 })
                 .findFirst()
@@ -190,22 +190,23 @@ public class Views {
         List<WebElement> elements = menu.findElement(By.className(CLASS_CHILD_SIDE_MENU)).findElements(
                 By.tagName("li")
         );
+        menu.click();
 
         try {
             WebElement option =
                     elements.stream().filter( li -> {
 
 
-                        System.out.println("(" +li.findElement(By.tagName("a")).getText() +", "+ subMenu +")");
+                      System.out.println("(" +li.findElement(By.tagName("a")).getText() +", "+ subMenu +")");
                         return li.findElement(By.tagName("a")).getText().equals(subMenu);
                             } )
                             .findFirst().get();
             option.findElement(By.tagName("a")).sendKeys(Keys.ENTER);
-            System.out.println("submenu clicked");
+//            System.out.println("submenu clicked");
 
         } catch (Exception e){
 
-            System.out.println("Element do not exist {{{{ li= " + menu.getText() +" @ " +  subMenu+"}}}}}}}}}}}}");
+           System.err.println("Element do not exist {{{{ li= " + menu.getText() +" @ " +  subMenu+"}}}}}}}}}}}}");
             e.printStackTrace();
         }
 
@@ -232,9 +233,12 @@ public class Views {
             menu.click();
             choose_sub_menuFrom(menu, subOptions);
         } catch (Exception e){
-            ((JavascriptExecutor) driver).executeScript("window.scrollTo(0,40)");
             WebElement menu = getSideBarMenuOptionsOf(driver,menu_name);
-            menu.click();
+            scrollToElement2(driver,menu);
+            Utility.sleep(10);
+            menu = getSideBarMenuOptionsOf(driver,menu_name);
+            System.out.println("SCROLLING @@@@@@@@@@@@@@@@@@@@@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+            System.out.println("Menu trouver {" + menu.getText()+" }\n\n");
             choose_sub_menuFrom(menu, subOptions);
         }
 
@@ -297,6 +301,11 @@ public class Views {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         // Scrolling down the page till the element is found
         js.executeScript("arguments[0].scrollIntoView();",driver.findElement(element));
+    }
+    public static void scrollToElement2(WebDriver driver, WebElement element){
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        // Scrolling down the page till the element is found
+        js.executeScript("arguments[0].scrollIntoView();",element);
     }
 
     public static void performClickWithJsExec(WebDriver driver, WebElement element){
