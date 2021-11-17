@@ -22,8 +22,10 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: maven
-    - name: install chrome 
-      run: pwd && chmod +x scripts/InstallChrome.sh && scripts/InstallChrome.sh 
+    - name: Install Google Chrome # Using shell script to install Google Chrome
+      run: |
+       chmod +x ./scripts/InstallChrome.sh
+        ./scripts/InstallChrome.sh
     - name: run the text
       run : mvn clean test
     
