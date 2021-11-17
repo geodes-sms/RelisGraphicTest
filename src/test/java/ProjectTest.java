@@ -44,6 +44,8 @@ public class ProjectTest {
         init.init();
         driver = init.getWebDriver();
         project = RelisParser.getProjectFromFiles();
+
+        project.getScreening().setReviewersPerPaper(1);
         //project.setProject_name(project_demo);
 
         ConnexionTest(driver);
@@ -186,7 +188,6 @@ public class ProjectTest {
      @Test(priority = 9)
     public void classifyPapersTest(){
         classControler.openClassificationPhase(driver);
-        Utility.sleep(10);
        classControler.finishClassificationPhase(driver,project.getClassification());
         //classControler.extractDOM_classificationValues(driver,project.getClassification());
         //classControler.finishClassificationPhase(driver,project.getClassification());

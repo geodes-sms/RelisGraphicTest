@@ -41,6 +41,7 @@ public class Screening {
    for (String name : names){
 
      ScreeningPhase phase = new ScreeningPhase(name);
+
      phases.add(phase);
    }
   }
@@ -101,7 +102,11 @@ public class Screening {
     strategies.add(strategy);
   }
 
+  public void setReviewersPerPaper(int num){
 
+    this.reviewers_per_paper = num;
+    phases.forEach( p -> p.setNumberOfUsers(num));
+  }
 
 
 

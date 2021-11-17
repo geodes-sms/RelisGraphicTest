@@ -9,6 +9,7 @@ import model.relis_parser.RelisParser;
 
 import org.openqa.selenium.WebDriver;
 
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import utils.Initialiazer;
@@ -44,6 +45,11 @@ public class DataManagerTest {
 
         ProjectTest.ConnexionTest(driver);
         ProjectTest.openProjectTest(driver, project);
+    }
+
+    @AfterTest
+    public void closeDriver(){
+        driver.quit();
     }
 
     @Test(priority = 1)

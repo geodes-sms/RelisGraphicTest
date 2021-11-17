@@ -35,18 +35,19 @@ public class Views {
         ArrayList<RelisUser> reviewers = new ArrayList<>();
         // list of every users web element
         List<WebElement> users = driver.findElements(By.className("form-group"));
-        users.remove( users.size()-1);
         // we don't have enough user to choose ?
         if(users.size() <= number){ // if so we choose all the users
+            WebElement reviewer_per_paper_elem = users.remove(users.size()-1);
+            for( WebElement elem  : users){
 
-            users.forEach( elem ->
-                    {
+                        if(elem.getText().equals("Reviews per paper")) continue;
+                        System.out.println("ELMENT FOR ASSIGNMENTS " + elem.getText());
                         elem.findElement(By.tagName("span")).click();
                         RelisUser user  = Utility.getUserByFullName(elem.getText());
                         reviewers.add(user);
 
                     }
-            );
+
         // otherwise we choose n users
         } else{
             // we remove the first two elements which is not important

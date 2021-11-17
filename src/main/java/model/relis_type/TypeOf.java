@@ -3,6 +3,7 @@ package model.relis_type;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import utils.Utility;
 
 import static utils.ClassificationUtils.CSS_INPUT_TEXT;
 
@@ -13,7 +14,9 @@ public abstract class TypeOf implements Cloneable {
 
     public  void sendValueToDOM(WebDriver driver,WebElement input, String value){
         try {
+            System.out.println("Calling since " + input.getText() +" => value=" +value);
             input.findElement(By.cssSelector(CSS_INPUT_TEXT)).sendKeys(value);
+            Utility.sleep(7);
         } catch (Exception e){
             input.findElement(By.tagName("textarea")).sendKeys(value);
         }

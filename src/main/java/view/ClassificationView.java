@@ -326,7 +326,7 @@ public class ClassificationView {
                 hasSubCategory = true;
 
             } else {
-//                System.out.println("cat en cours de traitement=" + category.displayDataContent());
+                System.out.println("cat en cours de traitement=" + category.displayDataContent());
                 if(category instanceof DependantDynamicCategory){
                     if(!((DependantDynamicCategory) category).getDependent_on().hasSubCategory() ){
                         category.fillWebElementInput(driver,input);
