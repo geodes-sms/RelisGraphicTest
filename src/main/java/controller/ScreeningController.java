@@ -2,6 +2,7 @@ package controller;
 
 import model.*;
 import org.openqa.selenium.WebDriver;
+import utils.Utility;
 import view.ScreeningView;
 
 import java.util.ArrayList;

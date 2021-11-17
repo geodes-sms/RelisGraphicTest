@@ -143,6 +143,7 @@ public class ScreeningView {
         if(rest_papers.getText().equals("Number of papers to assign :0")){
           return getReviewer(driver);
         }
+        System.out.println("SECOND OPTIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
         // we select some random users
         ArrayList<RelisUser> reviewers = Views.chooseUserforScreening(driver,number);

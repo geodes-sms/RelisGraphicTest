@@ -47,7 +47,7 @@ public class Views {
                         reviewers.add(user);
 
                     }
-            Utility.sleep(10);
+
         // otherwise we choose n users
         } else{
             // we remove the first two elements which is not important
