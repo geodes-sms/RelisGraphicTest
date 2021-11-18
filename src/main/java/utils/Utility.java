@@ -343,7 +343,6 @@ public class Utility {
                     // get all the papers present from the current table
                     List<WebElement> papers = table.findElements(By.tagName("tr"));
 //                    // we remove the first web element which is the table header
-                   // papers.remove(0);
                     function.apply(papers,sujet);
                     // there is no next table  ?
                     if(!predicate.test(driver))
@@ -464,25 +463,8 @@ public class Utility {
     private static final BiFunction<List<WebElement>, Object,Integer> getPapersKeyFromDOM = (papers, array) ->{
 
         ArrayList<String> assigments =(ArrayList<String>) array;
-        int index =0;
-        System.out.println("dans le extract papers @@@@@@@@@#######################");
-        Utility.sleep(10);
-        List<WebElement> header = papers.get(0).findElements(By.tagName("th"));
-        System.out.println("We have " + header.size() +" TD");
-        for (WebElement t : header){
-            String name = t.getAttribute("aria-label");
-
-            name  = name.substring(0, name.indexOf(":"));
-            if(name.equals("Paper")) {
-                System.out.println("name=> " + name);
-                break;
-            }
-            index++;
-        }
-
-        System.out.println("INDEX = " + index);
         papers.remove(0);
-        int finalIndex = index;
+        int finalIndex = 1;
         papers.forEach(paper ->{
             List<WebElement> tds = paper.findElements(By.tagName("td"));
 

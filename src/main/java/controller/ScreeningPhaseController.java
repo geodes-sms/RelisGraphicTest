@@ -93,6 +93,7 @@ public class ScreeningPhaseController {
         ScreeningView.showMyPendingAssignmentsPage(user.getParticipant().getDriver());
         System.out.println("Defbut de getting assignments @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         ArrayList<String> papersKeys= new ArrayList<>();
+        Utility.sleep(1);
         Utility.getPapersKeyFromDOMFromId(user.getParticipant().getDriver(),papersKeys);
         System.out.println("We got " + papersKeys.size() +" Papers");
         ArrayList<Paper> p = new ArrayList<>();
