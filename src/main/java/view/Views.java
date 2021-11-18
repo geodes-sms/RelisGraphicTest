@@ -41,7 +41,6 @@ public class Views {
             for( WebElement elem  : users){
 
                         if(elem.getText().equals("Reviews per paper")) continue;
-                        System.out.println("ELMENT FOR ASSIGNMENTS " + elem.getText());
                         elem.findElement(By.tagName("span")).click();
                         RelisUser user  = Utility.getUserByFullName(elem.getText());
                         reviewers.add(user);
@@ -191,14 +190,13 @@ public class Views {
         List<WebElement> elements = menu.findElement(By.className(CLASS_CHILD_SIDE_MENU)).findElements(
                 By.tagName("li")
         );
-        menu.click();
 
         try {
             WebElement option =
                     elements.stream().filter( li -> {
 
 
-                      //System.out.println("(" +li.findElement(By.tagName("a")).getText() +", "+ subMenu +")");
+                      System.out.println("(" +li.findElement(By.tagName("a")).getText() +", "+ subMenu +")");
                         return li.findElement(By.tagName("a")).getText().equals(subMenu);
                             } )
                             .findFirst().get();
@@ -229,15 +227,19 @@ public class Views {
     public static void openSuBMenuFrom(WebDriver driver, String menu_name, String subOptions){
 
         try {
+
             WebElement menu = getSideBarMenuOptionsOf(driver,menu_name);
             menu.click();
+            menu = getSideBarMenuOptionsOf(driver, menu_name);
             choose_sub_menuFrom(menu, subOptions);
         } catch (Exception e){
+
             WebElement menu = getSideBarMenuOptionsOf(driver,menu_name);
+
             scrollToElement2(driver,menu);
             menu = getSideBarMenuOptionsOf(driver,menu_name);
-            System.out.println("SCROLLING @@@@@@@@@@@@@@@@@@@@@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-            System.out.println("Menu trouver {" + menu.getText()+" }\n\n");
+            menu.click();
+            menu = getSideBarMenuOptionsOf(driver,menu_name);
             choose_sub_menuFrom(menu, subOptions);
         }
 

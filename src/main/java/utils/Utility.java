@@ -465,7 +465,8 @@ public class Utility {
 
         ArrayList<String> assigments =(ArrayList<String>) array;
         int index =0;
-
+        System.out.println("dans le extract papers @@@@@@@@@#######################");
+        Utility.sleep(10);
         List<WebElement> header = papers.get(0).findElements(By.tagName("th"));
         System.out.println("We have " + header.size() +" TD");
         for (WebElement t : header){
@@ -492,7 +493,6 @@ public class Utility {
     };
 
     public static final void getPapersKeyFromDOMFromId(WebDriver driver, Object object){
-        //ProjectController.openAllPapersPage(driver);
         work_through_table_id(driver,getPapersKeyFromDOM,object);
     }
 

@@ -55,15 +55,10 @@ public class ScreeningController {
   /**
    * this method assign the reviewers for the next screening phase
    * @param driver the web driver
-   * @param project the project object
-   * @return an object of a ScreeningPhase which is the next phase
+   * @param phase the project object
    */
-  public ScreeningPhase assignReviewers(WebDriver driver,Project project){
-    String current_phase_name = openNextPhase(driver);
-    ScreeningPhase phase = project.getScreening().getScreeningphaseByName(current_phase_name);
-    if(phase != null)
+  public void assignReviewers(WebDriver driver,ScreeningPhase phase){
     phaseController.assignReviewers(driver,phase);
-    return phase;
 
   }
 
@@ -71,6 +66,8 @@ public class ScreeningController {
   public void  doScreenPhase(WebDriver driver, ScreeningPhase phase){
 
     phaseController.makeReadyForScreeningpPhase(driver, phase);
+    System.out.println("fin de makeReady");
+    Utility.sleep(9);
     phase.startThisPhaseScreening();
     // now the screening phase is finish
     // get the screening result of the website

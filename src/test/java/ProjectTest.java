@@ -74,16 +74,22 @@ public class ProjectTest {
 
     @Test(priority = 1)
     public void assign_screening_reviewers(){
-
-        // assign reviewers
-        ScreeningPhase phase = sc.assignReviewers(driver, project);
+        System.out.println("Debut de 'assign reviewer test'");
+        String openedPhaseName = sc.openNextPhase(driver);
+        ScreeningPhase phase = project.getScreening().getScreeningphaseByName(openedPhaseName);
+        if(phase != null){
+            sc.assignReviewers(driver, phase);
+        }
 
         assertTrue(phase== null || phase.getParticipantNumbers() > 0 );
+        System.out.println("fin de 'assign reviewer test'");
 
     }
 
     @Test(priority = 2)
     public void screen_test(){
+
+        sc.openNextPhase(driver); // opening the screening phase
         ScreeningPhase phase;
         while ((phase = sc.getCurrentScreeningPhase(driver, project.getScreening())) != null){
 

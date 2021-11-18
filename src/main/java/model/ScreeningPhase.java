@@ -48,7 +48,8 @@ public class ScreeningPhase {
       includedPaperCout = decisionMaker.getINCLUDED();
       excludedPapeCount = decisionMaker.getEXCLUDED();
       paperInConflictCount = decisionMaker.getIN_CONFLICT();
-        System.out.println("Finished set up of the screening phase !!!");
+      System.out.println("Finished set up of the screening phase !!! PAPERS LENGTH=" + papers.size());
+
     } catch (Exception e ){
 
       e.printStackTrace();

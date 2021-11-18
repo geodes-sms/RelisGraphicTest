@@ -2,6 +2,7 @@ package model.user_work;
 
 import controller.ConnexionController;
 import controller.ProjectController;
+import controller.ScreeningController;
 import controller.ScreeningPhaseController;
 import databases.PapersDataBase;
 import lombok.Data;
@@ -33,11 +34,14 @@ public class ScreeningPhaseWork implements Observer {
 
   public void setUp() {
 
+    System.out.println("Debut de setting pour les reviewers");
     Initialiazer initialiazer = new Initialiazer();
     initialiazer.init();
     participant.setDriver(initialiazer.getWebDriver());
     ConnexionController.connect(participant.getDriver(), participant);
     ProjectController.openProject(participant.getDriver(), phase.getProjectName());
+    ScreeningView.openScreeningPhaseByName(participant.getDriver(), phase.getName());
+    System.out.println("Getting the users assigments ");
     pendingAssignments = ScreeningPhaseController.getUserPapersAssignments(this);
 
 

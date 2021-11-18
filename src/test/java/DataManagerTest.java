@@ -213,15 +213,6 @@ public class DataManagerTest {
 
 
 
-    //  @Test(priority = 16)
-    public void assignReviewers(){
-
-
-        ScreeningPhase phase = sc.assignReviewers(driver,project);
-        phase.printInfo();
-        assertTrue(true);
-
-    }
 
 
 

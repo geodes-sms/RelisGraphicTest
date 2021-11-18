@@ -129,7 +129,7 @@ public class ScreeningView {
     }
 
     private static void openAssignPaperPage(WebDriver driver){
-        open_current_screening_phase(driver);
+      //  open_current_screening_phase(driver);
 
         WebElement button = driver.findElement(By.cssSelector(CSS_ASSIGN_PAPER_BUTTON));
         // we choose assign paper options
@@ -140,10 +140,11 @@ public class ScreeningView {
         openAssignPaperPage(driver);
 
         WebElement rest_papers = driver.findElement(By.cssSelector("#home b"));
+        // we have already assigned
         if(rest_papers.getText().equals("Number of papers to assign :0")){
           return getReviewer(driver);
         }
-        System.out.println("SECOND OPTIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
 
         // we select some random users
         ArrayList<RelisUser> reviewers = Views.chooseUserforScreening(driver,number);
@@ -160,9 +161,13 @@ public class ScreeningView {
      * @param driver
      */
     public static ArrayList<RelisUser> getReviewer(WebDriver driver){
-        open_current_screening_phase(driver);
+
+        System.out.println("Showing the progress statitis@@@@@@@@@@@@@@ ");
+      //  Utility.sleep(5);
         // go to screening menu
         showProgressScreening(driver);
+        //Utility.sleep(10);
+        System.out.println("Dans le prgess page");
         return   Views.extractUsers(driver);
 
     }
@@ -173,7 +178,7 @@ public class ScreeningView {
      *
      */
     private static void showProgressScreening(WebDriver driver) {
-        open_current_screening_phase(driver);
+       // open_current_screening_phase(driver);
         Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_SCREENING_PROGRESS_PAGE);
     }
 
@@ -182,8 +187,6 @@ public class ScreeningView {
      * @param driver the web driver
      */
     public static void showMyAssignment(WebDriver driver){
-
-        open_current_screening_phase(driver);
         try{
 
             Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_SCREENING_MY_ASSIGMENTS_PAGE);
@@ -199,7 +202,7 @@ public class ScreeningView {
      * @param driver the web driver
      */
     public static void  showAllAssigmentsPage(WebDriver driver){
-        open_current_screening_phase(driver);
+//        open_current_screening_phase(driver);
         Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_ALL_ASSIGNMENTS);
 
     }
@@ -209,8 +212,8 @@ public class ScreeningView {
      * @param driver
      */
     public static void showMyPendingAssignmentsPage(WebDriver driver){
-
-        open_current_screening_phase(driver);
+        System.out.println("Dans le wait de pending assignment");
+        //Utility.sleep(15);
         Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_MY_PENDING_PAPERS);
 
     }
@@ -220,7 +223,7 @@ public class ScreeningView {
      * @param driver the web driver
      */
     public static void showScreeningPhasePage(WebDriver driver){
-        open_current_screening_phase(driver);
+//        open_current_screening_phase(driver);
         Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_SCREEN_PAPERS);
     }
 
@@ -256,7 +259,7 @@ public class ScreeningView {
    * @param driver the web driver
    * @param phaseName the screening phase name
    */
-    public void openScreeningPhaseByName(WebDriver driver, String phaseName){
+    public  static void openScreeningPhaseByName(WebDriver driver, String phaseName){
 
       driver.findElement(By.linkText(ProjectUtils.LK_CURRENT_PROJECT)).click();
       ArrayList<WebElement>  phases = work_through_table(driver);
