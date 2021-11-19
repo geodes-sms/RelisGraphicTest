@@ -67,7 +67,6 @@ public class ScreeningController {
 
     phaseController.makeReadyForScreeningpPhase(driver, phase);
     System.out.println("fin de makeReady");
-    Utility.sleep(9);
     phase.startThisPhaseScreening();
     // now the screening phase is finish
     // get the screening result of the website

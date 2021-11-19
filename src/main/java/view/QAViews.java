@@ -78,7 +78,6 @@ public class QAViews {
     public void showQuestionsPage(WebDriver driver){
         try{
             Views.open_admin_menu_options(driver,LK_PLANNING, LK_QUESTIONS);
-            Utility.sleep(10);
         } catch (Exception e){
 
             Views.scrollToElement(driver,By.linkText(LK_PLANNING));

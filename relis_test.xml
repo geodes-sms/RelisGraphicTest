@@ -24,7 +24,7 @@
         <!--        <case name="report"/>-->
     </test>
 
-    <test name="qa9">
+    <test name="qa">
 <!--        <case name="assignment"-->
 <!--              function="assign_reviewer_qa_test"/>-->
         <case name="assess"

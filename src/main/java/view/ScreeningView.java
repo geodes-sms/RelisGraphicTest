@@ -27,7 +27,7 @@ public class ScreeningView {
         if(screening_options_menu_exist(driver)){
 
          openHomeMenu(driver);
-          WebElement title = driver.findElement(By.cssSelector(".x_title h3"));
+          WebElement title = Views.findElementBy(driver,By.cssSelector(".x_title h3"));
 
           return title.getText().substring(title.getText().indexOf("- ")+2);
         }
@@ -43,8 +43,6 @@ public class ScreeningView {
           }).findFirst().orElse(null);
 
           if(next_phase != null){
-
-            RelisUser connectedUser = Utility.getCurrentConnectedUser(driver);
 
             List<WebElement> tds = next_phase.findElements(By.tagName("td"));
             String phaseName  = tds.get(0).getText();
@@ -128,10 +126,13 @@ public class ScreeningView {
         return taken;
     }
 
+    /**
+     * open the assign user page
+     * @param driver the web driver
+     */
     private static void openAssignPaperPage(WebDriver driver){
-      //  open_current_screening_phase(driver);
 
-        WebElement button = driver.findElement(By.cssSelector(CSS_ASSIGN_PAPER_BUTTON));
+        WebElement button = Views.findElementBy(driver, By.cssSelector(CSS_ASSIGN_PAPER_BUTTON));
         // we choose assign paper options
         button.sendKeys(Keys.ENTER);
     }
@@ -139,7 +140,7 @@ public class ScreeningView {
     public static ArrayList<RelisUser> assign_papers(WebDriver driver, int number){
         openAssignPaperPage(driver);
 
-        WebElement rest_papers = driver.findElement(By.cssSelector("#home b"));
+        WebElement rest_papers = Views.findElementBy(driver, By.cssSelector("#home b"));
         // we have already assigned
         if(rest_papers.getText().equals("Number of papers to assign :0")){
           return getReviewer(driver);
@@ -213,7 +214,7 @@ public class ScreeningView {
      */
     public static void showMyPendingAssignmentsPage(WebDriver driver){
         System.out.println("Dans le wait de pending assignment");
-        //Utility.sleep(15);
+
         Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_MY_PENDING_PAPERS);
 
     }
@@ -261,16 +262,18 @@ public class ScreeningView {
    */
     public  static void openScreeningPhaseByName(WebDriver driver, String phaseName){
 
-      driver.findElement(By.linkText(ProjectUtils.LK_CURRENT_PROJECT)).click();
+     Views.findElementBy(driver,By.linkText(ProjectUtils.LK_CURRENT_PROJECT)).click();
       ArrayList<WebElement>  phases = work_through_table(driver);
 
       for (WebElement phase : phases){
 
         List<WebElement> tds  = phase.findElements(By.tagName("td"));
         String current_phase_name = tds.get(0).getText();
+          System.out.println("PHASES NAME => "+ current_phase_name );
         if(current_phase_name.equals( phaseName)){
           RelisUser connectedUser = Utility.getCurrentConnectedUser(driver);
-          WebElement element = !(connectedUser.getUser_usergroup().equals("1"))?
+            System.out.println("USER GROUP TYPE=" + connectedUser.getUser_usergroup());
+          WebElement element = (connectedUser.getUser_usergroup().equals("3"))?
             Utility.chooseWebElement(tds, LK_GO_TO_PHASE):
             Utility.chooseWebElement(tds, SCREENING_MANAGER_ELEMENT);
           assert element != null;

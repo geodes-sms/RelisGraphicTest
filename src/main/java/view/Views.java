@@ -34,7 +34,7 @@ public class Views {
 
         ArrayList<RelisUser> reviewers = new ArrayList<>();
         // list of every users web element
-        List<WebElement> users = driver.findElements(By.className("form-group"));
+        List<WebElement> users = Views.findElementsBy(driver,By.className("form-group"));
         // we don't have enough user to choose ?
         if(users.size() <= number){ // if so we choose all the users
             WebElement reviewer_per_paper_elem = users.remove(users.size()-1);
@@ -52,18 +52,29 @@ public class Views {
             // we remove the first two elements which is not important
 
             users.remove(users.size()-1);
+            System.out.println("We have" + users.size() +" and we want" +
+                    " " + number);
             do{
                 // choose a random user
                 int size = users.size();
                 int i = Utility.nextInt(0,size);
                 WebElement userWebELment = users.remove(i);
+                System.out.println("WEB ELEMENT USER CHOOSED =>" + userWebELment.getText()
+                +" $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n\n");
                 RelisUser user  = Utility.getUserByFullName(userWebELment.getText());
                 reviewers.add(user);
+                Utility.sleep(1);
                 userWebELment.findElement(By.tagName("span")).click();
             } while (reviewers.size() < number);
         }
 
         return reviewers;
+    }
+
+    private static List<WebElement> findElementsBy(WebDriver driver, By className) {
+
+        WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+        return webDriverWait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(className));
     }
 
 
@@ -157,7 +168,7 @@ public class Views {
      */
     public static WebElement getSideBarMenuOptionsOf(WebDriver driver, String name){
 
-        WebElement ul = driver.findElement(By.className(CLASS_SIDE_BAR_MENU));
+        WebElement ul = findElementBy(driver, By.className(CLASS_SIDE_BAR_MENU));
         List<WebElement> li = ul.findElements(By.tagName("li"));
 
         return li.stream()
@@ -171,7 +182,7 @@ public class Views {
 
 
     public static WebElement open_sub_menu_admin(WebDriver driver,  String name){
-        WebElement ul = driver.findElements(By.className(CLASS_SIDE_BAR_MENU)).get(1);
+        WebElement ul = findElementsBy(driver, By.className(CLASS_SIDE_BAR_MENU)).get(1);
         List<WebElement> li = ul.findElements(By.tagName("li"));
 
         return li.stream()
@@ -486,5 +497,12 @@ public class Views {
         driver.findElement(By.id(ID_VALIDATION_NOTE_TEXT_AREA)).sendKeys(note);
         driver.findElement(By.className(CLASS_SUCCESS_BUTTON)).click();
 
+    }
+
+
+    public static WebElement findElementBy(WebDriver driver, By elem){
+
+        WebDriverWait driverWait = new WebDriverWait(driver,2);
+       return driverWait.until(ExpectedConditions.presenceOfElementLocated(elem));
     }
 }

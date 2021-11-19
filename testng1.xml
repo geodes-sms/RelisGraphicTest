@@ -13,6 +13,7 @@
                     <include name="assign_screening_reviewers"/>
                     <include name="screen_test"/>
                     <include name="classifyPapersTest"/>
+                    <include name="asses_qa_test"/>
                 </methods>
             </class>
         </classes>
