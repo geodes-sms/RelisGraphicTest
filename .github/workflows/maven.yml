@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-java@v1 # Setup JAVA
       with:
         java-version: 11
-    - name: Run script file
+    - name: Run script file and clone relis project from github
       run: |
          chmod +x ./scripts/chrome.sh
          ./scripts/chrome.sh
