@@ -76,25 +76,16 @@ public class QAViews {
     }
 
     public void showQuestionsPage(WebDriver driver){
-        try{
+       
             Views.open_admin_menu_options(driver,LK_PLANNING, LK_QUESTIONS);
-        } catch (Exception e){
-
-            Views.scrollToElement(driver,By.linkText(LK_PLANNING));
-            Views.open_admin_menu_options(driver,LK_PLANNING, LK_QUESTIONS);
-        }
+        
 
     }
 
     public void ShowAnswersPage(WebDriver driver){
-        try{
-            Views.open_admin_menu_options(driver,LK_PLANNING, LK_ANSWERS);
-            Utility.sleep(10);
-        } catch (Exception e){
-            Views.scrollToElement(driver,By.linkText(LK_PLANNING));
-            Utility.sleep(10);
-            Views.open_admin_menu_options(driver,LK_PLANNING, LK_ANSWERS);
-        }
+        
+         Views.open_admin_menu_options(driver,LK_PLANNING, LK_ANSWERS);
+       
     }
 
 
