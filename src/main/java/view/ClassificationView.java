@@ -209,9 +209,10 @@ public class ClassificationView {
     public void fillSubCategory(WebDriver driver, Classification classification,String key,int btn_index){
             List<WebElement> buttons = Views.findElementsBy(driver, By.cssSelector(".fa-plus"));
             buttons.get(btn_index).click();
+            Utility.sleep(1);
             driver.switchTo().activeElement();
             String labele = Views.findElementBy(driver, By.className("modal-title")).getText();
-          
+            System.out.println("LABEL SUB CATEGORY =>" + labele);
             labele = labele.substring( labele.indexOf("Add  : ") + "Add  : ".length());
             
             List<WebElement> sections = Views.findElementsBy(driver, By.cssSelector(CSS_RELIS_MODALS_FORM));

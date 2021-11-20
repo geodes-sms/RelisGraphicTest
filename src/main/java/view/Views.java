@@ -521,7 +521,7 @@ public class Views {
 
     public static WebElement findElementBy(WebDriver driver, By elem){
 
-        WebDriverWait driverWait = new WebDriverWait(driver,2);
+        WebDriverWait driverWait = new WebDriverWait(driver,3);
        return driverWait.until(ExpectedConditions.presenceOfElementLocated(elem));
     }
 }
