@@ -232,11 +232,22 @@ public class Views {
 
         WebElement element = open_sub_menu_admin(driver, menu);
         if(element == null) return;
-        if(!Utility.hasClass(element, "active")){
+        try {
+            if(!Utility.hasClass(element, "active")){
+                element.click();
+                open_sub_menu_admin(driver, menu);
+            }
+            choose_sub_menuFrom(element, sub_name);
+        } catch (Exception e ){
+            element = open_sub_menu_admin(driver,menu);
+
+            scrollToElement2(driver,element);
+            element = getSideBarMenuOptionsOf(driver,menu);
             element.click();
-            open_sub_menu_admin(driver, menu);
+            element = getSideBarMenuOptionsOf(driver,menu);
+            choose_sub_menuFrom(element, sub_name);
         }
-        choose_sub_menuFrom(element, sub_name);
+
 
     }
     /**

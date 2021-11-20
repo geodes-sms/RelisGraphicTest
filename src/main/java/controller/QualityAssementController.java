@@ -146,7 +146,7 @@ public class QualityAssementController {
 
 
     public void getQuestions(WebDriver driver, QuestionAnswesPaper qa){
-        Utility.sleep(10);
+
         views.getQuestion(driver,qa);
 
     }
