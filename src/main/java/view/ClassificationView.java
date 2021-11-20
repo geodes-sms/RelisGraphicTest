@@ -207,22 +207,21 @@ public class ClassificationView {
      * @param btn_index the nth category that has subcategories
      */
     public void fillSubCategory(WebDriver driver, Classification classification,String key,int btn_index){
-            List<WebElement> buttons = driver.findElements(By.cssSelector(".fa-plus"));
+            List<WebElement> buttons = Views.findElementsBy(driver, By.cssSelector(".fa-plus"));
             buttons.get(btn_index).click();
             driver.switchTo().activeElement();
-            Utility.sleep(1);
-            String labele = driver.findElement(By.className("modal-title")).getText();
+            String labele = Views.findElementBy(driver, By.className("modal-title")).getText();
           
             labele = labele.substring( labele.indexOf("Add  : ") + "Add  : ".length());
             
-            List<WebElement> sections = driver.findElements(By.cssSelector(CSS_RELIS_MODALS_FORM));
+            List<WebElement> sections = Views.findElementsBy(driver, By.cssSelector(CSS_RELIS_MODALS_FORM));
 
 
             Category category = classification.getCategoryByDisplayName(key,labele);
             
             int index =0, max= category.getSubCategorys().size();
             for(WebElement element : sections){
-                String labelCategory = element.findElement(By.tagName("label")).getText();
+                String labelCategory = Views.findElementBy(driver,By.tagName("label")).getText();
                 labelCategory = labelCategory.replace("*","").trim();
                 if(index ==0 ){
 
@@ -237,11 +236,7 @@ public class ClassificationView {
                 if(++index >= max) break;
             }
             driver.findElement(By.id("submit_but")).click();
-            Utility.sleep(1);
-
-
-
-
+        //    Utility.sleep(1);
     }
 
     public void edit_classification(WebDriver driver, Classification classification){

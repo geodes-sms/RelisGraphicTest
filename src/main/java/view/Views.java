@@ -76,7 +76,7 @@ public class Views {
         return reviewers;
     }
 
-    private static List<WebElement> findElementsBy(WebDriver driver, By className) {
+    public static List<WebElement> findElementsBy(WebDriver driver, By className) {
 
         WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
         return webDriverWait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(className));
