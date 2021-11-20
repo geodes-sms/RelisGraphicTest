@@ -242,9 +242,9 @@ public class Views {
             element = open_sub_menu_admin(driver,menu);
 
             scrollToElement2(driver,element);
-            element = getSideBarMenuOptionsOf(driver,menu);
+            element = open_sub_menu_admin(driver,menu);
             element.click();
-            element = getSideBarMenuOptionsOf(driver,menu);
+            element = open_sub_menu_admin(driver,menu);
             choose_sub_menuFrom(element, sub_name);
         }
 
