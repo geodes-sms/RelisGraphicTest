@@ -12,6 +12,7 @@ pwd
 cp -R ../workspace workspace
 echo Copied @@@@@@@@@@@@@@@@@@
 ls
+echo le repertoire dsl_forge
 cd workspace/dslforge_workspace
 ls
 
