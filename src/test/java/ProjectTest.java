@@ -69,6 +69,16 @@ public class ProjectTest {
 
 
 
+    @Test
+    public void create_project_test(){
+
+        System.out.println("Creating the project");
+        projectManager.createProject(driver, "mt");
+        System.out.println("Project created ");
+        String projet_name = "Model transformation";
+        ProjectController.open_project_all_phases(driver, projet_name);
+    }
+
 
 
 
@@ -222,7 +232,7 @@ public class ProjectTest {
 
     public static void ConnexionTest(WebDriver driver){
 
-        RelisUser user = Utility.getUserByUserName("youssouf1");
+        RelisUser user = Utility.getUserByUserName("admin");
 
         ConnexionController.connect(driver, user);
         String user_name = driver.findElement(By.className(

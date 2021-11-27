@@ -1,0 +1,13 @@
+PROJECT rv "Proyecto de prueba 2"
+
+SCREENING
+Reviews 2
+Conflict on Decision resolved_by Unanimity
+
+Criteria =["Estudios hechos despues del 2009"]
+
+CLASSIFICATION
+Simple Year :int(4)
+
+REPORT
+Simple Year "Studies per year" on Year charts( line)

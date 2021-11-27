@@ -7,16 +7,18 @@
 <tests>
 
 
+
     <test name="Screening">
-        <case name="assignment" function="assign_screening_reviewers"/>
-        <case name="screen"
+        <case  project_name="Model_transformation" function="create_project_test"/>
+<!--        <case name="assignment" function="assign_screening_reviewers"/>-->
+<!--        <case name="screen"-->
               function="screen_test"/>
         <!--        <case name="validation"
         function="current_test"/>-->
         <!--<case name="report" />-->
     </test>
 
-    <test name="classification">
+    <test name="classification9">
         <!--        <case name="assignment"/>-->
         <case name="classify"
               function="classifyPapersTest"/>
@@ -24,7 +26,7 @@
         <!--        <case name="report"/>-->
     </test>
 
-    <test name="qa">
+    <test name="qa9">
 <!--        <case name="assignment"-->
 <!--              function="assign_reviewer_qa_test"/>-->
         <case name="assess"
@@ -35,7 +37,7 @@
     </test>
 
 
-    <test name="management">
+    <test name="management9">
         <!--  La section d'importations de tests -->
         <case name="import csv"
               function="importBibTexTest"/>

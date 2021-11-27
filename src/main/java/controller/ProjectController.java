@@ -57,33 +57,71 @@ public class ProjectController {
      * this function suppose to create a new project by
      * uploading the ".php" configuration
      * @param driver
-     * @param fileName
+     * @param project_id
      */
-    public void createProject(WebDriver driver, String fileName) {
+    public void createProject(WebDriver driver, String project_id) {
 
-        // open the file and check if exist
-        File file = FileUtils.openFile(fileName);
-        // return if the file doesn't exist
-        if (file == null) return;
+
+        openProjectListPage(driver);
         // push the  create new project button
         driver.findElement(By.linkText(ProjectUtils.LK_ADD_NEW_PROJECT_BUTTON)).click();
-        // go to upload mode
-        driver.findElement(By.linkText(ProjectUtils.LINK_TEST_UPLOAD_MODE)).click();
 
-        // upload the '.php' file for the new project
-        driver.findElement(By.name(ProjectUtils.NAME_CHOOSE_FILE_ELEMENT)).sendKeys(file.getAbsolutePath());
-        Utility.sleep(4);
+        WebElement select = driver.findElement(By.name(ID_PROJECT_CONFIG_SELECT));
+        select.sendKeys(Keys.ENTER);
+        System.out.println("Clicked the options ");
+        List<WebElement> projects = select.findElements(By.tagName("optgroup"));
+
+        // choose the project that we wanna create by his id
+        WebElement project = projects.stream()
+                .filter( p -> {
+                    String p_id = ProjectUtils.extract_project_id(p.findElement(By.tagName("option")).getText());
+                    return p_id .equals( project_id);
+                })
+                .findFirst().orElse(null);
+        // is there a project with the current id?? if not exit.
+        if(project == null) return;
+        System.out.println("options choosed !!!!");
+        // here we found the project, now we choose the project
+        project.findElement(By.tagName("option")).click();
+
+        // we create the project
+
         // then create the project by clicking the submit button
         driver.findElement(By.cssSelector("button[type='submit']")).click();
 
     }
 
+    public static void open_project_all_phases(WebDriver driver, String projet_name){
+
+        openProject(driver, projet_name);
+        driver.findElement(By.className(CLASS_HOME_PROJECT)).click();
+        open_project_phases(driver);
+    }
+    private static void open_project_phases(WebDriver driver){
+
+        WebElement table  = driver.findElement(By.className(ScreeningUtils.CLASS_SCREENING_PHASES_TABLE));
+
+        List<WebElement> phases = table.findElements(By.tagName("tr"));
+        phases.remove(0); // remove the header tr
+        WebElement ph = phases.stream()
+                .filter( phase -> {
+                    List<WebElement> tds = phase.findElements(By.tagName("td"));
+                    return tds.get(1).getText().equals(CLOSED_PHASE);}
+                ).findFirst().orElse(null);
+        if(ph != null){
+            List<WebElement> tds = ph.findElements(By.tagName("td"));
+            int last = tds.size()-1;
+            tds.get(last).findElement(By.className(CLASS_UPLOAD_IMPORTED_PAPERS_BUTTON)).sendKeys(Keys.ENTER);
+            open_project_phases(driver);
+        }
+    }
     /**
      * this function take a project name and it will open the correspondant project
      * @param driver the web driver
      * @param projectName the project name
      */
     public static void openProject(WebDriver driver, String projectName) {
+        openProjectListPage(driver);
        // get all the project in a list
         List<WebElement> projectElements = driver.findElements(By.className("thumbnail"));
        // find the project that has a project name like the parameter project name

@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><suite name="test relis">
     <test verbose="2" preserve-order="true" name="data management test">
         <classes>
-            <class name="DataManagerTest">
-                <methods>
-                    <include name="importBibTexTest"/>
-                    <include name="deleteAllPaper"/>
-                    <include name="deleteProjectPaperByKey"/>
-                </methods>
-            </class>
             <class name="ProjectTest">
                 <methods>
-                    <include name="assign_screening_reviewers"/>
-                    <include name="screen_test"/>
-                    <include name="classifyPapersTest"/>
-                    <include name="asses_qa_test"/>
+                    <include name="create_project_test"/>
                 </methods>
             </class>
         </classes>

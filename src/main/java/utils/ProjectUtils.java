@@ -1,5 +1,7 @@
 package utils;
 
+import org.openqa.selenium.WebElement;
+
 public class ProjectUtils {
 
 
@@ -69,6 +71,8 @@ public class ProjectUtils {
     public static final String PROJECT_MANAGER_ROLE = "Project manager";
     public static final String GUEST_ROLE = "Guest";
     public static final String LK_CURRENT_PROJECT = "Project";
+    public static final String ID_PROJECT_CONFIG_SELECT = "selected_config";
+    public static final String CLOSED_PHASE = "Closed" ;
 
 
     /********************************************************************************
@@ -79,4 +83,16 @@ public class ProjectUtils {
     public static String model_transformation_project = "Model transformation";
     public static final String CSS_OPENED_PROJECT_NAME = ".x_title h3" ;
     public static final String BIBTEX_FILE1 = "src/main/resources/bibtex/my_pub.bib";
+
+
+
+    public static String extract_project_id(String filenName){
+
+        String res= "";
+
+        int pos = Utility.indexOfNth(filenName,"_",2)+1;
+        while ((pos < filenName.length()) && filenName.charAt(pos) != '.') res += filenName.charAt(pos++);
+
+        return res;
+    }
 }

@@ -20,22 +20,8 @@ public class MainTest {
 //        testng.addListener(tla);
 //        testng.run();
 
-        QualityAssement qa = new QualityAssement();
-
-        qa.setMin_score(3.5);
-        QuestionAnswesPaper questionAnswesPaper = new QuestionAnswesPaper();
-        questionAnswesPaper.addQuestions("Question 1");
-        questionAnswesPaper.addQuestions("Question 2");
-        questionAnswesPaper.addQuestions("Question 3");
-
-        questionAnswesPaper.addAnswer("answer1", 3);
-        questionAnswesPaper.addAnswer("answer2", 1.5);
-        questionAnswesPaper.addAnswer("answer3", 1);
-        questionAnswesPaper.addAnswer("answer4", 0);
-        questionAnswesPaper.setMin_score(3.5);
-        QA_Paper paper = new QA_Paper();
-
-        questionAnswesPaper.setRejectedAnswer(paper,3.5);
+        String mt = "classification_install_test34.php";
+        System.out.println("NAME ID_+={" + ProjectUtils.extract_project_id(mt)+"}");
 
     }
 
