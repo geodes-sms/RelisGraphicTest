@@ -2,16 +2,19 @@
 
 
 git clone https://github.com/geodes-sms/relis.git relisApp
-ls
+
 cd relisApp
+ls
 git checkout develop
 pwd
-sudo rm -r workspace
 
 #copy the workspace 
-cp -R ../workspace .
+cp -R ../workspace workspace
 echo Copied @@@@@@@@@@@@@@@@@@
 ls
+cd workspace/dslforge_workspace
+ls
+
 
 #build ReLis
 #sudo docker-compose build
