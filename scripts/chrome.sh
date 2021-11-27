@@ -10,14 +10,11 @@ pwd
 
 #copy the workspace 
 cp -R ../workspace workspace
-echo Copied @@@@@@@@@@@@@@@@@@
-ls
-echo le repertoire dsl_forge
-cd workspace/dslforge_workspace
-ls
+echo changing permission of 'workspcae' to 777
+sudo chmod 777 -R workspace
 
-
+cd relis_deployment
 #build ReLis
-#sudo docker-compose build
+sudo docker-compose build
 # run ReLis app
-#sudo docker-compose up -d
+sudo docker-compose up -d
