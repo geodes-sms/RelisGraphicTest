@@ -4,11 +4,12 @@
         <suite name="test relis">
             <test verbose="2" preserve-order="true" name="data management test">
                 <classes>
+                    <class name="DataManagerTest">
+                        <methods>
                     <xsl:for-each select="test">
-                        <xsl:if test="@name = 'management'">
+                        <xsl:if test="@name = 'management' or @name='project'">
 
-                            <class name="DataManagerTest">
-                                  <methods>
+
                                <xsl:for-each select="case">
                                 <include>
                                     <xsl:attribute name="name">
@@ -16,17 +17,17 @@
                                     </xsl:attribute>
                                 </include>
                                </xsl:for-each>
-                                  </methods>
 
-                            </class>
                         </xsl:if>
                     </xsl:for-each>
-
+                        </methods>
+                    </class>
                     <class name="ProjectTest">
                         <methods>
                         <xsl:for-each select="test">
                         <!--  SCREENING TEST -->
-                        <xsl:if test="@name = 'Screening' or @name='qa' or @name='classification'" >
+                        <xsl:if test="@name = 'Screening' or @name='qa' or @name='classification'
+                     or @name='open project' " >
                                 <xsl:for-each select="case">
                                     <include>
                                         <xsl:attribute name="name">

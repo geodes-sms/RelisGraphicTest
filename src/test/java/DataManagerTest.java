@@ -9,6 +9,7 @@ import model.relis_parser.RelisParser;
 
 import org.openqa.selenium.WebDriver;
 
+import org.testng.annotations.AfterGroups;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -44,7 +45,6 @@ public class DataManagerTest {
         //project.setProject_name(project_demo);
 
         ProjectTest.ConnexionTest(driver);
-        ProjectTest.openProjectTest(driver, project);
     }
 
     @AfterTest
@@ -52,9 +52,26 @@ public class DataManagerTest {
         driver.quit();
     }
 
-    @Test(priority = 1)
-    public void deleteAllPaper(){
 
+
+    @Test(priority = 1)
+    public void create_project_test(){
+
+        System.out.println("Creating the project");
+        projectManager.createProject(driver, project.getProjectId());
+        System.out.println("Project created ");
+        ProjectController.open_project_all_phases(driver, project.getProject_name());
+    }
+
+
+    @Test(priority = 2)
+    public void open_project_test(){
+
+        ProjectController.openProject(driver, project.getProject_name());
+    }
+    @Test(priority = 3)
+    public void deleteAllPaper(){
+        ProjectController.openProject(driver, project.getProject_name());
         projectManager.deleteAllPapers(driver);
         int papersLength = projectManager.getProjectPapersLength(driver);
         assertEquals(papersLength,0);
@@ -63,7 +80,7 @@ public class DataManagerTest {
 
 
 
-    @Test(priority = 2)
+    @Test(priority = 4)
     public void importBibTexTest(){
         projectManager.importBibTexPapers(driver, ProjectUtils.BIBTEX_FILE1);
 
@@ -74,7 +91,7 @@ public class DataManagerTest {
 
 
 
-    @Test(priority = 3)
+    @Test(priority = 5)
     public void deleteProjectPaperByKey(){
         String key = "Syriani2008";
         projectManager.deletePaperByKey(driver,key);
@@ -85,13 +102,13 @@ public class DataManagerTest {
 
     }
 
-     @Test(priority = 4)
+     @Test(priority = 6)
     public void addVenueTest(){
         projectManager.addVenue(driver,"The world after covid19");
 
         assertTrue(true);
     }
-    @Test(priority = 5)
+    @Test(priority = 7)
     public void deleteVenueTest(){
 
         assertEquals(1, 99-98);
@@ -99,7 +116,7 @@ public class DataManagerTest {
 
 
     //
-   @Test(priority = 7)
+   @Test(priority = 8)
     public void addReviewerTest(){
 
         RelisUser reviewer =  Utility.getRandomUser();
@@ -111,7 +128,7 @@ public class DataManagerTest {
 
     }
 
-  @Test(priority = 8)
+  @Test(priority = 9)
     public void addProjectManagerTest(){
         RelisUser pm =  Utility.getRandomUser();
 
@@ -121,7 +138,7 @@ public class DataManagerTest {
         DataBase.getInstance().addProjectManager(pm);
     }
 
-    @Test(priority = 9)
+    @Test(priority = 11)
     public void addValidatorTest(){
         RelisUser validator =  Utility.getRandomUser();
 
@@ -131,7 +148,7 @@ public class DataManagerTest {
         DataBase.getInstance().addValidator(validator);
     }
 
-    @Test(priority = 10)
+    @Test(priority = 12)
     public void addGuestRoleTest(){
         RelisUser guest =  Utility.getRandomUser();
 
@@ -142,7 +159,7 @@ public class DataManagerTest {
 
     }
 
-    @Test(priority = 11)
+    @Test(priority = 13)
     public void removeReviewer(){
 
         RelisUser reviewer = DataBase.getInstance().GetAReviewer();
@@ -152,7 +169,7 @@ public class DataManagerTest {
         DataBase.getInstance().deleteReviewer(reviewer);
     }
 
-    @Test(priority = 12)
+    @Test(priority = 14)
     public void removeProjectManager(){
 
         RelisUser pm = DataBase.getInstance().getAProjectManager();
@@ -161,7 +178,7 @@ public class DataManagerTest {
         assertTrue(not_pm);
         DataBase.getInstance().deleteProjectManager(pm);
     }
-    @Test(priority = 13)
+    @Test(priority = 15)
     public void removeValidator(){
 
         RelisUser validator = DataBase.getInstance().getAValidator();
@@ -171,7 +188,7 @@ public class DataManagerTest {
         DataBase.getInstance().deleteValidator(validator);
     }
 
-    @Test(priority = 14)
+    @Test(priority = 16)
     public void removeGuestUserRole(){
 
         RelisUser guest = DataBase.getInstance().getAGuestUser();
@@ -182,7 +199,7 @@ public class DataManagerTest {
     }
 
 
-    @Test(priority = 15)
+    @Test(priority = 17)
     public  void addSomeReviewers(){
         int i = 0;
         ArrayList<RelisUser> relisUsers = new ArrayList<>();
@@ -194,7 +211,7 @@ public class DataManagerTest {
     }
 
 
-    @Test(priority = 17)
+    @Test(priority = 18)
     public void modifyScreeningExclusionCriteria(){
 
         assertTrue(true);

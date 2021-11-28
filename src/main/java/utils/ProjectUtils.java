@@ -73,6 +73,14 @@ public class ProjectUtils {
     public static final String LK_CURRENT_PROJECT = "Project";
     public static final String ID_PROJECT_CONFIG_SELECT = "selected_config";
     public static final String CLOSED_PHASE = "Closed" ;
+    public static final String LK_USERS_MENU = "Users";
+    public static final String CSS_ADD_NEW_USER ="a[title='Add a new user']";
+    public static final String NAME_USER_NAME_INPUT ="user_username" ;
+    public static final String NAME_USER_EMAIL_INPUT = "user_mail";
+    public static final String NAME_USER_PASSWORD_INPUT = "user_password";
+    public static final String NAME_USER_PASSWORD_CONFIRMATION = "user_password_val";
+    public static final String ID_USER_GROUP_UL = "select2-user_usergroup-results";
+    public static final String CLASS_USER_GROUP_ELEMENT = "select2-selection__rendered";
 
 
     /********************************************************************************
@@ -83,7 +91,7 @@ public class ProjectUtils {
     public static String model_transformation_project = "Model transformation";
     public static final String CSS_OPENED_PROJECT_NAME = ".x_title h3" ;
     public static final String BIBTEX_FILE1 = "src/main/resources/bibtex/my_pub.bib";
-
+    public static String NAME_USER_FULL_NAME_INPUT = "user_name";
 
 
     public static String extract_project_id(String filenName){

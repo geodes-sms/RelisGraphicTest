@@ -15,7 +15,7 @@ public class Screening {
 
 
   private static  Screening single_instance=null;
-  private  int reviewers_per_paper = 1;
+  private  int reviewers_per_paper = 2;
   private  String conflict_type;
 
   private String conflit_resolution_by;

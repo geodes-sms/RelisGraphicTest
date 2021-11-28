@@ -252,7 +252,7 @@ public class ProjectController {
     private void addRoleForProject(WebDriver driver, RelisUser user,String role) {
 
         // go to the users page
-        driver.findElement(By.className(ProjectUtils.CLASS_PROJECT_USERS)).click();
+        driver.findElement(By.className(ProjectUtils.CLASS_PROJECT_USERS)).sendKeys(Keys.ENTER);
 
         // push the + button
         driver.findElement(By.className(ProjectUtils.CLASS_ADD_USER_BUTTON)).click();
@@ -647,12 +647,57 @@ public class ProjectController {
     }
 
 
-
+    /**
+     * this function will go to the project list web page
+     * @param driver web driver
+     */
     public static void openProjectListPage(WebDriver driver){
 
         WebElement menu = driver.findElement(By.className(ProjectUtils.CLASS_SIDEBAR_FOOTER_MENU));
         List<WebElement> links = menu.findElements(By.tagName("a"));
         links.get(0).click();
+    }
+
+    private static void addUserToReLis(WebDriver driver, RelisUser user){
+        // get the users menu element
+        WebElement user_menu = Views.getSideBarMenuOptionsOf(driver, LK_USERS_MENU);
+        user_menu.click(); // go to the users page
+        driver.findElement(By.cssSelector(CSS_ADD_NEW_USER)).click();
+        // fill all the inputs
+        driver.findElement(By.name(NAME_USER_FULL_NAME_INPUT)).sendKeys(user.getFull_name());
+        driver.findElement(By.name(NAME_USER_NAME_INPUT)).sendKeys(user.getUsername());
+        if(user.getUser_email() != null )
+            driver.findElement(By.name(NAME_USER_EMAIL_INPUT)).sendKeys(user.getUser_email());
+        driver.findElement(By.name(NAME_USER_PASSWORD_INPUT)).sendKeys(user.getPassword());
+        driver.findElement(By.name(NAME_USER_PASSWORD_CONFIRMATION)).sendKeys(user.getPassword());
+        // choose the user group
+        WebElement user_group_elem = driver.findElement(By.className(CLASS_USER_GROUP_ELEMENT));
+        user_group_elem.click();
+        WebElement ul_elem = driver.findElement(By.id(ID_USER_GROUP_UL));
+        int index = Integer.parseInt(user.getUser_usergroup());
+        List<WebElement> li  = ul_elem.findElements(By.tagName("li"));
+        li.get(index-1).click();
+
+        driver.findElement(By.className(CLASS_UPLOAD_IMPORTED_PAPERS_BUTTON)).click();
+
+    }
+
+    /**
+     * this function will add users to ReLis
+     * so we can use for the test
+     * @param driver web driver
+     */
+    public static void addUsersToReLis(WebDriver driver){
+
+        ArrayList<RelisUser> users = Utility.getMocksRelisUser();
+
+        users.stream()
+                        .filter(u -> !u.getUsername().equals("admin"))
+                                .forEach( user ->{
+                                    addUserToReLis(driver,user);
+                                });
+
+
     }
 
 

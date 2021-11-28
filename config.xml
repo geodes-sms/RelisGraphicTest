@@ -1,0 +1,8 @@
+<relis>
+
+    <workspace src="workspace"/>
+    <users src="src/main/resources/users/users.csv"/>
+
+    <project short_name="test"/>
+
+</relis>

@@ -45,11 +45,10 @@ public class ProjectTest {
         driver = init.getWebDriver();
         project = RelisParser.getProjectFromFiles();
 
-        project.getScreening().setReviewersPerPaper(1);
+        project.getScreening().setReviewersPerPaper(2);
         //project.setProject_name(project_demo);
 
         ConnexionTest(driver);
-        openProjectTest(driver,project);
 
     }
 
@@ -69,17 +68,14 @@ public class ProjectTest {
 
 
 
+
     @Test
-    public void create_project_test(){
+    public void open_project_test(){
 
-        System.out.println("Creating the project");
-        projectManager.createProject(driver, "mt");
-        System.out.println("Project created ");
-        String projet_name = "Model transformation";
-        ProjectController.open_project_all_phases(driver, projet_name);
+
+        ProjectController.addUsersToReLis(driver);
+        ProjectController.openProject(driver, project.getProject_name());
     }
-
-
 
 
     @Test(priority = 1)
@@ -91,7 +87,7 @@ public class ProjectTest {
             sc.assignReviewers(driver, phase);
         }
 
-        assertTrue(phase== null || phase.getParticipantNumbers() > 0 );
+        assertTrue(phase == null || phase.getParticipantNumbers() > 0 );
         System.out.println("fin de 'assign reviewer test'");
 
     }

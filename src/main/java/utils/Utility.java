@@ -263,7 +263,10 @@ public class Utility {
 
 
         Optional<WebElement> element = data.stream()
-                .filter(elem -> elem.getText().equals(cond))
+                .filter(elem -> {
+                    System.out.println("Compare ("+elem.getText()+") VS "+ " ("+ cond+")");
+                    return elem.getText().equals(cond);
+                })
                 .findFirst();
         return element.orElse(null);
     }
@@ -464,7 +467,7 @@ public class Utility {
 
         ArrayList<String> assigments =(ArrayList<String>) array;
         papers.remove(0);
-        int finalIndex = 1;
+        int finalIndex = 0;
         papers.forEach(paper ->{
             List<WebElement> tds = paper.findElements(By.tagName("td"));
 

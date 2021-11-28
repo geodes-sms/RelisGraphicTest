@@ -90,7 +90,7 @@ public class ScreeningPhaseController {
 
     }
     public static ArrayList<Paper> getUserPapersAssignments(ScreeningPhaseWork user){
-        ScreeningView.showMyPendingAssignmentsPage(user.getParticipant().getDriver());
+        ScreeningView.showMyAssignment(user.getParticipant().getDriver());
         System.out.println("Defbut de getting assignments @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         ArrayList<String> papersKeys= new ArrayList<>();
 

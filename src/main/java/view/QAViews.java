@@ -107,7 +107,6 @@ public class QAViews {
     public void getQuestion(WebDriver driver, QuestionAnswesPaper questionAnswesPaper){
 
         showQuestionsPage(driver);
-        Utility.sleep(10);
         Utility.work_through_table_id(driver,QAViews::extractQuestion,questionAnswesPaper);
 
     }

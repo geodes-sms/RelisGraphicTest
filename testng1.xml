@@ -3,7 +3,7 @@
         <classes>
             <class name="ProjectTest">
                 <methods>
-                    <include name="create_project_test"/>
+                    <include name="open_project_test"/>
                 </methods>
             </class>
         </classes>

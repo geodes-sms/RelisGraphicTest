@@ -34,10 +34,10 @@ public class ScreeningDecisionMaker {
         }
         int rest = UpperBoundPaperLength;
 
-        EXCLUDED = 5;
+        EXCLUDED = 1;
 
-        IN_CONFLICT = 3;
-        INCLUDED = rest -8;
+        IN_CONFLICT = 2;
+        INCLUDED = rest - EXCLUDED - IN_CONFLICT;
         System.out.println("INCLUDE = " + INCLUDED);
         System.out.println("EXCLUDED " + EXCLUDED);
         System.out.println("IN_CONFLICT = " + IN_CONFLICT);

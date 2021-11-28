@@ -272,15 +272,16 @@ public class ScreeningView {
           System.out.println("PHASES NAME => "+ current_phase_name );
         if(current_phase_name.equals( phaseName)){
           RelisUser connectedUser = Utility.getCurrentConnectedUser(driver);
-            System.out.println("USER GROUP TYPE=" + connectedUser.getUser_usergroup());
-          WebElement element = (connectedUser.getUser_usergroup().equals("3"))?
-            Utility.chooseWebElement(tds, LK_GO_TO_PHASE):
-            Utility.chooseWebElement(tds, SCREENING_MANAGER_ELEMENT);
-          assert element != null;
+          System.out.println("USER GROUP TYPE=" + connectedUser.getUser_usergroup());
 
-          // open the screening phase
-          ((JavascriptExecutor)driver).executeScript("arguments[0].click();",
-            element.findElement(By.className(CLASS_GOTO_PHASE)));
+          WebElement element;
+          int last = tds.size()-1;
+          element  = tds.get(last).findElement(By.cssSelector(CSS_GO_TO_PHASE));
+          assert element != null;
+          element.sendKeys(Keys.ENTER);
+//          // open the screening phase
+//          ((JavascriptExecutor)driver).executeScript("arguments[0].click();",
+//            element.findElement(By.className(CLASS_GOTO_PHASE)));
             break;
         }
 

@@ -8,39 +8,45 @@
 
 
 
-    <test name="Screening">
-        <case  project_name="Model_transformation" function="create_project_test"/>
-<!--        <case name="assignment" function="assign_screening_reviewers"/>-->
-<!--        <case name="screen"-->
-              function="screen_test"/>
-        <!--        <case name="validation"
-        function="current_test"/>-->
+    <test name="open project">
+
+        <case name="open the selected project" function="open_project_test"/>
+    </test>
+
+
+
+    <test name="Screening0">
+        <case name="assignment" function="assign_screening_reviewers"/>
+        <case name="screen" function="screen_test"/>
+        <!--        <case name="validation"   function="current_test"/>-->
         <!--<case name="report" />-->
     </test>
 
-    <test name="classification9">
+    <test name="classification0">
         <!--        <case name="assignment"/>-->
-        <case name="classify"
-              function="classifyPapersTest"/>
+        <case name="classify" function="classifyPapersTest"/>
         <!--        <case name="validation"/>-->
         <!--        <case name="report"/>-->
     </test>
 
-    <test name="qa9">
-<!--        <case name="assignment"-->
-<!--              function="assign_reviewer_qa_test"/>-->
-        <case name="assess"
-              function="asses_qa_test"/>
+    <test name="qa0">
+        <case name="assignment" function="assign_reviewer_qa_test"/>
+        <case name="assess" function="asses_qa_test"/>
         <!--        <case name="validation"
         function="validate_qa_test"/>-->
         <!--        <case name="report"/>-->
     </test>
 
 
-    <test name="management9">
+    <test name="managemen0t">
+
+<!--        <case name="create a project" function="create_project_test"/>-->
+
+        <!--        This test can't be commented-->
+        <case name="open the project" function="open_project_test"/>
+
         <!--  La section d'importations de tests -->
-        <case name="import csv"
-              function="importBibTexTest"/>
+        <case name="import csv" function="importBibTexTest"/>
         <!--        <case name="import endnote"/>-->
         <!--        <case name="import bibtex"/>-->
 
@@ -65,14 +71,11 @@
         function="removeGuestUserRole"/>-->
 
 
-        <case name="delete papers"
-              function="deleteAllPaper"/>
+        <case name="delete papers" function="deleteAllPaper"/>
 
-        <case name="delete specific paper"
-              function="deleteProjectPaperByKey"/>
+        <case name="delete specific paper" function="deleteProjectPaperByKey"/>
 
-        <!--        <case name="add some random reviewer"
-        function="addSomeReviewers"/>-->
+<!--        <case name="add some random reviewer" function="addSomeReviewers"/>-->
 
     </test>
 

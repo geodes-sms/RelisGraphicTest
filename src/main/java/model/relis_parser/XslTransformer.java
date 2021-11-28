@@ -1,11 +1,19 @@
 package model.relis_parser;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class XslTransformer {
@@ -36,6 +44,29 @@ public class XslTransformer {
 
         String name = "relis_test.xml";
 
-        transformToXml(name);
+      transformToXml(name);
+        project_files();
+    }
+
+    public static void project_files(){
+
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = null;
+        try {
+            db = dbf.newDocumentBuilder();
+            Document document = db.parse(new File("config.xml"));
+            NodeList nodeList = document.getElementsByTagName("workspace");
+            System.out.println("We have project Length =>" + nodeList.getLength());
+            for(int x=0,size= nodeList.getLength(); x<size; x++) {
+                System.out.println(nodeList.item(x).getAttributes().getNamedItem("src").getNodeValue());
+            }
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+
     }
 }
