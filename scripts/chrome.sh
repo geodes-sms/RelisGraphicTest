@@ -19,7 +19,7 @@ pwd
 echo changing permission of 'workspace' to 777
 sudo chmod 777 -R workspace
 echo chmod 777 to relisApp
-cd .. && sudo chmod 777 relisApp -R && ls -l && cd relisApp
+cd .. && sudo chmod a+rwx relisApp -R && cd relisApp && ls -l
 cd relis_deployment
 #build ReLis
 sudo docker-compose build
