@@ -2,7 +2,7 @@
 
 
 git clone https://github.com/geodes-sms/relis.git relisApp
-
+sudo chmod 777 -R relisApp
 cd relisApp
 ls
 git checkout develop
