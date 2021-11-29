@@ -7,6 +7,7 @@
     <project name="test" />
     <workspace src="./workspace"/>
     <users src="users.csv" />
+    <import src="my_pip.bib"/>
 
     <tests>
 
@@ -16,21 +17,21 @@
         </test>
 
 
-        <test name="Screening0">
+        <test name="Screening">
             <case name="assignment" function="assign_screening_reviewers"/>
             <case name="screen" function="screen_test"/>
-            <!--        <case name="validation"   function="current_test"/>-->
+<!--                    <case name="validation"   function="current_test"/>-->
             <!--<case name="report" />-->
         </test>
 
-        <test name="classification0">
+        <test name="classification">
                 <!--        <case name="assignment"/>-->
             <case name="classify" function="classifyPapersTest"/>
               <!--        <case name="validation"/>-->
               <!--        <case name="report"/>-->
         </test>
 
-        <test name="qa0">
+        <test name="qa">
             <case name="assignment" function="assign_reviewer_qa_test"/>
             <case name="assess" function="asses_qa_test"/>
             <!--        <case name="validation"  function="validate_qa_test"/>-->
@@ -38,9 +39,9 @@
         </test>
 
 
-        <test name="management0">
-
-    <!--        <case name="create a project" function="create_project_test"/>-->
+        <test name="management">
+<!--          CREATE THE PROJECT  -->
+            <case name="create a project" function="create_project_test"/>
 
             <!--        This test can't be commented-->
             <case name="open the project" function="open_project_test"/>
@@ -66,7 +67,7 @@
             <case name="delete papers" function="deleteAllPaper"/>
             <case name="delete specific paper" function="deleteProjectPaperByKey"/>
 
-    <!--        <case name="add some random reviewer" function="addSomeReviewers"/>-->
+            <case name="add some random reviewer" function="addSomeReviewers"/>
 
         </test>
 
