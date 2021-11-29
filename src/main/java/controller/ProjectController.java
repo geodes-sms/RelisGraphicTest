@@ -89,7 +89,7 @@ public class ProjectController {
         // then create the project by clicking the submit button
         driver.findElement(By.cssSelector("button[type='submit']")).click();
         System.out.print( "LE bodey \n \n \n");
-        System.out.print( project.findElement(By.tagName("body")).getText());
+        System.out.print( driver.findElement(By.tagName("body")).getText());
         System.out.print( "LE bodey FIN \n \n \n");
 
     }
