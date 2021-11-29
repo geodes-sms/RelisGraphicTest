@@ -88,6 +88,9 @@ public class ProjectController {
 
         // then create the project by clicking the submit button
         driver.findElement(By.cssSelector("button[type='submit']")).click();
+        System.out.print( "LE bodey \n \n \n");
+        System.out.print( project.findElement(By.tagName("body")).getText());
+        System.out.print( "LE bodey FIN \n \n \n");
 
     }
 
@@ -106,6 +109,7 @@ public class ProjectController {
         WebElement ph = phases.stream()
                 .filter( phase -> {
                     List<WebElement> tds = phase.findElements(By.tagName("td"));
+                    System.out.println( tds.get(1).getText());
                     return tds.get(1).getText().equals(CLOSED_PHASE);}
                 ).findFirst().orElse(null);
         if(ph != null){
