@@ -69,6 +69,9 @@ public class ProjectController {
         WebElement select = driver.findElement(By.name(ID_PROJECT_CONFIG_SELECT));
         select.sendKeys(Keys.ENTER);
         System.out.println("Clicked the options ");
+
+        System.out.println(driver.findElement(By.tagName("body")).getText()
+        +"\n\n\n\n");
         List<WebElement> projects = select.findElements(By.tagName("optgroup"));
 
         // choose the project that we wanna create by his id

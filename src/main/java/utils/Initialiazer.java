@@ -37,8 +37,6 @@ public class Initialiazer {
         chromeDriver();
         // go to the website
         webDriver.get(LOCAL_URL);
-        System.out.println(webDriver.findElement(By.tagName("body")).getText());
-        for(int i=0; i<5; i++) System.out.println("\n\n");
       // webDriver.manage().window().maximize();
 
 
