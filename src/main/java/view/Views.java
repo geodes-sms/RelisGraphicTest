@@ -176,13 +176,16 @@ public class Views {
         WebElement ul = findElementBy(driver, By.className(CLASS_SIDE_BAR_MENU));
         List<WebElement> li = ul.findElements(By.tagName("li"));
 
-        return li.stream()
+        WebElement element =  li.stream()
                 .filter(p-> {
                     //System.out.println("(" +p.findElement(By.tagName("a")).getText() +", "+ name +")");
                     return p.findElement(By.tagName("a")).getText().equals(name);
                 })
                 .findFirst()
                 .orElse(null);
+
+        scrollToElement2(driver, element);
+        return element;
     }
 
 
@@ -190,13 +193,15 @@ public class Views {
         WebElement ul = findElementsBy(driver, By.className(CLASS_SIDE_BAR_MENU)).get(1);
         List<WebElement> li = ul.findElements(By.tagName("li"));
 
-        return li.stream()
+        WebElement element =  li.stream()
                 .filter(p-> {
                     System.out.println("(" +p.findElement(By.tagName("a")).getText() +", "+ name +")");
                     return p.findElement(By.tagName("a")).getText().equals(name);
                 })
                 .findFirst()
                 .orElse(null);
+        scrollToElement2(driver, element);
+        return element;
 
     }
 
@@ -212,7 +217,7 @@ public class Views {
                     elements.stream().filter( li -> {
 
 
-                      System.out.println("(" +li.findElement(By.tagName("a")).getText() +", "+ subMenu +")");
+                    //  System.out.println("(" +li.findElement(By.tagName("a")).getText() +", "+ subMenu +")");
                         return li.findElement(By.tagName("a")).getText().equals(subMenu);
                             } )
                             .findFirst().get();
@@ -345,6 +350,11 @@ public class Views {
 //        js.executeScript("arguments[0].click()", element);
         element.click();
 
+    }
+    public static void js_click(WebDriver driver, WebElement element){
+        JavascriptExecutor executor = (JavascriptExecutor)driver;
+        System.out.println("WEB ELEMNT : " + element.getText());
+        executor.executeScript("arguments[0].click();", element);
     }
 
     public static boolean isWhiteBg(String bg){
@@ -523,5 +533,12 @@ public class Views {
 
         WebDriverWait driverWait = new WebDriverWait(driver,3);
        return driverWait.until(ExpectedConditions.presenceOfElementLocated(elem));
+    }
+
+    public static void waitAndClick(WebDriver driver, WebElement elem){
+
+        new WebDriverWait(driver, 3).until(
+                ExpectedConditions.elementToBeClickable(elem)
+        ).click();
     }
 }

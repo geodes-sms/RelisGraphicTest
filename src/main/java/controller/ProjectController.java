@@ -3,6 +3,8 @@ package controller;
 import lombok.NonNull;
 import model.*;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.*;
@@ -13,6 +15,7 @@ import java.io.File;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static utils.PaperUtils.*;
 import static utils.ProjectUtils.*;
@@ -249,7 +252,7 @@ public class ProjectController {
         //driver.findElement(By.className(utils.PaperUtils.CLASS_BACK_FROM_PAPERS_IMPORT_BUTTON)).click();
 
     }
-    
+
     /**
      * adding a reviewer to a project
      *
@@ -259,7 +262,10 @@ public class ProjectController {
     private void addRoleForProject(WebDriver driver, RelisUser user,String role) {
         // go to the users page;
         WebElement menu_user = Views.getSideBarMenuOptionsOf(driver,LK_USERS_MENU);
-        menu_user.click();
+
+        menu_user.findElement(By.tagName("a")).click();
+
+
         // push the + button
         driver.findElement(By.className(ProjectUtils.CLASS_ADD_USER_BUTTON)).click();
         // now we show all the users
@@ -665,10 +671,13 @@ public class ProjectController {
     }
 
     private static void addUserToReLis(WebDriver driver, RelisUser user){
+
         // get the users menu element
-        WebElement user_menu = Views.getSideBarMenuOptionsOf(driver, LK_USERS_MENU);
-        user_menu.click(); // go to the users page
-        driver.findElement(By.cssSelector(CSS_ADD_NEW_USER)).click();
+        WebElement menu_user = Views.getSideBarMenuOptionsOf(driver,LK_USERS_MENU);
+        menu_user.findElement(By.tagName("a")).sendKeys(Keys.ENTER);
+        WebElement add_new_user_btn =   driver.findElement(By.cssSelector(CSS_ADD_NEW_USER));
+        Views.waitAndClick(driver, add_new_user_btn);
+
         // fill all the inputs
         driver.findElement(By.name(NAME_USER_FULL_NAME_INPUT)).sendKeys(user.getFull_name());
         driver.findElement(By.name(NAME_USER_NAME_INPUT)).sendKeys(user.getUsername());
@@ -696,12 +705,17 @@ public class ProjectController {
     public static void addUsersToReLis(WebDriver driver){
 
         ArrayList<RelisUser> users = Utility.getMocksRelisUser();
-
-        users.stream()
+       // System.out.println("NOUS AVONS " + users.size()+" USERES ");
+       openProjectListPage(driver);
+       List<RelisUser> data =  users.stream()
                         .filter(u -> !u.getUsername().equals("admin"))
-                                .forEach( user ->{
-                                    addUserToReLis(driver,user);
-                                });
+               .collect(Collectors.toList());
+        System.out.println("NOUS AVONS " + data.size()+" USERES ");
+       for(RelisUser user : data){
+
+           System.out.println("ADDING => " + user);
+          ProjectController.addUserToReLis(driver,user);
+       }
 
 
     }

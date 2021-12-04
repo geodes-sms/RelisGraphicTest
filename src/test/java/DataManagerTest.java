@@ -7,6 +7,8 @@ import model.RelisUser;
 import model.ScreeningPhase;
 import model.relis_parser.RelisParser;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 
 import org.testng.annotations.AfterGroups;
@@ -16,6 +18,7 @@ import org.testng.annotations.Test;
 import utils.Initialiazer;
 import utils.ProjectUtils;
 import utils.Utility;
+import view.Views;
 
 
 import java.util.ArrayList;
@@ -66,7 +69,14 @@ public class DataManagerTest {
     }
     @Test(priority = 1)
     public void addUsersToReLisTest(){
-        ProjectController.addUsersToReLis(driver);
+
+
+        try {
+            ProjectController.addUsersToReLis(driver);
+        } catch ( Exception  e){
+            System.out.println("EXCEPTION DANS  addUsersToReLisTest");
+            e.printStackTrace();
+        }
     }
 
 
@@ -209,9 +219,15 @@ public class DataManagerTest {
     public  void addSomeReviewers(){
         int i = 0;
         ArrayList<RelisUser> relisUsers = new ArrayList<>();
+        Views.getSideBarMenuOptionsOf(driver, "Papers").findElement(By.tagName("a"))
+                .click();
+
         do relisUsers.add(Utility.getRandomUser()); while( i++ < 4);
         relisUsers.forEach(
-                user-> projectManager.addReviewer(driver,user)
+
+                user-> {
+                    projectManager.addReviewer(driver,user);
+                }
         );
         assertTrue(true);
     }
