@@ -257,10 +257,9 @@ public class ProjectController {
      * @param user
      */
     private void addRoleForProject(WebDriver driver, RelisUser user,String role) {
-
-        // go to the users page
-        driver.findElement(By.className(ProjectUtils.CLASS_PROJECT_USERS)).sendKeys(Keys.ENTER);
-
+        // go to the users page;
+        WebElement menu_user = Views.getSideBarMenuOptionsOf(driver,LK_USERS_MENU);
+        menu_user.click();
         // push the + button
         driver.findElement(By.className(ProjectUtils.CLASS_ADD_USER_BUTTON)).click();
         // now we show all the users

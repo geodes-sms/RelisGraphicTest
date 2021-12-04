@@ -26,3 +26,6 @@ cd relis_deployment
 sudo docker-compose build
 # run ReLis app
 sudo docker-compose up -d
+
+sudo docker rm relis-application -f
+sudo docker-compose up -d

@@ -73,9 +73,10 @@ public class ProjectTest {
     public void open_project_test(){
 
 
-        ProjectController.addUsersToReLis(driver);
+
         ProjectController.openProject(driver, project.getProject_name());
     }
+
 
 
     @Test(priority = 1)

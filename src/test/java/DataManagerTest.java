@@ -54,13 +54,19 @@ public class DataManagerTest {
 
 
 
-    @Test(priority = 1)
+
+
+    @Test
     public void create_project_test(){
 
         System.out.println("Creating the project");
         projectManager.createProject(driver, project.getProjectId());
         System.out.println("Project created ");
         ProjectController.open_project_all_phases(driver, project.getProject_name());
+    }
+    @Test(priority = 1)
+    public void addUsersToReLisTest(){
+        ProjectController.addUsersToReLis(driver);
     }
 
 

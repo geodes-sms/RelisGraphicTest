@@ -11,6 +11,7 @@
             <class name="DataManagerTest">
                 <methods>
                     <include name="create_project_test"/>
+                    <include name="addUsersToReLisTest"/>
                     <include name="open_project_test"/>
                     <include name="importBibTexTest"/>
                     <include name="deleteAllPaper"/>
@@ -31,7 +32,4 @@
         </classes>
     </test>
 </suite>
-
-
-
 

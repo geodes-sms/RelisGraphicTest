@@ -1,21 +1,15 @@
 
-<!-- Bibte-->
-
-<!-- ETAPE POUR ADD LES PROJECT RELIS AU WORKSPACE-->
 <relis>
     <!-- Le projet choisi pour les test. name est le short_name du projet-->
     <project name="test" />
     <workspace src="./workspace"/>
     <users src="users.csv" />
-    <import src="my_pip.bib"/>
+    <import src="my_pip.bib" />
 
     <tests>
-
         <test name="open project">
-
             <case name="open the selected project" function="open_project_test"/>
         </test>
-
 
         <test name="Screening">
             <case name="assignment" function="assign_screening_reviewers"/>
@@ -42,7 +36,7 @@
         <test name="management">
 <!--          CREATE THE PROJECT  -->
             <case name="create a project" function="create_project_test"/>
-
+            <case name="add users to ReLis for tests" function="addUsersToReLisTest"/>
             <!--        This test can't be commented-->
             <case name="open the project" function="open_project_test"/>
 
@@ -73,8 +67,5 @@
 
 
     </tests>
-
-
-
 
 </relis>
