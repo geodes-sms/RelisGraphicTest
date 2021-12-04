@@ -217,7 +217,7 @@ public class Views {
                     elements.stream().filter( li -> {
 
 
-                    //  System.out.println("(" +li.findElement(By.tagName("a")).getText() +", "+ subMenu +")");
+                      System.out.println("(" +li.findElement(By.tagName("a")).getText() +", "+ subMenu +")");
                         return li.findElement(By.tagName("a")).getText().equals(subMenu);
                             } )
                             .findFirst().get();
@@ -261,22 +261,12 @@ public class Views {
      */
     public static void openSuBMenuFrom(WebDriver driver, String menu_name, String subOptions){
 
-        try {
 
             WebElement menu = getSideBarMenuOptionsOf(driver,menu_name);
             menu.click();
             menu = getSideBarMenuOptionsOf(driver, menu_name);
             choose_sub_menuFrom(menu, subOptions);
-        } catch (Exception e){
 
-            WebElement menu = getSideBarMenuOptionsOf(driver,menu_name);
-
-            scrollToElement2(driver,menu);
-            menu = getSideBarMenuOptionsOf(driver,menu_name);
-            menu.click();
-            menu = getSideBarMenuOptionsOf(driver,menu_name);
-            choose_sub_menuFrom(menu, subOptions);
-        }
 
 
     }
