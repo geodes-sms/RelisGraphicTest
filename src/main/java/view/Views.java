@@ -198,6 +198,7 @@ public class Views {
                     System.out.println("(" +p.findElement(By.tagName("a")).getText() +", "+ name +")");
                     return p.findElement(By.tagName("a")).getText().equals(name);
                 })
+
                 .findFirst()
                 .orElse(null);
         scrollToElement2(driver, element);
@@ -237,22 +238,12 @@ public class Views {
 
         WebElement element = open_sub_menu_admin(driver, menu);
         if(element == null) return;
-        try {
-            if(!Utility.hasClass(element, "active")){
-                element.click();
-                open_sub_menu_admin(driver, menu);
-            }
-            choose_sub_menuFrom(element, sub_name);
-        } catch (Exception e ){
-            element = open_sub_menu_admin(driver,menu);
 
-            scrollToElement2(driver,element);
-            element = open_sub_menu_admin(driver,menu);
+        if(!Utility.hasClass(element, "active")){
             element.click();
-            element = open_sub_menu_admin(driver,menu);
-            choose_sub_menuFrom(element, sub_name);
+            element = open_sub_menu_admin(driver, menu);
         }
-
+        choose_sub_menuFrom(element, sub_name);
 
     }
     /**
