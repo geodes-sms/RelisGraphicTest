@@ -28,7 +28,7 @@ You can run localy all the tests, in order to do so, follow to next steps
 
 # Test of choice to run
 
-You can choose the tests that you wanna tests, the file 'relis_test.xml' contains all the tests and the project to choose for the tests,
+You can choose the tests that you wanna tests, the file **'relis_test.xml'** contains all the tests and the project to choose for the tests,
 you can comment a test if you wanna ignore it.
 
 
