@@ -7,20 +7,25 @@
     <import src="my_pip.bib" />
 
     <tests>
+        
+<!--        Can't be commented-->
         <test name="open project">
             <case name="open the selected project" function="open_project_test"/>
         </test>
-
+        
+        
         <test name="Screening">
             <case name="assignment" function="assign_screening_reviewers"/>
             <case name="screen" function="screen_test"/>
-<!--                    <case name="validation"   function="current_test"/>-->
             <!--<case name="report" />-->
         </test>
 
         <test name="classification">
                 <!--        <case name="assignment"/>-->
+<!--            this test run the assign, classify and the report test-->
             <case name="classify" function="classifyPapersTest"/>
+            
+            
               <!--        <case name="validation"/>-->
               <!--        <case name="report"/>-->
         </test>
@@ -28,7 +33,6 @@
         <test name="qa">
             <case name="assignment" function="assign_reviewer_qa_test"/>
             <case name="assess" function="asses_qa_test"/>
-            <!--        <case name="validation"  function="validate_qa_test"/>-->
             <!--        <case name="report"/>-->
         </test>
 
@@ -36,6 +40,9 @@
         <test name="management">
 <!--          CREATE THE PROJECT  -->
             <case name="create a project" function="create_project_test"/>
+            
+<!--            must run this test for the first time, to add users to ReLiS
+            and you can comment after -->
             <case name="add users to ReLis for tests" function="addUsersToReLisTest"/>
             <!--        This test can't be commented-->
             <case name="open the project" function="open_project_test"/>
@@ -61,6 +68,8 @@
             <case name="delete papers" function="deleteAllPaper"/>
             <case name="delete specific paper" function="deleteProjectPaperByKey"/>
 
+<!--            must run first time to add reviewer to the project
+            you can comment after-->
             <case name="add some random reviewer" function="addSomeReviewers"/>
 
         </test>
