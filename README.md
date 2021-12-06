@@ -30,6 +30,9 @@ You can run localy all the tests, in order to do so, follow to next steps
 
 You can choose the tests that you wanna tests, the file **'relis_test.xml'** contains all the tests and the project to choose for the tests,
 you can comment a test if you wanna ignore it.
+if you wanna to use a headless chrome web driver you can go to **Utils folder** and then open the file **Initializer.java** at the function **chromeDriver** to uncomment the line
+**ChromeOptions.addArguments("--headless", "window-size=1024,768", "--no-sandbox");**.
+
 
 
 
