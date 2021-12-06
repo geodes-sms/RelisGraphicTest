@@ -10,8 +10,27 @@ You can use a publically available instance of ReLiS at [http://relis.iro.umontr
 
 # ReLiS automated tests
 
-this projec implements the automated tests of ReLiS ## develop branch.
+this projec implements the automated tests of ReLiS **develop branch**.
 
-#Installation
+# Installation
+##
+You can run localy all the tests, in order to do so, follow to next steps
+
+# for Linux
+
+- after the git clone, you can this run the file 'build_test.sh'
+
+# for Windows
+
+- you can follows the steps of [https://github.com/geodes-sms/relis/tree/develop#relis](https://github.com/geodes-sms/relis/tree/develop#relis). to install ReLiS and run ReLiS on your machine.
+- you can go the root folder of this project, and your terminal run **mvn clean test**.
+
+
+# Test of choice to run
+
+You can choose the tests that you wanna tests, the file 'relis_test.xml' contains all the tests and the project to choose for the tests,
+you can comment a test if you wanna ignore it.
+
+
 
 
