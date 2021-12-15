@@ -1,9 +1,8 @@
 PROJECT test "Project 2"
-
 SCREENING
 Reviews 2
 Conflict on Criteria resolved_by Unanimity
-Criteria =   ["Criteria 1","Criteria 2"]
+Criteria =   ["Criteria 1","Criteria 2" ]
 Sources = ["Source 1","Source 2"]
 Strategies =["Strategy 1","Strategy 2"]
 Validation 30%  Normal
@@ -18,11 +17,13 @@ Min_score 3
 CLASSIFICATION
 no_override
 Simple string_100 "String100" * :string(100)
-Simple int_4 "Int4" * :int(4)
+Simple int_33 "Int4" * :int(4)
 Simple bool_1 "Boolean" * :bool
 Simple real_1 "Real" * :real
+Simple add_int "Add Int" *:int(4)
+
 Simple date_1 "Date" * :date
-Simple pattern "pattern" :string(50) style("[A-Z]+[0-9]*") = ["AB9"]
+Simple pattern "pattern" :string(50) style("[a-z90]+[0-9]*")
 
 DynamicList dynListOne "DynamicListOne"  [1] "listOneDynamic" =["DynamicListData1","DynamicListData2","DynamicListData3","DynamicListData4","DynamicListData5"]
 DynamicList dynList3 "DynamicListThreeValues"  [2] "DynamicListThreeValues"

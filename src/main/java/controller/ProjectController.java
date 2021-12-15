@@ -69,26 +69,7 @@ public class ProjectController {
         // push the  create new project button
         driver.findElement(By.linkText(ProjectUtils.LK_ADD_NEW_PROJECT_BUTTON)).click();
 
-        WebElement select = driver.findElement(By.name(ID_PROJECT_CONFIG_SELECT));
-        select.sendKeys(Keys.ENTER);
-        System.out.println("Clicked the options ");
-
-        System.out.println(driver.findElement(By.tagName("body")).getText()
-        +"\n\n\n\n");
-        List<WebElement> projects = select.findElements(By.tagName("optgroup"));
-
-        // choose the project that we wanna create by his id
-        WebElement project = projects.stream()
-                .filter( p -> {
-                    String p_id = ProjectUtils.extract_project_id(p.findElement(By.tagName("option")).getText());
-                    return p_id .equals( project_id);
-                })
-                .findFirst().orElse(null);
-        // is there a project with the current id?? if not exit.
-        if(project == null) return;
-        System.out.println("options choosed !!!!");
-        // here we found the project, now we choose the project
-        project.findElement(By.tagName("option")).click();
+        Views.choose_project( driver, project_id);
 
         // we create the project
 
@@ -719,6 +700,8 @@ public class ProjectController {
 
 
     }
+
+
 
 
 

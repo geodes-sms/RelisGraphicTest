@@ -566,6 +566,12 @@ public class Utility {
     }
 
 
+    /**
+     *
+
+     * @param text the text that contains of the article key
+     * @return return the paper key
+     */
     private static String takePaperKey(String text) {
 
         return text.substring(0,text.indexOf(" "));

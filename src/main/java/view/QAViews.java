@@ -201,7 +201,7 @@ public class QAViews {
     public static void doPaperQA(WebDriver driver, QualityAssementSessionWork sessionWork){
 
         int max = sessionWork.getQa_papers().size();
-        System.out.println("Nombre de doPapers => " + max +"         )))))))))))))))))))))))))))))))))))))))))))))))00");
+        System.out.println("NUMBER OF PAPER FOR THE QA => " + max);
         for(int i =0; i < max*4; i++){
 
             // get the next question for the current paper

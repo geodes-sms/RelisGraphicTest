@@ -21,20 +21,20 @@ public class Initialiazer {
 
         WebDriverManager.chromedriver().setup();
         ChromeOptions ChromeOptions = new ChromeOptions();
-       ChromeOptions.addArguments("--headless", "window-size=1024,768", "--no-sandbox");
+        //ChromeOptions.addArguments("--headless", "window-size=1024,768", "--no-sandbox");
         webDriver = new ChromeDriver(ChromeOptions);
 
     }
 
-    private void fierfoxDriver(){
+    private void firefoxDriver(){
 
         WebDriverManager.firefoxdriver().setup();
         webDriver = new FirefoxDriver();
     }
     // initializing the web page
     public void init(){
-        // setup for using firefox as web navigator
-        chromeDriver();
+        // setup for using chrome as web navigator
+       chromeDriver();
         // go to the website
         webDriver.get(LOCAL_URL);
       // webDriver.manage().window().maximize();

@@ -2,6 +2,7 @@ package controller;
 
 import model.Classification;
 import model.Paper;
+import model.Project;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -116,6 +117,15 @@ public class ClassificationController {
             assign_validators(driver,classification);
         }
 
+        if(classification.getPapersToClassifyLength() == 0 ){
+            ArrayList<Paper> toClassify = new ArrayList<>();
+            // pass the arraylist by reference so to populate it
+            Utility.getPapersForClassification(driver,toClassify);
+
+            classification.setPapersToClassify(toClassify);
+
+        }
+
 
     }
     /**
@@ -141,10 +151,11 @@ public class ClassificationController {
      * this method finish the classification phase
      * like classifying  every paper
      * @param driver the web driver
-     * @param classification objecy
+     * @param project a project
      */
-    public void finishClassificationPhase(WebDriver driver, Classification classification){
+    public void finishClassificationPhase(WebDriver driver, Project project){
 
+        Classification classification = project.getClassification();
         makeReadyForClassification(driver,classification);
             // for every classificators
             classification.getClassificators().parallelStream()
@@ -155,7 +166,7 @@ public class ClassificationController {
                         WebDriver drive = initialiazer.getWebDriver();
                         // connect the classificator
                         ConnexionController.connect(drive,relisUser);
-                        ProjectController.openProject(drive,"Project 2");
+                        ProjectController.openProject(drive,project.getProject_name());
                         ClassificationView.openClassification(drive);
                         // classify the papers
                         views.classifyAndTest(drive,classification);
@@ -168,15 +179,22 @@ public class ClassificationController {
 
     }
 
+
+    /**
+     *
+     * this function will process the validation phase
+     * @param driver the web driver
+     * @param classification the classificator
+     */
     public void finishValidationPhase(WebDriver driver, Classification classification){
 
         //views.openValidatePaperPage(driver);
         makeReadyForValidationPhase(driver,classification);
         int i=0, max =classification.getPapersToClassifyLength();
+        System.out.println("max => " + max);
         while (++i < max){
             views.validateNextPaper(driver,classification);
         }
-
         views.extracDOM_validation(driver,classification);
 
     }

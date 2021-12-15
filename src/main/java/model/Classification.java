@@ -71,6 +71,7 @@ public class Classification {
     public ClassificatedPaper getClassifiedPaperByKey(String key){
 
         return classificatedPapers.stream()
+                .filter( Objects::nonNull)
                 .filter(p-> p.getPaper().getKey().equals(key))
                 .findFirst()
                 .orElse(null);

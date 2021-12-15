@@ -3,6 +3,8 @@ package model.relis_parser;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import utils.FileUtils;
+import utils.ProjectUtils;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,6 +48,16 @@ public class XslTransformer {
 
       transformToXml(name);
         project_files();
+
+        String dir = ProjectUtils.get_workspace_path();
+
+        String look_for = ProjectUtils.getProjectConfigFileName("test");
+        String res = FileUtils.getPath(look_for, dir);
+
+        System.out.println("RESULT => {"+ res +"}");
+
+
+
     }
 
     public static void project_files(){

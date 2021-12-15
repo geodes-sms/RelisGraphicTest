@@ -36,6 +36,10 @@ public  class Paper implements Observable ,Cloneable{
     private int exclude_count;
     private int conflict_count;
 
+
+    private String validation_note;
+
+    private String valiation_response;
 /**
  * this method will be call after the end of a screening phase so we
  * can merge all the decision for this paper
@@ -189,4 +193,8 @@ public  class Paper implements Observable ,Cloneable{
 
     }
 
+    public void addValidation(String correct, String not) {
+        valiation_response = correct;
+        validation_note = not;
+    }
 }

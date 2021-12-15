@@ -147,7 +147,8 @@ public class ClassificationView {
         BiFunction<List<WebElement>,String,WebElement> nextPaperToValide =
                 this::getNextPaperToValidateWebElement;
        WebElement nextPaper = Views.work_through_table(driver,nextPaperToValide,"Correct");
-        assert nextPaper != null;
+       if(nextPaper == null)
+           return null;
         List<WebElement> next_paper = nextPaper.findElements(By.tagName("td"));
         String tmp = next_paper.get(1).getText();
         String paper_key = tmp.substring(0, tmp.indexOf(" "));
@@ -185,14 +186,20 @@ public class ClassificationView {
     public void validateNextPaper(WebDriver driver, Classification classification){
         Views.openValidatePaperPage(driver);
         String paper_key = getNextPaperForValidation(driver);
-        ClassificatedPaper classificatedPaper = classification.getClassifiedPaperByKey(paper_key);
+        if(paper_key == null) return;
+        Paper classificatedPaper = classification.getPaper(paper_key);
         List<WebElement> panels = driver.findElements(By.className("x_panel"));
         WebElement classifyPaperSection = panels.get(1);
         WebElement ul = classifyPaperSection.findElement(By.tagName("ul"));
         try {
-            Views.clickLiWebElement(driver,ul,"Correct");
-            String not = "";
-            classificatedPaper.addValidation("Correct", not);
+            String res = "";
+            if(new Random().nextBoolean())
+                res = "Correct";
+            else res = "Not correct";
+
+            Views.clickLiWebElement(driver,ul,res);
+            String not = "note of the validation";
+            classificatedPaper.addValidation(res, not);
         } catch (Exception e){};
 
 
@@ -444,15 +451,17 @@ public class ClassificationView {
         for(WebElement element : values){
 
             List<WebElement> table_element = element.findElements(By.tagName("td"));
+            if(table_element.size() == 0 )
+                break;
             String text = table_element.get(1).getText();
             String key = text.substring(0, text.indexOf(" "));
-            ClassificatedPaper classificatedPaper = classification.getClassifiedPaperByKey(key);
+            Paper classificatedPaper = classification.getPaper(key);
             String validation_response = table_element.get(3).getText();
             String note = table_element.get(4).getText();
 
-            boolean correct = validation_response.equals(classificatedPaper.getValidated_msg());
+            boolean correct = validation_response.equals(classificatedPaper.getValiation_response());
             String str ="VALIDATION_DECISION => {"+validation_response+"} VS " +
-                    "{" +classificatedPaper.getValidated_msg()+"} => " + correct;
+                    "{" +classificatedPaper.getValidation_note()+"} => " + correct;
             classification.append_test_message(str+"\n");
             System.out.print(str);
             correct = note.equals(classificatedPaper.getValidation_note());

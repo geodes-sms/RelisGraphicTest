@@ -4,16 +4,14 @@
     <project name="test" />
     <workspace src="./workspace"/>
     <users src="users.csv" />
-    <import src="my_pip.bib" />
-
     <tests>
         
 <!--        Can't be commented-->
         <test name="open project">
+            <!-- CAN'T BE COMMENTED-->
             <case name="open the selected project" function="open_project_test"/>
+<!--            <case name="reconfigurate project" function="reconfiguration_project_test"/>-->
         </test>
-        
-        
         <test name="Screening">
             <case name="assignment" function="assign_screening_reviewers"/>
             <case name="screen" function="screen_test"/>
@@ -27,7 +25,9 @@
             
             
               <!--        <case name="validation"/>-->
-              <!--        <case name="report"/>-->
+            <case name="assignment" function="assign_classificators_test"/>
+            <case name="classify" function="classify_test"/>
+            <case name="validation" function="validate_classification_test"/>
         </test>
 
         <test name="qa">
@@ -38,43 +38,38 @@
 
 
         <test name="management">
-<!--          CREATE THE PROJECT  -->
+            <!-- CREATE THE PROJECT  -->
             <case name="create a project" function="create_project_test"/>
             
 <!--            must run this test for the first time, to add users to ReLiS
             and you can comment after -->
+
+            <!-- MUST RUN FOR FIRST TIME, to add users to ReLiS and you can comment after -->
             <case name="add users to ReLis for tests" function="addUsersToReLisTest"/>
             <!--        This test can't be commented-->
             <case name="open the project" function="open_project_test"/>
-
             <!--  La section d'importations de tests -->
             <case name="import csv" function="importBibTexTest"/>
-            <!--        <case name="import endnote"/>-->
-            <!--        <case name="import bibtex"/>-->
-
+<!--            <case name="import endnote"/>-->
+<!--            <case name="import bibtex"/>-->
             <!-- la section d'ajoutes des users pour un projet -->
-            <!--        <case name="add reviewer" function="addReviewerTest"/>-->
-            <!--        <case name="add project manager" function="addProjectManagerTest"/>-->
-            <!--        <case name="add validator"  function="addValidatorTest"/>-->
-            <!--        <case name="add guest" function="addGuestRoleTest"/>-->
-
-            <!--        &lt;!&ndash; la section de suppression des users pour un projet &ndash;&gt;-->
-            <!--        <case name="remove reviewer"   function="removeReviewer"/>-->
-            <!--        <case name="remove project manager" function="removeProjectManager"/>-->
-            <!--        <case name="remove validator"function="removeValidator"/>-->
-                <!--        <case name="remove guest" function="removeGuestUserRole"/>-->
-
+<!--            <case name="add reviewer" function="addReviewerTest"/>-->
+<!--            <case name="add project manager" function="addProjectManagerTest"/>-->
+<!--            <case name="add validator"  function="addValidatorTest"/>-->
+<!--            <case name="add guest" function="addGuestRoleTest"/>-->
+            <!-- la section de suppression des users pour un projet -->
+<!--            <case name="remove reviewer"   function="removeReviewer"/>-->
+<!--            <case name="remove project manager" function="removeProjectManager"/>-->
+<!--            <case name="remove validator" function="removeValidator"/>-->
+<!--            <case name="remove guest" function="removeGuestUserRole"/>-->
 
             <case name="delete papers" function="deleteAllPaper"/>
             <case name="delete specific paper" function="deleteProjectPaperByKey"/>
 
-<!--            must run first time to add reviewer to the project
-            you can comment after-->
+            <!-- MUST RUN FOR FIRST TIME to add reviewer to the project you can comment after-->
             <case name="add some random reviewer" function="addSomeReviewers"/>
 
         </test>
-
-
     </tests>
 
 </relis>

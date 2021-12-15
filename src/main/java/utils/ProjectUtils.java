@@ -9,6 +9,8 @@ public class ProjectUtils {
     public static final String CLASS_OPEN_PROJECT = ".fa-paper-plane";
     public static final String LK_ADD_NEW_PROJECT_BUTTON = "Add new project";
 
+    public static final String SRC_GEN_DIR_NAME  = "src-gen";
+
     public static final String LINK_TEST_UPLOAD_MODE = "Upload configuration file";
     public static final String NAME_CHOOSE_FILE_ELEMENT = "install_config";
 
@@ -93,7 +95,23 @@ public class ProjectUtils {
     public static final String BIBTEX_FILE1 = "src/main/resources/bibtex/my_pub.bib";
     public static String NAME_USER_FULL_NAME_INPUT = "user_name";
 
+    private static String _WORKSPACE_FOLDER_PATH =
+            "/home/youssouf1/Documents/IntellijProject/RelisApp/workspace/dslforge_workspace/";
 
+    public static void set_relis_workspace_path(String path){
+
+        _WORKSPACE_FOLDER_PATH = path;
+    }
+
+    public static  String get_workspace_path(){
+        return _WORKSPACE_FOLDER_PATH;
+    }
+
+
+    public static String getProjectConfigFileName(String projet_id){
+
+        return "classification_install_" + projet_id +".php";
+    }
     public static String extract_project_id(String filenName){
 
         String res= "";

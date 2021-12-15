@@ -2,16 +2,19 @@ package view;
 
 import controller.ProjectController;
 import model.Paper;
+import model.Project;
 import model.RelisUser;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.*;
 
+import java.io.File;
 import java.util.*;
 import java.util.function.BiFunction;
 
 import static utils.ClassificationUtils.*;
+import static utils.ProjectUtils.ID_PROJECT_CONFIG_SELECT;
 import static utils.QAUtils.*;
 import static utils.ScreeningUtils.CLASS_SUCCESS_BUTTON;
 
@@ -20,6 +23,7 @@ public class Views {
 
     private static final String LK_SETTINGS = "Settings";
     private static final String CSS_VALIDATION_RESULT = "Results" ;
+    private static final String LK_UPDATE_PROJECT_LI = "Update Project Config" ;
 
     /**
      * this fonction chooses random users
@@ -522,4 +526,61 @@ public class Views {
                 ExpectedConditions.elementToBeClickable(elem)
         ).click();
     }
+
+
+    public static void reconfigurate(WebDriver driver, Project project){
+
+        WebElement refong_w_e = open_sub_menu_admin(driver,LK_UPDATE_PROJECT_LI);
+        refong_w_e.click();
+        Utility.sleep(10);
+
+        choose_project(driver, project.getProjectId());
+        String url = "updateProject/classification_install_test.php";
+
+        String dir = ProjectUtils.get_workspace_path();
+
+        String look_for = ProjectUtils.getProjectConfigFileName(project.getProjectId());
+        String res = FileUtils.getPath(look_for, dir);
+        FileUtils.copyFiles(new File(url),new File(res));
+
+
+
+        choose_project(driver, project.getProjectId());
+        driver.findElement(By.className(CLASS_SUCCESS_BUTTON)).click();
+
+
+
+
+
+
+    }
+
+    /**
+     * choose a project from the web application
+     * by choosing the righy '.php' config
+     * @param driver the web driver
+     * @param project_id the projet id
+     */
+
+    public static void choose_project(WebDriver driver, String project_id) {
+        WebElement select = driver.findElement(By.name(ID_PROJECT_CONFIG_SELECT));
+        select.sendKeys(Keys.ENTER);
+        System.out.println("Clicked the options ");
+
+        List<WebElement> projects = select.findElements(By.tagName("optgroup"));
+
+        // choose the project that we wanna create by his id
+        WebElement project = projects.stream()
+                .filter( p -> {
+                    String p_id = ProjectUtils.extract_project_id(p.findElement(By.tagName("option")).getText());
+                    return p_id .equals( project_id);
+                })
+                .findFirst().orElse(null);
+        // is there a project with the current id?? if not exit.
+        if(project == null) return;
+        System.out.println("options choosed !!!!");
+        // here we found the project, now we choose the project
+        project.findElement(By.tagName("option")).click();
+    }
 }
+

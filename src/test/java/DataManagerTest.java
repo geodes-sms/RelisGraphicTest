@@ -223,11 +223,8 @@ public class DataManagerTest {
                 .click();
 
         do relisUsers.add(Utility.getRandomUser()); while( i++ < 4);
-        relisUsers.forEach(
+        relisUsers.forEach( user -> projectManager.addReviewer(driver,user)
 
-                user-> {
-                    projectManager.addReviewer(driver,user);
-                }
         );
         assertTrue(true);
     }
@@ -237,6 +234,16 @@ public class DataManagerTest {
     public void modifyScreeningExclusionCriteria(){
 
         assertTrue(true);
+    }
+
+    @Test(priority = 20)
+    public void reconfiguration_project_test(){
+
+        ProjectTest.openProjectTest(driver, project);
+
+        Views.reconfigurate(driver, project);
+
+
     }
 
 

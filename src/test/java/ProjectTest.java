@@ -37,6 +37,7 @@ public class ProjectTest {
     private static final ScreeningController sc = new ScreeningController();
 
 
+
     @BeforeTest
     public static void runSetUp(){
 
@@ -204,12 +205,42 @@ public class ProjectTest {
 
     }
 
+    @Test(priority = 8)
+    public void assign_classificators_test(){
+
+        classControler.openClassificationPhase(driver);
+        classControler.assignClassificators(driver, project.getClassification());
+        assertTrue(project.getClassification().getNumber_of_classifier() > 0);
+    }
+
+    @Test(priority = 10)
+    public void classify_test(){
+
+        classControler.openClassificationPhase(driver);
+        classControler.finishClassificationPhase(driver, project);
+
+        assertTrue(true);
+    }
+
+
+
      @Test(priority = 9)
     public void classifyPapersTest(){
         classControler.openClassificationPhase(driver);
-       classControler.finishClassificationPhase(driver,project.getClassification());
+       classControler.finishClassificationPhase(driver,project);
         //classControler.extractDOM_classificationValues(driver,project.getClassification());
         //classControler.finishClassificationPhase(driver,project.getClassification());
+    }
+
+
+    @Test(priority = 10)
+    public void validate_classification_test(){
+
+        openProjectTest(driver, project);
+        ClassificationView.enable_validation(driver);
+
+        classControler.openClassificationPhase(driver);
+        classControler.finishValidationPhase(driver,project.getClassification());
     }
 
     @Test(priority = 14)
@@ -218,6 +249,10 @@ public class ProjectTest {
         RelisUser admin = Utility.getAdminUser();
         QAViews.finish_validation_phase(driver,project,admin);
     }
+
+
+
+
 
 
 
