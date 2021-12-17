@@ -18,7 +18,7 @@ You can run localy all the tests, in order to do so, follow to next steps
 
 # for Linux
 
-- after the git clone, you can this run the file 'build_test.sh'
+- after clonning this project, you can this run the file 'build_test.sh'
 
 # for Windows
 
