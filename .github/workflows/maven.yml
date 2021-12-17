@@ -22,8 +22,8 @@ jobs:
         java-version: 11
     - name: clone relis project from github, build ReLiS and run the docker container
       run: |
-         chmod +x ./scripts/chrome.sh
-         ./scripts/chrome.sh
+         chmod +x ./scripts/build.sh
+         ./scripts/build.sh
       shell: bash
     - name: Build and run the tests regarding the .xml file
       run : mvn clean test
