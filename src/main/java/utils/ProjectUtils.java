@@ -95,8 +95,8 @@ public class ProjectUtils {
     public static final String BIBTEX_FILE1 = "src/main/resources/bibtex/my_pub.bib";
     public static String NAME_USER_FULL_NAME_INPUT = "user_name";
 
-    private static String _WORKSPACE_FOLDER_PATH =
-            "/home/youssouf1/Documents/IntellijProject/RelisApp/workspace/dslforge_workspace/";
+    private static final String RELIS_DIRECTORY = "relis_dev";
+    private static String _WORKSPACE_FOLDER_PATH = RELIS_DIRECTORY +"/workspace/dslforge_workspace/";
 
     public static void set_relis_workspace_path(String path){
 

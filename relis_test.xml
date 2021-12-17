@@ -10,12 +10,10 @@
         <test name="open project">
             <!-- CAN'T BE COMMENTED-->
             <case name="open the selected project" function="open_project_test"/>
-<!--            <case name="reconfigurate project" function="reconfiguration_project_test"/>-->
         </test>
         <test name="Screening">
             <case name="assignment" function="assign_screening_reviewers"/>
             <case name="screen" function="screen_test"/>
-            <!--<case name="report" />-->
         </test>
 
         <test name="classification">
@@ -27,7 +25,7 @@
               <!--        <case name="validation"/>-->
             <case name="assignment" function="assign_classificators_test"/>
             <case name="classify" function="classify_test"/>
-            <case name="validation" function="validate_classification_test"/>
+<!--            <case name="validation" function="validate_classification_test"/>-->
         </test>
 
         <test name="qa">
@@ -69,6 +67,8 @@
             <!-- MUST RUN FOR FIRST TIME to add reviewer to the project you can comment after-->
             <case name="add some random reviewer" function="addSomeReviewers"/>
 
+<!--            <case name="reconfigurate project" function="reconfiguration_project_test"/>-->
+<!---->
         </test>
     </tests>
 

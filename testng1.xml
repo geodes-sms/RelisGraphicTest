@@ -9,7 +9,7 @@
             <class name="DataManagerTest">
                 <methods>
                     <include name="create_project_test"/>
-<!--                    <include name="addUsersToReLisTest"/>-->
+                    <include name="addUsersToReLisTest"/>
                     <include name="open_project_test"/>
                     <include name="importBibTexTest"/>
                     <include name="deleteAllPaper"/>
@@ -22,9 +22,9 @@
                     <include name="open_project_test"/>
                     <include name="assign_screening_reviewers"/>
                     <include name="screen_test"/>
+                    <include name="classifyPapersTest"/>
                     <include name="assign_classificators_test"/>
                     <include name="classify_test"/>
-                    <include name="validate_classification_test"/>
                     <include name="assign_reviewer_qa_test"/>
                     <include name="asses_qa_test"/>
                 </methods>

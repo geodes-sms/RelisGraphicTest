@@ -4,10 +4,14 @@ SCREENING
 Reviews 2
 Conflict on Decision resolved_by Unanimity
 
-Criteria =["Estudios hechos despues del 2009"]
+Criteria =["CRITERIA 1", "CRITERIA 2"]
 
 CLASSIFICATION
 Simple Year :int(4)
+DynamicList dynListMulti "DynamicListMulti"  [0] "DynamicListThreeValues" =["MultiVal1","MultiVal2","MultiVal3","MultiVal4"]
+
+Simple note "Note" [1] :text(500)
+
 
 REPORT
 Simple Year "Studies per year" on Year charts( line)

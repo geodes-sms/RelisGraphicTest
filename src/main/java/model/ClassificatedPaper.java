@@ -34,6 +34,12 @@ public class ClassificatedPaper {
     }
 
 
+    public void displayContents(){
+
+        categories.forEach( p -> p.displayDataContent());
+    }
+
+
     /**
      * this method classifies all the paper
      * like choosing the input value 

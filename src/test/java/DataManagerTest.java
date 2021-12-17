@@ -7,6 +7,7 @@ import model.RelisUser;
 import model.ScreeningPhase;
 import model.relis_parser.RelisParser;
 
+import model.relis_parser.XslTransformer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -44,8 +45,8 @@ public class DataManagerTest {
 
         if(driver == null)
             System.out.println("The driver is null @@@!!");
-        project = RelisParser.getProjectFromFiles();
-        //project.setProject_name(project_demo);
+        XslTransformer.transformToXml();
+        project = XslTransformer.project();
 
         ProjectTest.ConnexionTest(driver);
     }
@@ -250,30 +251,6 @@ public class DataManagerTest {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //@Test(priority = 3)
-    public void deleteAllUserRole(){
-
-        // connexion.disConnect(driver,Utility.getCurrentConnectedUser(driver));
-        projectManager.removeAllProjectUsers(driver);
-        // connexion.connect(driver,connected);
-        // driver.quit();
-        assertTrue(true);
-    }
 
 
 

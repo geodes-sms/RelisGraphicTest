@@ -307,6 +307,7 @@ public class ClassificationView {
         for (int i = 0; i < max; i++) {
 
             classifyPaperSection(driver,classification);
+
         }
         // launch the test
        // extracDOM_classification_values(driver,classification);
@@ -318,6 +319,7 @@ public class ClassificationView {
 //        System.out.println("paper to classify=" + paper);
         assert paper != null;
         ClassificatedPaper classificatedPaper = classification.getClassifiedPaperByKey(key);
+
         int inde =0, maximum = classification.getAllCategories().size();
         boolean hasSubCategory = false, haveToFill=false;
         List<WebElement> inputs = driver.findElements(By.className(CLASS_FORM_GROUP));
@@ -354,6 +356,7 @@ public class ClassificationView {
             }
             if(haveToFill)
                 fill_dependent_categories(driver,classificatedPaper);
+
             driver.findElement(By.className(CLASS_BTN_SUCCES)).click();
 
         }

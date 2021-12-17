@@ -1,9 +1,10 @@
 #!/bin/bash
 
+relis_app='relis_dev'
 
-git clone https://github.com/geodes-sms/relis.git relisApp
+git clone https://github.com/geodes-sms/relis.git $relis_app
 
-cd relisApp
+cd $relis_app
 
 git checkout develop
 pwd
@@ -17,10 +18,9 @@ sudo cp -r ../workspace workspace
 echo last_pwd
 pwd
 
-cd .. && sudo chmod a+rwx relisApp -R && cd relisApp && ls -l
+cd .. && sudo chmod a+rwx $relis_app -R && cd $relis_app && ls -l
 #echo changing permission of 'workspace' to 777
 sudo chmod 777 -R workspace
-echo chmod 777 to relisApp
 cd relis_deployment
 #build ReLis
 sudo docker-compose build

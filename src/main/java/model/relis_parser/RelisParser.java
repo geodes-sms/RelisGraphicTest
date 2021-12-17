@@ -16,7 +16,15 @@ public class RelisParser {
 
 
 
+
     private static final String PROJECT_MT = "src/main/resources/mt.relis" ;
+
+    /**
+     * this function will parse the relis project configuration file
+     *
+     * @param project project to extract
+     * @param dataParse all lines of the configuration file
+     */
     public static void  extractProject(Project project, StringParser dataParse){
 
         String data = dataParse.getData();
@@ -29,15 +37,14 @@ public class RelisParser {
             String name = dataParse.gextNextQuotedWord();
             project.setProject_name(name);
             project.setProjectId(id);
-            // System.out.println("projectName=" + name +" id={"+id+"}");
+            //System.out.println("projectName=" + name +" id={"+id+"}");
 
         } else if(nextWord.equals(SCREENING)){
-            System.out.println("dans screening");
+          //  System.out.println("dans screening");
             Screening screening = new Screening();
-            System.out.println("calling screening phase");
+            //System.out.println("calling screening phase");
             project.setScreening(screening);
             extractScreening(project,dataParse);
-            //   System.out.println("nextWordsss={" + dataParse.getData()+"}" );
             project.setScreening(screening);
 
         } else if(nextWord.equals(CLASSIFICATION)){
@@ -49,25 +56,28 @@ public class RelisParser {
             project.setClassification(classifi);
         } else if(nextWord.equals(QualityAssurance)){
 
-            System.out.println("DANS QA");
+            //System.out.println("DANS QA");
             QualityAssement qa = new QualityAssement();
 
             while (true){
                 nextWord = dataParse.getNextWord();
-                // System.out.println("next word QA={" + nextWord+"}");
+                if(nextWord.equals("keep_qa"))
+                    nextWord = dataParse.getNextWord();
+
+              //   System.out.println("next word QA={" + nextWord+"}");
                 if(nextWord.equals(QUESTIONS)) {
 
                     String[] questions = getNextListElements(dataParse);
                     qa.setQuestionsForOA(questions);
 
-                    //System.out.println("set question = true");
+                   // System.out.println("set question = true");
                 }
                 else if(nextWord.equals(RESPONSES)){
 
 
                     getResponseDataForQA(dataParse, qa);
 
-                    //  System.out.println("set up answer ");
+                    // System.out.println("set up answer ");
 
                 }
                 else if(nextWord.equals(MIN_QA_SCORES)){
@@ -94,8 +104,11 @@ public class RelisParser {
 
     private static void extractScreening(Project project, StringParser dataParser){
 
+
         Screening screening = project.getScreening();
         String nextWord = dataParser.getNextWord();
+        if(nextWord.equals("keep_screening") || nextWord.equals("override"))
+            nextWord = dataParser.getNextWord();
         if(nextWord.equals(""))
             return;
 
@@ -142,8 +155,8 @@ public class RelisParser {
             screening.setValidationPercentage(nextWord);
             nextWord = dataParser.getNextWord();
             screening.setValidation_type(nextWord);
-            // System.out.println("validation{percent="+screening.getValidationPercentage()+
-            //         ",type="+screening.getValidation_type()+"}");
+//             System.out.println("validation{percent="+screening.getValidationPercentage()+
+//                     ",type="+screening.getValidation_type()+"}");
         } else if(nextWord.equals("Phases")){
 
             char punctuation = ' ';
@@ -156,7 +169,7 @@ public class RelisParser {
                 phase.setFields(nextWord);
                 screening.addPhase(phase);
                 phase.setProjectName( project.getProject_name());
-                //System.out.println(phase);
+                System.out.println(phase);
 
                 punctuation= Utility.getNextPunctuation(dataParser);
             }while (punctuation == ',');
@@ -196,7 +209,7 @@ public class RelisParser {
 
         String nextWord;
         nextWord  = dataParse.getNextWord();
-        if(nextWord.equals("no_override"))
+        if(nextWord.equals("no_override") || nextWord.equals("override"))
             nextWord = dataParse.getNextWord();
         String type = nextWord, id, displayName;
         boolean mandatory = false;

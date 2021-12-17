@@ -1,5 +1,6 @@
 package model.relis_parser;
 
+import model.Project;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -22,14 +23,17 @@ public class XslTransformer {
 
 
     public static final  String TEST_XML_FILE = "testng1.xml";
+    private static final String RELIS_CONFIG_XML = "relis_test.xml";
 
-    public static  void transformToXml(String fileName){
+
+
+    public static  void transformToXml(){
 
 
 
         try {
             StreamSource source_xsl = new StreamSource(new File("test.xsl"));
-            StreamSource source_xml = new StreamSource(new File(fileName));
+            StreamSource source_xml = new StreamSource(new File(RELIS_CONFIG_XML));
             StreamResult output_xml = new StreamResult(new File( TEST_XML_FILE));
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
@@ -44,41 +48,48 @@ public class XslTransformer {
 
     public static void main(String[] args) {
 
-        String name = "relis_test.xml";
 
-      transformToXml(name);
-        project_files();
+        Project p = project();
+
+        System.out.println(p);
+
+    }
+
+
+    public static Project project(){
 
         String dir = ProjectUtils.get_workspace_path();
+        String projectName  = getAttributeOf("project", "name") +".relis";
 
-        String look_for = ProjectUtils.getProjectConfigFileName("test");
-        String res = FileUtils.getPath(look_for, dir);
+        String res = FileUtils.getPath(projectName, dir);
 
-        System.out.println("RESULT => {"+ res +"}");
+        String fileName = res +"/"+ projectName;
 
+        return RelisParser.getProjectFrom(fileName);
 
 
     }
 
-    public static void project_files(){
+
+    private static String getAttributeOf( String tag, String attr){
+        String res= "";
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = null;
+        DocumentBuilder db;
         try {
             db = dbf.newDocumentBuilder();
-            Document document = db.parse(new File("config.xml"));
-            NodeList nodeList = document.getElementsByTagName("workspace");
-            System.out.println("We have project Length =>" + nodeList.getLength());
+            Document document = db.parse(new File(RELIS_CONFIG_XML));
+            NodeList nodeList = document.getElementsByTagName(tag);
             for(int x=0,size= nodeList.getLength(); x<size; x++) {
-                System.out.println(nodeList.item(x).getAttributes().getNamedItem("src").getNodeValue());
+              res = nodeList.item(x).getAttributes().getNamedItem(attr).getNodeValue();
             }
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
+        }  catch (Exception e){
+
             e.printStackTrace();
         }
-
+        System.out.println("Project selected is " + res);
+        return res;
     }
+
+
 }

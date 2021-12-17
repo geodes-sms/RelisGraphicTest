@@ -96,6 +96,7 @@ public class Classification {
             // classify all the cateogties by choosing a value
             classificatedPaper.classifyData();
 
+
             if(classificatedPapers == null){
                 classificatedPapers = new ArrayList<>();
             }

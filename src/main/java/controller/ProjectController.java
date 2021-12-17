@@ -68,17 +68,12 @@ public class ProjectController {
         openProjectListPage(driver);
         // push the  create new project button
         driver.findElement(By.linkText(ProjectUtils.LK_ADD_NEW_PROJECT_BUTTON)).click();
-
+        System.out.println(" Le project id est =>" + project_id);
         Views.choose_project( driver, project_id);
-
         // we create the project
 
         // then create the project by clicking the submit button
         driver.findElement(By.cssSelector("button[type='submit']")).click();
-        System.out.print( "LE bodey \n \n \n");
-        System.out.print( driver.findElement(By.tagName("body")).getText());
-        System.out.print( "LE bodey FIN \n \n \n");
-
     }
 
     public static void open_project_all_phases(WebDriver driver, String projet_name){
