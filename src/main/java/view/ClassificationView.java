@@ -200,6 +200,10 @@ public class ClassificationView {
             String css = "a[title='" + res+"']";
             driver.findElement(By.cssSelector(css)).click();
             String not = "note of the validation";
+            if(res.equals("Not correct")){
+                driver.findElement(By.id(ID_INCORRECT_NOTE_INPUT)).sendKeys(not);
+                driver.findElement(By.className(CLASS_BTN_SUCCES)).click();
+            }
             classificatedPaper.addValidation(res, not);
         } catch (Exception e){};
 

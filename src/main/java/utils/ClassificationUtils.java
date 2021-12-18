@@ -49,6 +49,7 @@ public class ClassificationUtils {
     public static final String LK_RESULTS_CLASSIFICATION = "Result";
     public static final String CSS_BTN_SUBMIT = "button[type='submit']";
     public static final String LK_DELETE_VAL = "Delete";
+    public static final String ID_INCORRECT_NOTE_INPUT = "validation_note";
     public static String LK_My_CLASSIFIED = "My Classified";
 
     public static final String LK_TABLE_RESULT_OF_CLASSIFICATION = "Table";
