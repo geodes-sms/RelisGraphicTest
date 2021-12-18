@@ -1,5 +1,6 @@
 package view;
 
+import controller.ProjectController;
 import model.*;
 import model.relis_categories.Category;
 import model.relis_categories.DependantDynamicCategory;
@@ -17,8 +18,6 @@ import java.util.stream.Collectors;
 import static utils.ClassificationUtils.*;
 
 public class ClassificationView {
-
-
 
 
     /**
@@ -196,8 +195,10 @@ public class ClassificationView {
             if(new Random().nextBoolean())
                 res = "Correct";
             else res = "Not correct";
+            System.out.println("DECISION => " + res);
 
-            Views.clickLiWebElement(driver,ul,res);
+            String css = "a[title='" + res+"']";
+            driver.findElement(By.cssSelector(css)).click();
             String not = "note of the validation";
             classificatedPaper.addValidation(res, not);
         } catch (Exception e){};
@@ -293,6 +294,58 @@ public class ClassificationView {
         }
     }
 
+
+    private static int check_values_exists(WebDriver driver, String val){
+
+        Functions func = (FourthParamsFunctions) (driver1, webElementList, user, obj) ->
+                get_dynamic_list_value(driver1,webElementList,user, obj);
+        return Utility.find_element_table_id(driver, func, null,val );
+    }
+
+
+    public static boolean delete_dynamic_entry_val(WebDriver driver, String dynamic_ref,String val){
+
+
+        Views.openSuBMenuFrom(driver, LK_DYNAMIC_LIST_MENU,dynamic_ref);
+        Functions func = (FourthParamsFunctions) (driver1, webElementList, user, obj) ->
+                delete_dynamic_value(driver1,webElementList,user, obj);
+        int x =  Utility.find_element_table_id(driver, func, null,val );
+
+        return x== 1;
+    }
+
+
+    private static int delete_dynamic_value(WebDriver driver,List<WebElement>
+            values, Object subject, Object object){
+
+
+        WebElement value = ProjectController.getValueFrom(driver,values,subject, 1);
+
+        if(value != null){
+
+            List<WebElement> tds = value.findElements(By.tagName("td"));
+            tds.get(0).findElement(By.linkText(LK_DELETE_VAL)).click();
+            driver.switchTo().alert().accept();
+
+
+        }
+        return (value != null)? 1 : 0;
+
+
+
+    }
+    public static int get_dynamic_list_value(WebDriver driver,List<WebElement>
+            values, Object subject, Object object){
+
+
+        WebElement value = ProjectController.getValueFrom(driver,values,subject,1);
+
+        return (value != null)? 1 : 0;
+
+
+
+    }
+
     /**
      * this function is take care the classification phase
      * and after it's will launch the test to check whether
@@ -364,6 +417,21 @@ public class ClassificationView {
 
 
     }
+
+
+    public static void add_dynamic_list_entry(WebDriver driver, String dynamic_ref, String valueToAdd){
+
+        Views.openSuBMenuFrom(driver,LK_DYNAMIC_LIST_MENU, dynamic_ref);
+        driver.findElement(By.className(CLASS_BTN_SUCCES)).click();
+
+        driver.findElement(By.id(ID_VALUE_REF_INPUT)).sendKeys(valueToAdd);
+
+        driver.findElement(By.cssSelector(CSS_BTN_SUBMIT)).click();
+        int x  = check_values_exists(driver, valueToAdd);
+        System.out.println("RESULT $=> " + x);
+       assert x == 1;
+    }
+
 
 
 

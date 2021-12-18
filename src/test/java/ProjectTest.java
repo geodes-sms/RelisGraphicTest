@@ -46,7 +46,7 @@ public class ProjectTest {
         init.init();
         driver = init.getWebDriver();
 
-        XslTransformer.transformToXml();
+       XslTransformer.transformToXml();
         project = XslTransformer.project();
         project.getScreening().setReviewersPerPaper(2);
         ConnexionTest(driver);
@@ -202,6 +202,25 @@ public class ProjectTest {
     }
 
 
+
+
+    @Test(priority = 15)
+    public void add_dynamic_val_test(){
+
+
+        classControler.openClassificationPhase(driver);
+        String ref = project.getClassification().getDynamicRefName();
+       // ClassificationView.add_dynamic_list_entry(driver, ref, "Today20");
+    }
+
+    @Test(priority = 16)
+    public void delete_dynamic_val_test(){
+        classControler.openClassificationPhase(driver);
+        String ref =  project.getClassification().getDynamicRefName();
+        String val = project.getClassification().getValueOf(ref);
+        if(val !=null)
+        ClassificationView.delete_dynamic_entry_val(driver,ref,val);
+    }
 
 
 

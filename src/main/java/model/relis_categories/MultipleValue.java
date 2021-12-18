@@ -90,4 +90,13 @@ public abstract class MultipleValue extends Category {
         return val;
 
     }
+
+    public  String getRandomChoice(){
+
+        int x = Utility.nextInt(0,values.size());
+
+        if(values.size()> 0)
+            return values.get(x);
+        return null;
+    }
 }

@@ -3,6 +3,7 @@ import model.*;
 import org.apache.hc.client5.http.classic.ExecChain;
 import org.openqa.selenium.*;
 import java.util.*;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -189,11 +190,12 @@ public class ScreeningView {
      */
     public static void showMyAssignment(WebDriver driver){
         try{
-
             Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_SCREENING_MY_ASSIGMENTS_PAGE);
+        } catch ( Throwable e ){
+            System.out.println("RETRYING FOR THE SHOW ASSIGNMENTS");
 
-        } catch ( Exception e ){
             Views.openSuBMenuFrom(driver, LK_OPEN_SCREENING_MENU, LK_SCREENING_ONLINE_MY_ASSIGNMENTS_PAGE);
+
         }
 
     }
@@ -277,11 +279,8 @@ public class ScreeningView {
           WebElement element;
           int last = tds.size()-1;
           element  = tds.get(last).findElement(By.cssSelector(CSS_GO_TO_PHASE));
-          assert element != null;
+          if (element != null)
           element.sendKeys(Keys.ENTER);
-//          // open the screening phase
-//          ((JavascriptExecutor)driver).executeScript("arguments[0].click();",
-//            element.findElement(By.className(CLASS_GOTO_PHASE)));
             break;
         }
 

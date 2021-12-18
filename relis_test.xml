@@ -17,18 +17,13 @@
         </test>
 
         <test name="classification">
-                <!--        <case name="assignment"/>-->
-<!--            this test run the assign, classify and the report test-->
-            <case name="classify" function="classifyPapersTest"/>
-            
-            
-              <!--        <case name="validation"/>-->
             <case name="assignment" function="assign_classificators_test"/>
             <case name="classify" function="classify_test"/>
-<!--            <case name="validation" function="validate_classification_test"/>-->
+            <case name="add dynamic value test" function="add_dynamic_val_test"/>
+            <case name="validation" function="validate_classification_test"/>
         </test>
 
-        <test name="qa">
+        <test name="qa0">
             <case name="assignment" function="assign_reviewer_qa_test"/>
             <case name="assess" function="asses_qa_test"/>
             <!--        <case name="report"/>-->
@@ -38,9 +33,6 @@
         <test name="management">
             <!-- CREATE THE PROJECT  -->
             <case name="create a project" function="create_project_test"/>
-            
-<!--            must run this test for the first time, to add users to ReLiS
-            and you can comment after -->
 
             <!-- MUST RUN FOR FIRST TIME, to add users to ReLiS and you can comment after -->
             <case name="add users to ReLis for tests" function="addUsersToReLisTest"/>
@@ -61,11 +53,16 @@
 <!--            <case name="remove validator" function="removeValidator"/>-->
 <!--            <case name="remove guest" function="removeGuestUserRole"/>-->
 
-            <case name="delete papers" function="deleteAllPaper"/>
-            <case name="delete specific paper" function="deleteProjectPaperByKey"/>
+<!--            <case name="delete papers" function="deleteAllPaper"/>-->
+<!--            <case name="delete specific paper" function="deleteProjectPaperByKey"/>-->
 
             <!-- MUST RUN FOR FIRST TIME to add reviewer to the project you can comment after-->
             <case name="add some random reviewer" function="addSomeReviewers"/>
+
+<!--            <case name="add a venue" function="addVenueTest"/>-->
+            <case name="delete a venue" function="deleteVenueTest"/>
+<!--            <case name="add a new author" function="add_author_test"/>-->
+
 
 <!--            <case name="reconfigurate project" function="reconfiguration_project_test"/>-->
 <!---->

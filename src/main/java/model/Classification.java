@@ -11,8 +11,10 @@ import utils.MainTest;
 import utils.Utility;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Data
 
@@ -178,6 +180,37 @@ public class Classification {
         categories_displayed_names.add(name);
     }
 
+
+
+    public String getValueOf(String ref){
+
+        MultipleValue value = (MultipleValue) allCategories.stream().filter(cat ->
+                ((IndependantDynamicCategory) cat).getReference_id().equals(ref))
+                .findFirst()
+                .orElse(null);
+        if(value != null){
+
+            return value.getRandomChoice();
+        }
+        return null;
+
+
+    }
+    public String getDynamicRefName(){
+
+        List<Category> multipleValues =
+
+                allCategories.stream()
+                        .filter( cat -> cat instanceof IndependantDynamicCategory)
+                        .collect(Collectors.toList());
+        int pos = Utility.nextInt(0, multipleValues.size());
+        if(multipleValues.size() > 1){
+            return ((IndependantDynamicCategory) multipleValues.get(pos)).getReference_id();
+
+        }
+        return null;
+
+    }
 
     public void append_test_message(String s) {
         test_message += s;

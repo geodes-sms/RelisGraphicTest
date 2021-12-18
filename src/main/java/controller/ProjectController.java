@@ -2,6 +2,7 @@ package controller;
 
 import lombok.NonNull;
 import model.*;
+import org.apache.hc.core5.concurrent.FutureCallback;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static utils.ClassificationUtils.*;
 import static utils.PaperUtils.*;
 import static utils.ProjectUtils.*;
 
@@ -73,7 +75,7 @@ public class ProjectController {
         // we create the project
 
         // then create the project by clicking the submit button
-        driver.findElement(By.cssSelector("button[type='submit']")).click();
+        driver.findElement(By.cssSelector(CSS_BTN_SUBMIT)).click();
     }
 
     public static void open_project_all_phases(WebDriver driver, String projet_name){
@@ -189,6 +191,144 @@ public class ProjectController {
         driver.findElement(By.id(ID_VENUE_YEAR_INPUT)).sendKeys("2021");
 
         driver.findElement(By.className(CLASS_SUCCESS_BUTTON)).click();
+       assert  find_venue(driver, venuename);
+
+    }
+
+    public static final WebElement getValueFrom(WebDriver driver, List<WebElement> values, Object subject, int pos){
+
+        values.remove(0); // remove the header
+
+        String value_looking_for = (String) subject;
+        System.out.println(" le subject => " + subject);
+
+        WebElement value = values.stream()
+                .filter( val ->{
+                    boolean is_true = false;
+
+                    List<WebElement> tds = val.findElements(By.tagName("td"));
+                    System.out.println("entry => " + tds.get(pos).getText());
+                    if(tds.get(pos).getText().equals(value_looking_for))
+                        is_true = true;
+                    return is_true;
+                })
+                .findFirst().orElse(null);
+
+        return value;
+    }
+
+    /**
+     * delete a venue
+     * @param driver the web driver
+     * @param venuName the venu name to delete
+     * @return boolean if venue exists and it's deleted
+     */
+    public static boolean delete_venue(WebDriver driver, String venuName){
+
+
+        Functions func = (FourthParamsFunctions) ProjectController::_delete_venue;
+        int x =  Utility.find_element_table_id(driver, func, null,venuName );
+        return x ==1;
+
+    }
+    private static int _delete_venue(WebDriver driver,List<WebElement>
+            values, Object subject, Object object){
+
+
+        WebElement value = getValueFrom(driver, values, subject,1);
+
+
+        if(value != null){
+            List<WebElement> tds = value.findElements(By.tagName("td"));
+            tds.get(0).findElement(By.linkText(LK_DELETE_VAL)).click();
+            driver.switchTo().alert().accept();
+
+            return 1;
+        }
+
+        return 0;
+    }
+    public static boolean find_venue(WebDriver driver, String venue_full_name){
+
+        Functions func = (FourthParamsFunctions) ProjectController::_find_venue;
+        int x =  Utility.find_element_table_id(driver, func, null,venue_full_name );
+        return x ==1;
+    }
+
+    private static int _find_venue(WebDriver driver,List<WebElement>
+            values, Object subject, Object object){
+
+
+        WebElement value = getValueFrom(driver,values,subject,1);
+
+        return (value != null)? 1 : 0;
+
+
+
+    }
+
+
+    private static int _find_author(WebDriver driver,List<WebElement>
+            values, Object author, Object object){
+
+        WebElement value = getValueFrom(driver,values,author,0);
+
+        return (value != null)? 1 : 0;
+
+
+
+    }
+
+    public static int find_author(WebDriver driver, String author_name){
+
+        Functions functions = (FourthParamsFunctions) ProjectController::_find_author;
+        return Utility.find_element_table_id(driver,functions,null,author_name);
+    }
+
+    /**
+     * this function will add a new author to a project
+     * @param driver the web driver
+     * @param author_full_name the author full name
+     */
+    public static void add_authors(WebDriver driver, String author_full_name){
+
+        Views.openSuBMenuFrom(driver,LK_AUTHORS_MENU,LK_ALL);
+        driver.findElement(By.cssSelector(CSS_ADD_NEW_AUTHOR_BTN)).click();
+
+        driver.findElement(By.id(ID_INPUT_AUTHOR_FULL_NAME)).sendKeys(author_full_name);
+        driver.findElement(By.className(CLASS_BTN_SUCCES)).click();
+        int x = find_author(driver, author_full_name);
+        assert x != 3;
+    }
+
+    /**
+     * this function will return a venue from the browser
+     * @param driver
+     * @return
+     */
+    public static String getA_venue(WebDriver driver){
+        try {
+            Views.openMenuFrom(driver,LK_VENUES);
+        } catch (Exception e){
+
+        }
+        Functions functions = (FourthParamsFunctions) (driver1, webElementList, user, obj) -> {
+            webElementList.remove(0); // remove the header
+
+            int x = Utility.nextInt(0, webElementList.size());
+            if (webElementList.size() > 0) {
+
+                WebElement elem = webElementList.get(x);
+                List<String> data = (List<String>) obj;
+                data.add( elem.findElements(By.tagName("td")).get(1).getText());
+            }
+            return 1;
+        };
+        ArrayList<String> res = new ArrayList<>();
+        Utility.find_element_table_id(driver,functions,res,null);
+
+        return res.get(0);
+
 
     }
 

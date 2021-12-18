@@ -192,7 +192,7 @@ public class ClassificationController {
         makeReadyForValidationPhase(driver,classification);
         int i=0, max =classification.getPapersToClassifyLength();
         System.out.println("max => " + max);
-        while (++i < max){
+        while (i++ < max){
             views.validateNextPaper(driver,classification);
         }
         views.extracDOM_validation(driver,classification);

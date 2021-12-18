@@ -31,12 +31,7 @@ public class ScreeningPhaseController {
 
 
     }
-    public void startUserScreeningPhase( RelisUser user){
-        openCurrentScreeningPhase(user.getDriver());
-        //driver.findElement(By.linkText(ScreeningUtils.LK_DASHBORD_LINK)).click();
-       // screeningView.openScreeningPage(driver);
 
-    }
 
     /**
      *
@@ -91,7 +86,7 @@ public class ScreeningPhaseController {
     }
     public static ArrayList<Paper> getUserPapersAssignments(ScreeningPhaseWork user){
         ScreeningView.showMyAssignment(user.getParticipant().getDriver());
-        System.out.println("Defbut de getting assignments @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        System.out.println("DEBUT DE  GETTING USER ASSIGNMENTS ");
         ArrayList<String> papersKeys= new ArrayList<>();
 
         Utility.getPapersKeyFromDOMFromId(user.getParticipant().getDriver(),papersKeys);

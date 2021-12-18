@@ -47,10 +47,17 @@ public class ClassificationUtils {
     public static final String CSS_RELIS_MODALS_FORM = "#relisformModal .form-group";
     public static final String ID_LABEL_CLASSIFICATION = "myModalLabel";
     public static final String LK_RESULTS_CLASSIFICATION = "Result";
+    public static final String CSS_BTN_SUBMIT = "button[type='submit']";
+    public static final String LK_DELETE_VAL = "Delete";
     public static String LK_My_CLASSIFIED = "My Classified";
 
     public static final String LK_TABLE_RESULT_OF_CLASSIFICATION = "Table";
 
     public static final String LABEL_CLASSIFICATION = "Classification";
     public static final String LABEL_ENABLE_VALIDATION = "Validation enabled";
+
+    public static final String LK_DYNAMIC_LIST_MENU = "Reference Categories";
+
+    public static final String ID_VALUE_REF_INPUT = "ref_value";
+
 }

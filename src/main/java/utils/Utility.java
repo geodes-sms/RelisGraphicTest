@@ -264,7 +264,7 @@ public class Utility {
 
         Optional<WebElement> element = data.stream()
                 .filter(elem -> {
-                    System.out.println("Compare ("+elem.getText()+") VS "+ " ("+ cond+")");
+//                    System.out.println("Compare ("+elem.getText()+") VS "+ " ("+ cond+")");
                     return elem.getText().equals(cond);
                 })
                 .findFirst();
@@ -383,12 +383,12 @@ public class Utility {
                     List<WebElement> papers = table.findElements(By.tagName("tr"));
 //                    // we remove the first web element which is the table header
                     // papers.remove(0);
-                    int result = ( (FourthParamsFunctions) function).apply(driver, papers, sujet, object);
+                     val = ( (FourthParamsFunctions) function).apply(driver, papers, sujet, object);
                     // there is no next table  ?
                     boolean nextTable = predicate.test(driver);
-                    if(result == 1 || !nextTable ){
-                        if(!nextTable)
-                            val = 1;
+                    if(val == 1 || !nextTable ){
+                        if(val != 1)
+                            val = 3;
                         break;
                     }
 

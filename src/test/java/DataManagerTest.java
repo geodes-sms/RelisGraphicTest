@@ -22,6 +22,7 @@ import utils.Utility;
 import view.Views;
 
 
+import javax.print.attribute.standard.MediaSize;
 import java.util.ArrayList;
 
 import static org.testng.Assert.*;
@@ -121,14 +122,16 @@ public class DataManagerTest {
 
      @Test(priority = 6)
     public void addVenueTest(){
-        projectManager.addVenue(driver,"The world after covid19");
+        projectManager.addVenue(driver,"The world after 2021");
 
-        assertTrue(true);
     }
     @Test(priority = 7)
     public void deleteVenueTest(){
 
-        assertEquals(1, 99-98);
+        String venue = ProjectController.getA_venue(driver);
+        System.out.println("VENUE TO DELETE => " + venue);
+        ProjectController.delete_venue(driver, venue);
+
     }
 
 
@@ -231,7 +234,16 @@ public class DataManagerTest {
     }
 
 
+
     @Test(priority = 18)
+    public void add_author_test(){
+
+
+        String author_name = "AUTHOR 1";
+
+        ProjectController.add_authors(driver,author_name);
+    }
+    @Test(priority = 19)
     public void modifyScreeningExclusionCriteria(){
 
         assertTrue(true);

@@ -222,17 +222,16 @@ public class Views {
                     elements.stream().filter( li -> {
 
 
-                      System.out.println("(" +li.findElement(By.tagName("a")).getText() +", "+ subMenu +")");
+                     // System.out.println("(" +li.findElement(By.tagName("a")).getText() +", "+ subMenu +")");
                         return li.findElement(By.tagName("a")).getText().equals(subMenu);
                             } )
-                            .findFirst().get();
+                            .findFirst().orElse(null);
             option.findElement(By.tagName("a")).sendKeys(Keys.ENTER);
 //            System.out.println("submenu clicked");
 
         } catch (Exception e){
 
-          // System.err.println("Element do not exist {{{{ li= " + menu.getText() +" @ " +  subMenu+"}}}}}}}}}}}}");
-            e.printStackTrace();
+          throw  e;
         }
 
     }
@@ -336,11 +335,7 @@ public class Views {
         element.click();
 
     }
-    public static void js_click(WebDriver driver, WebElement element){
-        JavascriptExecutor executor = (JavascriptExecutor)driver;
-        System.out.println("WEB ELEMNT : " + element.getText());
-        executor.executeScript("arguments[0].click();", element);
-    }
+
 
     public static boolean isWhiteBg(String bg){
         return bg.equals("rgba(255, 255, 255, 1)");

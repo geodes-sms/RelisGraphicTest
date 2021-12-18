@@ -84,6 +84,10 @@ public class ProjectUtils {
     public static final String ID_USER_GROUP_UL = "select2-user_usergroup-results";
     public static final String CLASS_USER_GROUP_ELEMENT = "select2-selection__rendered";
 
+    public static final String LK_AUTHORS_MENU = "Authors";
+    public static final String LK_ALL  = "All";
+    public static final String CSS_ADD_NEW_AUTHOR_BTN = "a[title='Add a new author']";
+    public static final String ID_INPUT_AUTHOR_FULL_NAME = "author_name";
 
     /********************************************************************************
      *
