@@ -33,7 +33,10 @@ you can comment a test if you wanna ignore it.
 if you wanna to use a headless chrome web driver you can go to **Utils folder** and then open the file **Initializer.java** at the function **chromeDriver** to uncomment the line
 **ChromeOptions.addArguments("--headless", "window-size=1024,768", "--no-sandbox");**.
 
+# Distribution
 
+
+The source code is licensed under a [GNU GENERAL PUBLIC LICENSE 3](https://www.gnu.org/copyleft/gpl.html) ![GNU GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)
 
 
 
