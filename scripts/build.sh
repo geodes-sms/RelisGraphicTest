@@ -1,7 +1,6 @@
 #!/bin/bash
 
 relis_app='relis_dev'
-# switch to the root
 
 git clone https://github.com/geodes-sms/relis.git $relis_app
 
