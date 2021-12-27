@@ -17,12 +17,15 @@ public class Initialiazer {
     private WebDriver webDriver;
 
 
-    private void chromeDriver(){
-
+    private  void headLessChromeDriver(){
         WebDriverManager.chromedriver().setup();
         ChromeOptions ChromeOptions = new ChromeOptions();
         ChromeOptions.addArguments("--headless", "window-size=1024,768", "--no-sandbox");
         webDriver = new ChromeDriver(ChromeOptions);
+    }
+    private void chromeDriver(){
+        WebDriverManager.chromedriver().setup();
+        webDriver = new ChromeDriver();
 
     }
 
@@ -34,7 +37,7 @@ public class Initialiazer {
     // initializing the web page
     public void init(){
         // setup for using chrome as web navigator
-       chromeDriver();
+        headLessChromeDriver();
         // go to the website
         webDriver.get(LOCAL_URL);
       // webDriver.manage().window().maximize();
