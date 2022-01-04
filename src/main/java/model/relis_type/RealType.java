@@ -8,9 +8,8 @@ public class RealType extends TypeOf {
 
 
     public Object getMockValue(){
-        double d = Utility.nextDouble(0,1999);
 
-        return String.format("%.2f",d);
+        return Utility.nextDouble(0,1999);
     }
 
 

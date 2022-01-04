@@ -70,13 +70,15 @@ public class ProjectController {
         openProjectListPage(driver);
         // push the  create new project button
         driver.findElement(By.linkText(ProjectUtils.LK_ADD_NEW_PROJECT_BUTTON)).click();
-        System.out.println(" Le project id est =>" + project_id);
+        System.out.println(" Le project id est =>" + project_id +" {} {} &&&&");
         Views.choose_project( driver, project_id);
         // we create the project
 
         // then create the project by clicking the submit button
         driver.findElement(By.cssSelector(CSS_BTN_SUBMIT)).click();
     }
+
+
 
     public static void open_project_all_phases(WebDriver driver, String projet_name){
 

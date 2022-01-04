@@ -13,7 +13,6 @@
                     <include name="open_project_test"/>
                     <include name="importBibTexTest"/>
                     <include name="addSomeReviewers"/>
-                    <include name="deleteVenueTest"/>
                 </methods>
             </class>
             <class name="ProjectTest">

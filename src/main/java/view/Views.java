@@ -25,6 +25,16 @@ public class Views {
     private static final String CSS_VALIDATION_RESULT = "Results" ;
     private static final String LK_UPDATE_PROJECT_LI = "Update Project Config" ;
 
+    public static void click(WebElement element){
+
+        try {
+            element.click();
+
+        } catch (Exception e){
+            element.sendKeys(Keys.ENTER);
+        }
+    }
+
     /**
      * this fonction chooses random users
      * for the screening phase or the classification phase
@@ -559,23 +569,29 @@ public class Views {
 
     public static void choose_project(WebDriver driver, String project_id) {
         WebElement select = driver.findElement(By.name(ID_PROJECT_CONFIG_SELECT));
-        select.sendKeys(Keys.ENTER);
+        click(select);
         System.out.println("Clicked the options ");
-
         List<WebElement> projects = select.findElements(By.tagName("optgroup"));
 
         // choose the project that we wanna create by his id
         WebElement project = projects.stream()
                 .filter( p -> {
+
                     String p_id = ProjectUtils.extract_project_id(p.findElement(By.tagName("option")).getText());
+
                     return p_id .equals( project_id);
                 })
                 .findFirst().orElse(null);
         // is there a project with the current id?? if not exit.
-        if(project == null) return;
+        if(project == null)
+            return;
+
+
+
         System.out.println("options choosed !!!!");
         // here we found the project, now we choose the project
-        project.findElement(By.tagName("option")).click();
+        click(project.findElement(By.tagName("option")));
+
     }
 }
 

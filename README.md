@@ -25,7 +25,13 @@ You can run localy all the tests, in order to do so, follow to next steps
 - you can follows the steps of [https://github.com/geodes-sms/relis/tree/develop#relis](https://github.com/geodes-sms/relis/tree/develop#relis). to install ReLiS and run ReLiS on your machine.
 - you can go the root folder of this project, and your terminal run **mvn clean test**.
 
+# Must read
 
+if you are running the test locally you have to switch to a non headless chrome
+, to do so, go to the **src/main/java/utils/Initialiazer.java** and go scroll down
+to the **init function**, and call the method **chromeDriver()**
+instead of the **headLessChromeDriver()** <br/>
+if the test are running using **GIT Action** use the **headLessChromeDriver()**
 # Test of choice to run
 
 You can choose the tests that you wanna tests, the file **'relis_test.xml'** contains all the tests and the project to choose for the tests,

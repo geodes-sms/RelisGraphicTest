@@ -540,7 +540,10 @@ public class ScreeningView {
      */
   public static String extractScreeningResult(WebDriver driver){
 
-      driver.findElement(By.linkText(LK_STATISTICS_BUTTON)).click();
+//      driver.findElement(By.linkText(LK_STATISTICS_BUTTON)).click();
+        WebElement menuStat = Views.getSideBarMenuOptionsOf(driver,LK_STATISTICS_BUTTON);
+
+        Views.click(menuStat);
       List<WebElement> elements = driver.findElements(By.cssSelector(".row"));
       List<WebElement> result_data = elements.get(1).findElements(By.className("col-md-6"));
 

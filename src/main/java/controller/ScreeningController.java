@@ -125,6 +125,7 @@ public class ScreeningController {
   public boolean resolveIfConflicts(WebDriver driver, ScreeningPhase phase){
     // do we have more than one reviewer per paper?
     boolean resolved = true;
+    System.out.println("CHECKING THE CONFLICT (" + phase.getParticipantNumbers() +" > 1)");
     if(phase.getParticipantNumbers() > 1){
       // if so we check out if we have conflicts
       // we'll resolve them

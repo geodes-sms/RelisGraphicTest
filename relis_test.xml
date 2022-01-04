@@ -39,7 +39,7 @@
             <!--        This test can't be commented-->
             <case name="open the project" function="open_project_test"/>
             <!--  La section d'importations de tests -->
-            <case name="import csv" function="importBibTexTest"/>
+            <case name="import bibtex" function="importBibTexTest"/>
 <!--            <case name="import endnote"/>-->
 <!--            <case name="import bibtex"/>-->
             <!-- la section d'ajoutes des users pour un projet -->
@@ -60,7 +60,7 @@
             <case name="add some random reviewer" function="addSomeReviewers"/>
 
 <!--            <case name="add a venue" function="addVenueTest"/>-->
-            <case name="delete a venue" function="deleteVenueTest"/>
+<!--            <case name="delete a venue" function="deleteVenueTest"/>-->
 <!--            <case name="add a new author" function="add_author_test"/>-->
 
 

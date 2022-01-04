@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 
 import static utils.ClassificationUtils.*;
+import static view.Views.click;
 
 public class ClassificationView {
 
@@ -221,9 +222,9 @@ public class ClassificationView {
     public void fillSubCategory(WebDriver driver, Classification classification,String key,int btn_index){
 
         List<WebElement> buttons = driver.findElements(By.cssSelector(".fa-plus"));
-        buttons.get(btn_index).click();
+        click(buttons.get(btn_index));
         driver.switchTo().activeElement();
-        Utility.sleep(1);
+        Utility.sleep(3);
         String labele = driver.findElement(By.className("modal-title")).getText();
 
         labele = labele.substring( labele.indexOf("Add  : ") + "Add  : ".length());
@@ -402,9 +403,9 @@ public class ClassificationView {
             if((++inde+2) >= maximum) break;
 
         }
-        driver.findElement(By.className(CLASS_BTN_SUCCES)).click();
+        click(driver.findElement(By.className(CLASS_BTN_SUCCES)));
         if(hasSubCategory){
-            driver.findElement(By.cssSelector(CSS_EDIT_CLASSIFICATION_BTN)).click();
+            click(driver.findElement(By.cssSelector(CSS_EDIT_CLASSIFICATION_BTN)));
 
             List<WebElement> buttons = driver.findElements(By.cssSelector(".fa-plus"));
             for(int i =0; i< buttons.size();i++){
@@ -414,7 +415,7 @@ public class ClassificationView {
             if(haveToFill)
                 fill_dependent_categories(driver,classificatedPaper);
 
-            driver.findElement(By.className(CLASS_BTN_SUCCES)).click();
+            click(driver.findElement(By.className(CLASS_BTN_SUCCES)));
 
         }
 
